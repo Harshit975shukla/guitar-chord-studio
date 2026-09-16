@@ -36,6 +36,7 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      padding-bottom: 85px;
     }
 
     /* Top Bar */
@@ -3388,8 +3389,11 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
   </div>
 
   <!-- PERSISTENT BOTTOM RHYTHM DOCK BAR -->
-  <div class="rhythm-dock-container">
-    <div class="rhythm-dock-left">
+  <div class="rhythm-dock-container" id="rhythm-dock-bar">
+    <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="toggleRhythmDockCollapse()" id="btn-dock-collapse" title="Collapse/Expand Rhythm Bar">
+      🔽
+    </button>
+    <div class="rhythm-dock-left" id="rhythm-dock-content">
       <button class="btn btn-primary" id="btn-dock-rhythm-toggle" style="padding:6px 16px; font-size:0.85rem;" onclick="toggleRhythmPlayback()">
         <span id="dock-rhythm-icon">▶️</span> <span id="dock-rhythm-text">Rhythm</span>
       </button>
@@ -4575,6 +4579,10 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
     /* ==========================================================================
        REAL-TIME AUDIO INITIALIZATION (WITH BIQUAD HARDWARE FILTERS)
        ========================================================================== */
+    function toggleListening() {
+      toggleMicrophone();
+    }
+
     async function toggleMicrophone() {
       if (isListening) stopMicrophone();
       else await startMicrophone();
@@ -4666,8 +4674,6 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
       noiseGateThreshold = parseFloat(val);
       const gateVal = document.getElementById('gate-val');
       if (gateVal) gateVal.textContent = `${Math.round(val)} dB`;
-      const threshLabel = document.getElementById('gate-threshold-label');
-      if (threshLabel) threshLabel.textContent = `${Math.round(val)} dB`;
       const pct = Math.min(100, Math.max(5, (noiseGateThreshold / 50) * 100));
       const gateMarker = document.getElementById('gate-marker');
       if (gateMarker) gateMarker.style.left = `${pct}%`;
@@ -4987,6 +4993,11 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
 
         // Hook to AI Tab Transcriber and Web MIDI Output
         onSingleNoteDetectedForTranscriberAndMidi(roundMidi, noteFullName, sargamName, guitarPos, f0);
+
+        // Real-time Pitch Feed for Headstock Tuner
+        if (currentActiveTab === 'tuner') {
+          updateTunerPitchRealtime(f0, noteFullName, cents);
+        }
       } 
       // PATH B: POLYPHONIC CHORD DETECTED
       else {
@@ -5101,6 +5112,11 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
           // Check against active play-along song chord!
           checkPlayAlongLiveMatch(best.short);
 
+          // Real-time Chord Evaluation for Chord Quiz Trainer
+          if (currentActiveTab === 'trainer') {
+            checkQuizChordMatch(best.short);
+          }
+
           // Hook to Web MIDI Output for Chords
           onChordDetectedForMidi(best.short);
 
@@ -5183,11 +5199,13 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
     }
 
     function drawSpectrum(freqData) {
+      if (currentActiveTab !== 'detector') return;
       const canvas = document.getElementById('canvas-spectrum');
-      if (!canvas) return;
+      if (!canvas || canvas.clientWidth === 0) return;
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
       const h = canvas.height;
+      if (w <= 0 || h <= 0) return;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -5233,7 +5251,25 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
 
     // Register Service Worker for PWA (offline & installable mobile app)
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+      
+    let isRhythmDockCollapsed = false;
+    function toggleRhythmDockCollapse() {
+      isRhythmDockCollapsed = !isRhythmDockCollapsed;
+      const bar = document.getElementById('rhythm-dock-bar');
+      const content = document.getElementById('rhythm-dock-content');
+      const btn = document.getElementById('btn-dock-collapse');
+      if (isRhythmDockCollapsed) {
+        if (content) content.style.display = 'none';
+        if (btn) btn.textContent = '🔼 Show Rhythm';
+        if (bar) bar.style.padding = '4px 14px';
+      } else {
+        if (content) content.style.display = 'flex';
+        if (btn) btn.textContent = '🔽';
+        if (bar) bar.style.padding = '10px 20px';
+      }
+    }
+
+    window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => {
           console.log('Service Worker registration note:', err);
         });
@@ -7720,15 +7756,18 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)`;
 
     function sendMidiNoteOn(pitch, velocity = 90) {
       if (selectedMidiOutput) {
-        const channel = parseInt(document.getElementById('midi-channel-select')?.value || 1) - 1;
-        selectedMidiOutput.send([0x90 + channel, pitch, velocity]);
-        setTimeout(() => {
-          selectedMidiOutput.send([0x80 + channel, pitch, 0]);
-        }, 300);
-      } else {
-        // Fallback: Virtual Polyphonic Synth Audio
-        playVirtualSynthVoice(pitch, velocity);
+        try {
+          const channel = parseInt(document.getElementById('midi-channel-select')?.value || 1) - 1;
+          selectedMidiOutput.send([0x90 + channel, pitch, velocity]);
+          setTimeout(() => {
+            selectedMidiOutput.send([0x80 + channel, pitch, 0]);
+          }, 300);
+        } catch (e) {
+          console.warn('MIDI send error:', e);
+        }
       }
+      // NOTE: We NEVER play audible speaker sound here while the microphone is live!
+      // Playing speaker audio into an active listening microphone causes a devastating acoustic feedback screech.
     }
 
     function playVirtualSynthVoice(pitch, velocity) {
@@ -7817,12 +7856,24 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)`;
 
     function startVideoCanvasCompositor() {
       const canvas = document.getElementById('video-overlay-canvas');
+      const videoEl = document.getElementById('camera-video-element');
+      if (!canvas || !videoEl) return;
       const ctx = canvas.getContext('2d');
 
       function drawOverlay() {
+        if (!webcamStream) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 1. Top HUD Banner
+        // 1. Draw mirrored webcam video frame onto canvas
+        if (videoEl.readyState >= 2) {
+          ctx.save();
+          ctx.translate(canvas.width, 0);
+          ctx.scale(-1, 1);
+          ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+          ctx.restore();
+        }
+
+        // 2. Top HUD Banner
         ctx.fillStyle = 'rgba(10, 14, 26, 0.75)';
         ctx.fillRect(20, 20, 360, 48);
         ctx.strokeStyle = '#ffb300';
@@ -7963,15 +8014,16 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)`;
       LOOPER_TRACKS.forEach((t, i) => updateLooperTrackUI(i));
     }
 
-    function toggleTrackRecord(trackIdx) {
-      ensureAudio();
-      if (!isListening) toggleMicrophone();
+    async function toggleTrackRecord(trackIdx) {
+      await ensureAudio();
+
+      if (!micStream) {
+        await startMicrophone();
+      }
 
       if (activeLooperRecTrackIdx === trackIdx) {
-        // Stop recording
         stopTrackRecording(trackIdx);
       } else {
-        // Start recording this track
         startTrackRecording(trackIdx);
       }
     }
@@ -8000,9 +8052,14 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)`;
       }
 
       // Record audio buffer using MediaRecorder
-      if (micStream) {
+      if (micStream && micStream.active) {
         looperRecordedTrackChunks = [];
-        looperTrackMediaRecorder = new MediaRecorder(micStream);
+        try {
+          looperTrackMediaRecorder = new MediaRecorder(micStream);
+        } catch(err) {
+          console.error("MediaRecorder init error:", err);
+          return;
+        }
         looperTrackMediaRecorder.ondataavailable = e => {
           if (e.data.size > 0) looperRecordedTrackChunks.push(e.data);
         };
