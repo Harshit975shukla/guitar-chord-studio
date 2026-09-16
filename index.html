@@ -867,7 +867,605 @@
       color: #38bdf8;
     }
   
+    
     /* ==========================================================================
+       ANTI-FLUCTUATION & HIGH-STABILITY LAYOUT LOCKS
+       ========================================================================== */
+    .chord-hero-box {
+      min-height: 310px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .status-badge-row {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #strum-hold-badge {
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      background: rgba(255, 179, 0, 0.2);
+      color: #ffd54f;
+    }
+    #strum-hold-badge.badge-visible {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+    .detected-chord-name {
+      min-height: 78px;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 3.6rem;
+      font-weight: 900;
+      line-height: 1;
+      overflow: hidden;
+      margin: 4px 0;
+    }
+    .top-candidates-row {
+      min-height: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+    .chord-sub-info {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .seventh-inspector-box {
+      margin-top: 12px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 179, 0, 0.28);
+      border-radius: 14px;
+      padding: 10px 16px;
+      min-height: 94px;
+      height: 94px;
+      box-sizing: border-box;
+      text-align: left;
+      font-size: 0.78rem;
+      overflow: hidden;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    /* Master Rosewood Fretboard Luxury Aesthetic */
+    .fretboard-container {
+      background: linear-gradient(180deg, #170f0a 0%, #2a1910 20%, #1f130b 50%, #2a1910 80%, #170f0a 100%) !important;
+      border: 2px solid #5a3825 !important;
+      border-radius: 16px !important;
+      box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.95), inset 0 -3px 12px rgba(0, 0, 0, 0.95), 0 12px 35px rgba(0, 0, 0, 0.6) !important;
+    }
+    .fret-num.marker {
+      color: #ffd54f !important;
+      text-shadow: 0 0 8px rgba(255, 179, 0, 0.6);
+    }
+    .finger-dot {
+      background: linear-gradient(135deg, #ffd54f 0%, #ff8f00 100%) !important;
+      color: #0b0f19 !important;
+      box-shadow: 0 0 16px rgba(255, 179, 0, 0.85), 0 0 4px #ffffff !important;
+      border: 1.5px solid #fff !important;
+      animation: dotPulse 1.8s infinite alternate ease-in-out;
+    }
+    @keyframes dotPulse {
+      0% { transform: scale(1); box-shadow: 0 0 12px rgba(255, 179, 0, 0.7); }
+      100% { transform: scale(1.08); box-shadow: 0 0 22px rgba(255, 179, 0, 1), 0 0 6px #fff; }
+    }
+
+    /* ==========================================================================
+       SONGS & PLAY-ALONG STUDIO STYLES
+       ========================================================================== */
+    .songs-container {
+      max-width: 1300px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .song-hero-card {
+      background: linear-gradient(145deg, rgba(20, 26, 48, 0.92), rgba(12, 16, 30, 0.95));
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .song-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .song-title-group h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffd54f, #ff9100, #ff6d00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .song-meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .song-meta-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 4px 12px;
+      border-radius: 14px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .song-meta-pill strong {
+      color: var(--accent-gold);
+    }
+    .song-select-dropdown {
+      background: rgba(14, 18, 30, 0.9);
+      border: 1.5px solid var(--accent-gold);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      min-width: 260px;
+    }
+    .song-select-dropdown option {
+      background: #0d111e;
+      color: #fff;
+    }
+
+    /* Song Controls Bar */
+    .song-playback-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 12px 18px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .playback-main-btns {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-song-play {
+      background: linear-gradient(135deg, #ffb300, #ff8f00);
+      color: #0b0f19;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 10px 22px;
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 20px rgba(255, 179, 0, 0.4);
+      transition: all 0.2s;
+    }
+    .btn-song-play:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(255, 179, 0, 0.6);
+    }
+    .tempo-speed-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .tempo-speed-control input[type="range"] {
+      width: 110px;
+    }
+
+    /* Practice with Mic Mode Toggle Badge */
+    .practice-mic-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .practice-mic-toggle.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--accent-emerald);
+      color: #6ee7b7;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Song Grid: Lyrics & Live Tab Sheet */
+    .song-stage-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+    }
+    @media (max-width: 950px) {
+      .song-stage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Scrolling Lyrics Box */
+    .lyrics-scroll-container {
+      background: rgba(10, 14, 26, 0.7);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 20px;
+      max-height: 420px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scrollbar-width: thin;
+      position: relative;
+    }
+    .lyric-line-item {
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid transparent;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .lyric-line-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .lyric-line-item.active-line {
+      background: linear-gradient(90deg, rgba(255, 179, 0, 0.14), rgba(56, 189, 248, 0.08));
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 20px rgba(255, 179, 0, 0.18);
+      transform: scale(1.01);
+    }
+    .line-section-header {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .line-chords-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .chord-tag-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      font-family: monospace;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(255, 179, 0, 0.18);
+      border: 1px solid rgba(255, 179, 0, 0.4);
+      color: var(--accent-gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .chord-tag-badge.playing-now {
+      background: var(--accent-gold);
+      color: #000;
+      box-shadow: 0 0 14px rgba(255, 179, 0, 0.8);
+      transform: scale(1.1);
+    }
+    .chord-tag-badge.user-matched {
+      background: var(--accent-emerald) !important;
+      color: #000 !important;
+      border-color: #fff !important;
+      box-shadow: 0 0 18px var(--accent-emerald) !important;
+    }
+    .line-words {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+    .line-sargam {
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      margin-top: 4px;
+      font-family: monospace;
+    }
+
+    /* Live Lead Sheet / Tab Card */
+    .lead-tab-card {
+      background: rgba(10, 14, 26, 0.7);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .lead-now-playing {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .lead-big-note {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+    }
+    .lead-big-sargam {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-top: 2px;
+    }
+    .lead-pos-info {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* Live Mic Play-Along Evaluation Banner */
+    .playalong-eval-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .eval-score-text {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .eval-match-indicator {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .eval-match-indicator.match-success {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid var(--accent-emerald);
+      color: #6ee7b7;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+      animation: scoreFlash 0.4s ease;
+    }
+    @keyframes scoreFlash {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    /* ==========================================================================
+       SONG SEARCH & CHORDS GENERATOR STYLES
+       ========================================================================== */
+    .search-tab-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .search-hero-card {
+      background: linear-gradient(145deg, rgba(20, 26, 48, 0.95), rgba(12, 16, 32, 0.98));
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.12);
+      text-align: center;
+      position: relative;
+    }
+    .search-bar-wrap {
+      display: flex;
+      max-width: 760px;
+      margin: 16px auto 14px auto;
+      position: relative;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+      border-radius: 30px;
+    }
+    .song-search-input {
+      width: 100%;
+      background: rgba(10, 14, 26, 0.9);
+      border: 2px solid var(--accent-cyan);
+      border-radius: 30px;
+      padding: 14px 140px 14px 24px;
+      font-size: 1.05rem;
+      color: #fff;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .song-search-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .search-action-btn {
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      bottom: 6px;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 0 22px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .search-action-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+    }
+    .quick-search-tags {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .quick-tag-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quick-tag-pill:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+
+    /* Search Results Dashboard */
+    .search-result-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      animation: tabFadeIn 0.3s ease;
+    }
+    .res-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 16px;
+    }
+    .res-title h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .res-title p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .res-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Chord Diagrams Grid in Search */
+    .res-chord-diagrams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+    .mini-chord-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mini-chord-card:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
+    }
+    .mini-chord-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+    }
+    .mini-chord-frets {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      margin-top: 4px;
+    }
+
+    /* Chorded Lyrics Preview */
+    .res-lyrics-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 20px;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      max-height: 380px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: inherit;
+    }
+    .res-sargam-box {
+      background: rgba(56, 189, 248, 0.06);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 0.86rem;
+      color: #bae6fd;
+      line-height: 1.6;
+    }
+
+/* ==========================================================================
        STUDIO TAB NAVIGATION & ADVANCED SUITE STYLES
        ========================================================================== */
     .studio-nav-container {
@@ -1503,6 +2101,12 @@
       <button class="studio-tab-btn active" id="tab-btn-detector" onclick="switchStudioTab('detector')">
         <span>🕵️</span> Live Detector <span class="tab-badge">Real-Time</span>
       </button>
+      <button class="studio-tab-btn" id="tab-btn-songs" onclick="switchStudioTab('songs')">
+        <span>🎵</span> Songs & Play-Along <span class="tab-badge" style="background:#f59e0b; color:#000;">Previous Songs</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-search" onclick="switchStudioTab('search')">
+        <span>🔍</span> Song Search & Chords <span class="tab-badge" style="background:#38bdf8; color:#000;">Instant Notes</span>
+      </button>
       <button class="studio-tab-btn" id="tab-btn-tuner" onclick="switchStudioTab('tuner')">
         <span>🎸</span> Headstock Tuner <span class="tab-badge">GuitarTuna</span>
       </button>
@@ -1571,20 +2175,42 @@
 
         <!-- 7th NOTE DISAMBIGUATION INSPECTOR -->
         <div class="seventh-inspector-box" id="seventh-inspector">
-          <div class="inspector-header">
-            <span>🔍 7th Note Disambiguation (Am vs Am7):</span>
-            <span class="verdict-pill verdict-triad" id="seventh-verdict-badge">Clean Triad (Am)</span>
-          </div>
-          <div class="inspector-meter-row">
-            <span>7th Note (<span id="seventh-note-label">G</span>):</span>
-            <div class="seventh-meter-track">
-              <div class="seventh-meter-fill" id="seventh-meter-fill" style="width: 25%;"></div>
-              <div class="seventh-meter-marker" id="seventh-marker" style="left: 55%;" title="Cutoff Threshold"></div>
+          <!-- View 1: Chord Disambiguation Inspector -->
+          <div id="inspector-chord-view">
+            <div class="inspector-header">
+              <span id="inspector-chord-title">🔍 7th Note Disambiguation (Am vs Am7):</span>
+              <span class="verdict-pill verdict-triad" id="seventh-verdict-badge">Clean Triad (Am)</span>
             </div>
-            <strong id="seventh-ratio-text" style="width: 85px; text-align:right;">25% / 55%</strong>
+            <div class="inspector-meter-row">
+              <span>7th Note (<span id="seventh-note-label">G</span>):</span>
+              <div class="seventh-meter-track">
+                <div class="seventh-meter-fill" id="seventh-meter-fill" style="width: 25%;"></div>
+                <div class="seventh-meter-marker" id="seventh-marker" style="left: 55%;" title="Cutoff Threshold"></div>
+              </div>
+              <strong id="seventh-ratio-text" style="width: 85px; text-align:right;">25% / 55%</strong>
+            </div>
+            <div class="inspector-desc" id="seventh-desc">
+              Harmonic energy analysis properly separates clean triads from 7th chords.
+            </div>
           </div>
-          <div class="inspector-desc" id="seventh-desc">
-            G note energy is below threshold (natural acoustic overtone of C). Properly classified as <strong>A Minor (Am)</strong>.
+
+          <!-- View 2: Single Note Precision Cent Tuner -->
+          <div id="inspector-note-view" style="display: none;">
+            <div class="inspector-header">
+              <span>🎯 Single Note Pitch & Cent Precision Guide:</span>
+              <span class="verdict-pill verdict-triad" id="note-tuning-badge">In Tune</span>
+            </div>
+            <div class="inspector-meter-row">
+              <span>Pitch Deviation (<span id="note-cents-label">±0¢</span>):</span>
+              <div class="seventh-meter-track" style="position:relative;">
+                <div style="position:absolute; left:50%; top:0; bottom:0; width:2px; background:#10b981; z-index:2;"></div>
+                <div class="seventh-meter-marker" id="note-pitch-marker" style="left: 50%; background:#38bdf8; border-color:#fff;" title="Cent Offset"></div>
+              </div>
+              <strong id="note-freq-text" style="width: 85px; text-align:right;">0.0 Hz</strong>
+            </div>
+            <div class="inspector-desc" id="note-tuning-desc">
+              Pluck note clearly. Center marker indicates accurate concert pitch.
+            </div>
           </div>
         </div>
 
@@ -1906,6 +2532,230 @@
     </aside>
   </main>
 </div>
+
+  <!-- TAB: SONGS & PLAY-ALONG STUDIO -->
+  <div class="studio-tab-pane" id="pane-songs">
+    <div class="songs-container">
+      <div class="song-hero-card">
+        <div class="song-header-row">
+          <div class="song-title-group">
+            <h2 id="song-display-title">🎸 Chalo Ek Baar Phir Se</h2>
+            <p id="song-display-meta" style="font-size:0.85rem; color:var(--text-muted);">
+              Movie: Gumrah (1963) • Singer: Mahendra Kapoor • Music: Ravi
+            </p>
+            <div class="song-meta-pills" id="song-meta-pills">
+              <span class="song-meta-pill">Key: <strong id="song-pill-key">D Minor (Sa = D)</strong></span>
+              <span class="song-meta-pill">Chords: <strong id="song-pill-chords">Dm, C, Bb, Gm, A, F</strong></span>
+              <span class="song-meta-pill">Strum: <strong id="song-pill-strum">D - D U - U D -</strong></span>
+              <span class="song-meta-pill">Tempo: <strong id="song-pill-bpm">76 BPM</strong></span>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Choose Previous Song:</label>
+            <select class="song-select-dropdown" id="song-selector-select" onchange="loadSongById(this.value)">
+              <option value="chalo_ek_baar">1. Chalo Ek Baar Phir Se (Gumrah)</option>
+              <option value="tera_mera_pyar">2. Tera Mera Pyar Amar (Asli-Naqli)</option>
+              <option value="roothay_ho_tum">3. Roothay Ho Tum (Jawab)</option>
+              <option value="jaise_suraj">4. Jaise Suraj Ki Garmi Se (Parinay)</option>
+              <option value="gulabi_aankhen">5. Gulabi Aankhen (The Train)</option>
+              <option value="kal_ho_naa_ho">6. Kal Ho Naa Ho (Title Track)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Song Playback Controls Bar -->
+        <div class="song-playback-bar">
+          <div class="playback-main-btns">
+            <button class="btn-song-play" id="btn-song-play" onclick="toggleSongPlayback()">
+              <span id="song-play-icon">▶</span> <span id="song-play-text">Play Guitar & Song</span>
+            </button>
+            <button class="btn btn-secondary" onclick="restartSongPlayback()">
+              <span>⏮️</span> Restart
+            </button>
+          </div>
+
+          <div class="tempo-speed-control">
+            <span>Tempo:</span>
+            <input type="range" id="song-tempo-slider" min="50" max="140" value="76" oninput="onSongTempoChange(this.value)">
+            <strong id="song-tempo-readout" style="color:var(--accent-gold); width:54px;">76 BPM</strong>
+          </div>
+
+          <div class="playback-main-btns">
+            <!-- Practice with Mic Toggle -->
+            <button class="practice-mic-toggle active" id="btn-toggle-song-mic" onclick="toggleSongPracticeMic()">
+              <span>🎙️</span> Practice With Guitar Mic: <strong id="song-mic-status-label">ON</strong>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Score & Match Feedback Banner -->
+        <div class="playalong-eval-box" id="playalong-eval-box">
+          <div class="eval-score-text">
+            <span>🎯 Live Play-Along Match: </span>
+            <span id="eval-target-chord-label" style="color:var(--accent-gold); font-size:1.1rem; font-weight:800;">Target: Dm</span>
+            <span style="color:var(--text-muted); margin-left:12px;">• Played: </span>
+            <strong id="eval-heard-chord-label" style="color:#38bdf8;">--</strong>
+          </div>
+          <div class="eval-match-indicator" id="eval-feedback-badge">
+            Play guitar chord when highlighted!
+          </div>
+          <div style="font-size:0.85rem; color:var(--text-muted);">
+            Score: <strong id="song-practice-score" style="color:var(--accent-gold); font-size:1.1rem;">0</strong> pts
+          </div>
+        </div>
+
+        <!-- 2-Column Lyrics & Live Lead Tab Strip -->
+        <div class="song-stage-grid">
+          <!-- Column 1: Karaoke Scrolling Lyrics -->
+          <div class="lyrics-scroll-container" id="lyrics-scroll-box">
+            <!-- Dynamically populated lyrics with chord boxes -->
+          </div>
+
+          <!-- Column 2: Lead Notes & Sargam Box -->
+          <div class="lead-tab-card">
+            <div style="font-size:0.85rem; font-weight:800; color:var(--text-main); display:flex; justify-content:space-between; align-items:center;">
+              <span>🎼 Current Melody & Lead Note:</span>
+              <span id="song-note-counter" style="color:var(--text-muted); font-size:0.75rem;">1 / 1</span>
+            </div>
+
+            <div class="lead-now-playing" id="lead-now-playing">
+              <div class="lead-big-note" id="lead-active-western">F</div>
+              <div class="lead-big-sargam" id="lead-active-sargam">ga (च-)</div>
+              <div class="lead-pos-info">
+                <span id="lead-active-string">2nd String (B)</span>
+                <span>•</span>
+                <span id="lead-active-fret">6th Fret</span>
+                <span>•</span>
+                <span id="lead-active-hz">349.2 Hz</span>
+              </div>
+            </div>
+
+            <!-- Chords Used in this Song (Interactive Strum Buttons) -->
+            <div>
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700; margin-bottom:8px;">
+                Chords Used in this Song:
+              </div>
+              <div id="song-chords-palette" style="display:flex; flex-wrap:wrap; gap:8px;">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Strumming Pattern Visual -->
+            <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:10px; border:1px solid var(--border-light);">
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Strumming Rhythm Guide:</div>
+              <div id="song-strum-pattern-visual" style="font-family:monospace; font-size:1.1rem; color:var(--accent-gold); font-weight:700; letter-spacing:3px;">
+                ↓ - ↓ ↑ - ↑ ↓ -
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SONG SEARCH & CHORDS GENERATOR -->
+  <div class="studio-tab-pane" id="pane-search">
+    <div class="search-tab-container">
+      <div class="search-hero-card">
+        <h2 style="font-size:1.8rem; font-weight:800; color:#fff; display:flex; align-items:center; justify-content:center; gap:10px;">
+          <span>🔍</span> Search ANY Song Chords & Notes
+        </h2>
+        <p style="font-size:0.88rem; color:var(--text-muted); max-width:640px; margin:6px auto 0 auto;">
+          Type any Bollywood, Punjabi, Pop, or Rock song name to instantly get chords, scale, key, strumming patterns, Sargam lead notes, and lyrics!
+        </p>
+
+        <!-- Search Bar -->
+        <div class="search-bar-wrap">
+          <input type="text" class="song-search-input" id="search-song-input" placeholder="Type song name (e.g. Tum Hi Ho, Kabira, Hotel California, Kesariya, Wonderwall...)" onkeydown="if(event.key==='Enter') executeSongSearch()">
+          <button class="search-action-btn" onclick="executeSongSearch()">
+            <span>🔎</span> Search
+          </button>
+        </div>
+
+        <!-- Quick Search Tags -->
+        <div class="quick-search-tags">
+          <span style="font-size:0.75rem; color:var(--text-muted); align-self:center;">Popular Searches:</span>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Tum Hi Ho')">Tum Hi Ho</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Kabira')">Kabira</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Hotel California')">Hotel California</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Wonderwall')">Wonderwall</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Kesariya')">Kesariya</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Pani Da Rang')">Pani Da Rang</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Channa Mereya')">Channa Mereya</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Jeena Jeena')">Jeena Jeena</button>
+        </div>
+      </div>
+
+      <!-- Search Result Display Box -->
+      <div class="search-result-box" id="search-result-box" style="display:none;">
+        <div class="res-top-row">
+          <div class="res-title">
+            <h3 id="res-song-title">Tum Hi Ho</h3>
+            <p id="res-song-meta">Film: Aashiqui 2 • Singer: Arijit Singh • Scale: C# Minor / D Minor Transposed</p>
+          </div>
+
+          <div class="res-actions-row">
+            <!-- Transpose Controls -->
+            <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:12px; border:1px solid var(--border-light);">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Transpose:</span>
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.75rem;" onclick="transposeSearchedSong(-1)">-1</button>
+              <strong id="res-transpose-display" style="color:var(--accent-gold); font-size:0.8rem; width:28px; text-align:center;">0</strong>
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.75rem;" onclick="transposeSearchedSong(1)">+1</button>
+            </div>
+
+            <!-- Strum Preview Button -->
+            <button class="btn btn-secondary" onclick="playSearchedSongProgression()">
+              <span>🔊</span> Hear Progression
+            </button>
+
+            <!-- Send to Play-Along Studio -->
+            <button class="btn btn-primary" onclick="loadSearchedSongInPlayAlong()">
+              <span>🎸</span> Open in Play-Along Studio
+            </button>
+          </div>
+        </div>
+
+        <!-- Song Metadata Badges -->
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <div class="song-meta-pill">Key: <strong id="res-pill-key">C# Minor (Sa = C#)</strong></div>
+          <div class="song-meta-pill">Tempo: <strong id="res-pill-bpm">88 BPM</strong></div>
+          <div class="song-meta-pill">Strumming: <strong id="res-pill-strum">D - D U - U D -</strong></div>
+          <div class="song-meta-pill">Difficulty: <strong id="res-pill-diff" style="color:#6ee7b7;">Intermediate</strong></div>
+        </div>
+
+        <!-- Chord Diagrams Row -->
+        <div>
+          <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700; margin-bottom:10px;">
+            Chord Diagrams (Click to Strum):
+          </div>
+          <div class="res-chord-diagrams-grid" id="res-chord-diagrams-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Sargam Melody Lead Hook -->
+        <div>
+          <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-cyan); font-weight:700; margin-bottom:8px;">
+            Sargam & Western Lead Notes Hook:
+          </div>
+          <div class="res-sargam-box" id="res-sargam-box">
+            <!-- Lead hook notes rendered here -->
+          </div>
+        </div>
+
+        <!-- Chorded Lyrics -->
+        <div>
+          <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-main); font-weight:700; margin-bottom:8px;">
+            Full Lyrics with Chords:
+          </div>
+          <div class="res-lyrics-box" id="res-lyrics-box">
+            <!-- Lyrics rendered here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- TAB 2: HEADSTOCK TUNER (GUITARTUNA STYLE) -->
   <div class="studio-tab-pane" id="pane-tuner">
@@ -3105,10 +3955,13 @@
 
     function updateNoiseGate(val) {
       noiseGateThreshold = parseFloat(val);
-      document.getElementById('gate-val').textContent = `${Math.round(val)} dB`;
-      document.getElementById('gate-threshold-label').textContent = `${Math.round(val)} dB`;
+      const gateVal = document.getElementById('gate-val');
+      if (gateVal) gateVal.textContent = `${Math.round(val)} dB`;
+      const threshLabel = document.getElementById('gate-threshold-label');
+      if (threshLabel) threshLabel.textContent = `${Math.round(val)} dB`;
       const pct = Math.min(100, Math.max(5, (noiseGateThreshold / 50) * 100));
-      document.getElementById('gate-marker').style.left = `${pct}%`;
+      const gateMarker = document.getElementById('gate-marker');
+      if (gateMarker) gateMarker.style.left = `${pct}%`;
     }
 
     function updateSeventhStrictness(val) {
@@ -3332,9 +4185,23 @@
                            (detectedPeaks.length > 0 && harmonicMatchCount >= detectedPeaks.length * 0.70 && activePitchClasses <= 2);
 
       // =========================================================================
-      // PATH A: SINGLE NOTE DETECTED (PLUCKED STRING / MELODY NOTE)
+      // STABILIZED DUAL SINGLE-NOTE & CHORD DETECTOR (ANTI-FLUCTUATION HYSTERESIS)
       // =========================================================================
       if (isSingleNote && f0 >= 75) {
+        consecutiveNoteFrames++;
+        consecutiveChordFrames = 0;
+      } else {
+        consecutiveChordFrames++;
+        consecutiveNoteFrames = 0;
+      }
+
+      // Require consensus hold before switching display modes to eliminate jitter
+      const allowModeSwitchToNote = consecutiveNoteFrames >= 4;
+      const allowModeSwitchToChord = consecutiveChordFrames >= 3;
+
+      if ((currentDisplayMode === 'note' && !allowModeSwitchToChord) || allowModeSwitchToNote) {
+        currentDisplayMode = 'note';
+
         const midi = 69 + 12 * Math.log2(f0 / 440);
         const roundMidi = Math.round(midi);
         const noteName = NOTE_NAMES[((roundMidi % 12) + 12) % 12];
@@ -3365,15 +4232,40 @@
           document.getElementById('cand-3').innerHTML = `#3 <strong>Single String</strong>`;
         }
 
-        // Hide 7th chord inspector for single notes
-        document.getElementById('seventh-inspector').style.display = 'none';
+        // DUAL INSPECTOR: Switch to Note Precision Cent Tuner (NEVER HIDE PARENT BOX)
+        const chordInspView = document.getElementById('inspector-chord-view');
+        const noteInspView = document.getElementById('inspector-note-view');
+        if (chordInspView) chordInspView.style.display = 'none';
+        if (noteInspView) {
+          noteInspView.style.display = 'block';
+          const centsLabel = document.getElementById('note-cents-label');
+          if (centsLabel) centsLabel.textContent = centsSign;
+          const freqLabel = document.getElementById('note-freq-text');
+          if (freqLabel) freqLabel.textContent = `${f0.toFixed(1)} Hz`;
+          const badge = document.getElementById('note-tuning-badge');
+          if (badge) {
+            badge.textContent = tunerVerdict;
+            badge.className = `verdict-pill ${Math.abs(cents) <= 4 ? 'verdict-triad' : 'verdict-seventh'}`;
+          }
+          const needle = document.getElementById('note-pitch-marker');
+          if (needle) {
+            const clampNeedle = Math.max(5, Math.min(95, 50 + cents));
+            needle.style.left = `${clampNeedle}%`;
+          }
+          const desc = document.getElementById('note-tuning-desc');
+          if (desc) {
+            desc.innerHTML = `Detected <strong>${noteFullName}</strong> (${f0.toFixed(1)} Hz) on ${guitarPos ? guitarPos.stringName + ' Fret ' + guitarPos.fret : 'Guitar String'}. Cent offset: ${centsSign}.`;
+          }
+        }
 
-        // Update status badge
+        // Update status badge with smooth opacity transition
         const holdBadge = document.getElementById('strum-hold-badge');
-        holdBadge.style.display = 'inline-flex';
-        holdBadge.innerHTML = `<span>🎵</span> Note ${noteFullName} (${f0.toFixed(1)} Hz)`;
-        holdBadge.style.background = 'rgba(56, 189, 248, 0.2)';
-        holdBadge.style.color = '#38bdf8';
+        if (holdBadge) {
+          holdBadge.classList.add('badge-visible');
+          holdBadge.innerHTML = `<span>🎵</span> Note ${noteFullName} (${f0.toFixed(1)} Hz)`;
+          holdBadge.style.background = 'rgba(56, 189, 248, 0.2)';
+          holdBadge.style.color = '#38bdf8';
+        }
 
         // Light up single note on Fretboard
         if (guitarPos) {
@@ -3384,12 +4276,15 @@
 
         updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(noteName));
       } 
-      // =========================================================================
-      // PATH B: POLYPHONIC CHORD DETECTED (STRUMMED CHORD)
-      // =========================================================================
+      // PATH B: POLYPHONIC CHORD DETECTED
       else {
-        // Show 7th inspector when chords are played
-        document.getElementById('seventh-inspector').style.display = 'block';
+        currentDisplayMode = 'chord';
+
+        // DUAL INSPECTOR: Switch to 7th Disambiguation (NEVER HIDE PARENT BOX)
+        const chordInspView = document.getElementById('inspector-chord-view');
+        const noteInspView = document.getElementById('inspector-note-view');
+        if (chordInspView) chordInspView.style.display = 'block';
+        if (noteInspView) noteInspView.style.display = 'none';
 
         const matches = [];
         for (let root = 0; root < 12; root++) {
@@ -3482,14 +4377,17 @@
           updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(best.root));
 
           const holdBadge = document.getElementById('strum-hold-badge');
-          holdBadge.style.display = 'inline-flex';
+          holdBadge.classList.add('badge-visible');
           holdBadge.innerHTML = `<span>🎸</span> Chord: ${best.short}`;
           holdBadge.style.background = 'rgba(255, 179, 0, 0.2)';
           holdBadge.style.color = '#ffd54f';
           clearTimeout(lockCooldownTimer);
           lockCooldownTimer = setTimeout(() => {
-            holdBadge.style.display = 'none';
-          }, 1500);
+            holdBadge.classList.remove('badge-visible');
+          }, 2000);
+
+          // Check against active play-along song chord!
+          checkPlayAlongLiveMatch(best.short);
 
           if (CHORD_PRESETS[best.short]) {
             currentFretboardState = [...CHORD_PRESETS[best.short].frets];
@@ -3634,23 +4532,36 @@
     // 1. STUDIO TAB SWITCHING
     let currentActiveTab = 'detector';
 
+    let consecutiveNoteFrames = 0;
+    let consecutiveChordFrames = 0;
+    let currentDisplayMode = 'idle';
+
     function switchStudioTab(tabId) {
       currentActiveTab = tabId;
 
+      // Stop song playback if leaving songs tab
+      if (tabId !== 'songs' && isSongPlaying) {
+        toggleSongPlayback();
+      }
+
       // Update tab buttons
-      const buttons = ['detector', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
+      const buttons = ['detector', 'songs', 'search', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
       buttons.forEach(id => {
         const btn = document.getElementById('tab-btn-' + id);
         const pane = document.getElementById('pane-' + id);
         if (btn) btn.classList.toggle('active', id === tabId);
         if (pane) {
           pane.classList.toggle('active', id === tabId);
-          pane.style.display = (id === tabId) ? (id === 'metronome' || id === 'chords' || id === 'recorder' || id === 'tuner' || id === 'trainer' ? 'block' : '') : 'none';
+          pane.style.display = (id === tabId) ? 'block' : 'none';
         }
       });
 
       // Special tab initialization
-      if (tabId === 'tuner') {
+      if (tabId === 'songs') {
+        initSongsStudio();
+      } else if (tabId === 'search') {
+        initSongSearch();
+      } else if (tabId === 'tuner') {
         updateTunerUI();
       } else if (tabId === 'trainer') {
         if (!quizTargetChord) nextQuizChord();
@@ -4447,6 +5358,1115 @@
       renderRecordedTakes();
     }
 
+
+    /* ==========================================================================
+       DEDICATED SONGS & PLAY-ALONG STUDIO ENGINE
+       ========================================================================== */
+    const SONG_CATALOG = {
+      chalo_ek_baar: {
+        id: "chalo_ek_baar",
+        title: "Chalo Ek Baar Phir Se",
+        movie: "Gumrah (1963)",
+        singer: "Mahendra Kapoor",
+        music: "Ravi",
+        lyricsBy: "Sahir Ludhianvi",
+        key: "D Minor (Sa = D)",
+        bpm: 76,
+        strum: "D - D U - U D -",
+        strumPatternVisual: "↓ - ↓ ↑ - ↑ ↓ -",
+        chordsUsed: ["Dm", "C", "Bb", "Gm", "A", "F"],
+        lines: [
+          {
+            sec: "Mukhda - Line 1",
+            text: "Chalo ek baar phir se, ajnabi ban jayein hum dono",
+            chords: [
+              { chord: "Dm", word: "Chalo" },
+              { chord: "C", word: "ajnabi" },
+              { chord: "Dm", word: "dono" }
+            ],
+            sargam: "ga ga Re Sa ni Sa | Sa Sa Sa Re Sa Re Pa ma ga",
+            notes: [
+              { note: "F4", sargam: "ga", lyric: "च- (Cha-)", str: 2, fret: 6, beats: 0.6, freq: 349.23 },
+              { note: "F4", sargam: "ga", lyric: "-लो (-lo)", str: 2, fret: 6, beats: 0.6, freq: 349.23 },
+              { note: "E4", sargam: "Re", lyric: "एक (ek)", str: 2, fret: 5, beats: 0.6, freq: 329.63 },
+              { note: "D4", sargam: "Sa", lyric: "बा- (baa-)", str: 3, fret: 7, beats: 0.8, freq: 293.66 },
+              { note: "C4", sargam: "ni", lyric: "-र (-r)", str: 3, fret: 5, beats: 0.5, freq: 261.63 },
+              { note: "D4", sargam: "Sa", lyric: "फिर (phir)", str: 3, fret: 7, beats: 1.2, freq: 293.66 },
+              { note: "D4", sargam: "Sa", lyric: "से (se)", str: 3, fret: 7, beats: 0.5, freq: 293.66 },
+              { note: "D4", sargam: "Sa", lyric: "अज- (Aj-)", str: 3, fret: 7, beats: 0.5, freq: 293.66 },
+              { note: "E4", sargam: "Re", lyric: "बन (ban)", str: 2, fret: 5, beats: 0.6, freq: 329.63 },
+              { note: "A4", sargam: "Pa", lyric: "हम (hum)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "G4", sargam: "ma", lyric: "दो- (do-)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "F4", sargam: "ga", lyric: "-नों (-no)", str: 2, fret: 6, beats: 1.2, freq: 349.23 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 2",
+            text: "Na main tumse koi ummeed-e-dil-nawazi ki rakhun",
+            chords: [
+              { chord: "Gm", word: "Na main" },
+              { chord: "C", word: "ummeed-e" },
+              { chord: "Dm", word: "rakhun" }
+            ],
+            sargam: "Re Re ma Pa Pa Pa Dha Pa ma | Pa Dha Sa' ni' ni' ni'",
+            notes: [
+              { note: "E4", sargam: "Re", lyric: "ना (Na)", str: 2, fret: 5, beats: 0.5, freq: 329.63 },
+              { note: "G4", sargam: "ma", lyric: "तुम- (tum-)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "A4", sargam: "Pa", lyric: "-से (-se)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "B4", sargam: "Dha", lyric: "उम- (um-)", str: 1, fret: 7, beats: 0.5, freq: 493.88 },
+              { note: "A4", sargam: "Pa", lyric: "-मी- (-mee-)", str: 1, fret: 5, beats: 0.6, freq: 440.00 },
+              { note: "G4", sargam: "ma", lyric: "-द (-d)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "C5", sargam: "ni'", lyric: "-ज़ी (-zi)", str: 1, fret: 8, beats: 1.0, freq: 523.25 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 3",
+            text: "Na tum meri taraf dekho galat-andaaz nazron se",
+            chords: [
+              { chord: "Bb", word: "Na tum" },
+              { chord: "C", word: "galat" },
+              { chord: "Dm", word: "nazron se" }
+            ],
+            sargam: "Dha Dha ni' Dha Pa Pa Dha Pa ma | ga ga Re Re Sa Sa",
+            notes: [
+              { note: "B4", sargam: "Dha", lyric: "ना (Na)", str: 1, fret: 7, beats: 0.5, freq: 493.88 },
+              { note: "C5", sargam: "ni'", lyric: "मे- (me-)", str: 1, fret: 8, beats: 0.6, freq: 523.25 },
+              { note: "B4", sargam: "Dha", lyric: "-री (-ri)", str: 1, fret: 7, beats: 0.6, freq: 493.88 },
+              { note: "A4", sargam: "Pa", lyric: "त- (ta-)", str: 1, fret: 5, beats: 0.6, freq: 440.00 },
+              { note: "G4", sargam: "ma", lyric: "-खो (-kho)", str: 2, fret: 8, beats: 0.8, freq: 392.00 },
+              { note: "F4", sargam: "ga", lyric: "अं- (an-)", str: 2, fret: 6, beats: 0.5, freq: 349.23 },
+              { note: "E4", sargam: "Re", lyric: "-ज़ (-z)", str: 2, fret: 5, beats: 0.5, freq: 329.63 },
+              { note: "D4", sargam: "Sa", lyric: "-रों (-ron)", str: 3, fret: 7, beats: 1.2, freq: 293.66 }
+            ]
+          },
+          {
+            sec: "Antara 2 - Line 4",
+            text: "Na mere dil ki dhadkan ladkhadaye meri baaton mein",
+            chords: [
+              { chord: "Gm", word: "Na mere" },
+              { chord: "A", word: "dhadkan" },
+              { chord: "Dm", word: "baaton mein" }
+            ],
+            sargam: "Re Re ma Pa Pa Pa Dha Pa ma | Pa Dha Sa' ni' ni'",
+            notes: [
+              { note: "E4", sargam: "Re", lyric: "ना (Na)", str: 2, fret: 5, beats: 0.5, freq: 329.63 },
+              { note: "G4", sargam: "ma", lyric: "-रे (-re)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "A4", sargam: "Pa", lyric: "दिल (dil)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "D5", sargam: "Sa'", lyric: "मे- (me-)", str: 1, fret: 10, beats: 0.8, freq: 587.33 }
+            ]
+          },
+          {
+            sec: "Antara 2 - Line 5",
+            text: "Na zaahir ho tumhari kashmkash ka raaz nazron se",
+            chords: [
+              { chord: "C", word: "Na zaahir" },
+              { chord: "Bb", word: "kashmkash" },
+              { chord: "Dm", word: "nazron se" }
+            ],
+            sargam: "Dha Dha ni' Dha Pa Pa Dha Pa ma | ga ga Re Re Sa",
+            notes: [
+              { note: "B4", sargam: "Dha", lyric: "ना (Na)", str: 1, fret: 7, beats: 0.5, freq: 493.88 },
+              { note: "A4", sargam: "Pa", lyric: "राज़ (raaz)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "D4", sargam: "Sa", lyric: "से (se)", str: 3, fret: 7, beats: 1.4, freq: 293.66 }
+            ]
+          }
+        ]
+      },
+
+      tera_mera_pyar: {
+        id: "tera_mera_pyar",
+        title: "Tera Mera Pyar Amar",
+        movie: "Asli-Naqli (1962)",
+        singer: "Lata Mangeshkar",
+        music: "Shankar-Jaikishan",
+        lyricsBy: "Hasrat Jaipuri",
+        key: "D Minor (Sa = D)",
+        bpm: 82,
+        strum: "D - D - D U D U",
+        strumPatternVisual: "↓ - ↓ - ↓ ↑ ↓ ↑",
+        chordsUsed: ["Dm", "C", "Bb", "Gm", "A", "F"],
+        lines: [
+          {
+            sec: "Mukhda - Line 1",
+            text: "Tera mera pyar amar, phir kyon mujhko lagta hai dar",
+            chords: [
+              { chord: "Dm", word: "Tera mera" },
+              { chord: "C", word: "amar" },
+              { chord: "Dm", word: "lagta hai dar" }
+            ],
+            sargam: "Sa Re Re ga | Sa Re Re ga | Sa Re Re Sa ni | ni Sa Sa Re",
+            notes: [
+              { note: "D4", sargam: "Sa", lyric: "ते- (Te-)", str: 3, fret: 7, beats: 0.6, freq: 293.66 },
+              { note: "E4", sargam: "Re", lyric: "-रा (-ra)", str: 2, fret: 5, beats: 0.6, freq: 329.63 },
+              { note: "E4", sargam: "Re", lyric: "मे- (me-)", str: 2, fret: 5, beats: 0.6, freq: 329.63 },
+              { note: "F4", sargam: "ga", lyric: "-रा (-ra)", str: 2, fret: 6, beats: 1.2, freq: 349.23 },
+              { note: "D4", sargam: "Sa", lyric: "प्या- (pyaa-)", str: 3, fret: 7, beats: 0.5, freq: 293.66 },
+              { note: "E4", sargam: "Re", lyric: "अ- (a-)", str: 2, fret: 5, beats: 0.5, freq: 329.63 },
+              { note: "F4", sargam: "ga", lyric: "-मर (-mar)", str: 2, fret: 6, beats: 1.2, freq: 349.23 },
+              { note: "C4", sargam: "ni", lyric: "फिर (Phir)", str: 3, fret: 5, beats: 0.6, freq: 261.63 },
+              { note: "D4", sargam: "Sa", lyric: "क्यों (kyon)", str: 3, fret: 7, beats: 0.6, freq: 293.66 },
+              { note: "E4", sargam: "Re", lyric: "-को (-ko)", str: 2, fret: 5, beats: 1.2, freq: 329.63 },
+              { note: "D4", sargam: "Sa", lyric: "डर (dar)", str: 3, fret: 7, beats: 1.4, freq: 293.66 }
+            ]
+          },
+          {
+            sec: "Mukhda - Line 2",
+            text: "Mere jeevan saathi bata, kyon dil dhadke reh reh kar",
+            chords: [
+              { chord: "Gm", word: "Mere jeevan" },
+              { chord: "C", word: "bata" },
+              { chord: "Dm", word: "reh reh kar" }
+            ],
+            sargam: "Sa Re Re ga | Sa Re Re ga | dha ni ni Sa Sa",
+            notes: [
+              { note: "D4", sargam: "Sa", lyric: "मे- (Me-)", str: 3, fret: 7, beats: 0.6, freq: 293.66 },
+              { note: "E4", sargam: "Re", lyric: "-रे (-re)", str: 2, fret: 5, beats: 0.6, freq: 329.63 },
+              { note: "F4", sargam: "ga", lyric: "साथी (saathi)", str: 2, fret: 6, beats: 1.0, freq: 349.23 },
+              { note: "A#3", sargam: "dha", lyric: "दिल (dil)", str: 3, fret: 3, beats: 0.5, freq: 233.08 },
+              { note: "C4", sargam: "ni", lyric: "धड़के (dhadke)", str: 3, fret: 5, beats: 0.8, freq: 261.63 },
+              { note: "D4", sargam: "Sa", lyric: "कर (kar)", str: 3, fret: 7, beats: 1.4, freq: 293.66 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 3",
+            text: "Kya kaha hai chand ne, jisko sunke chandni",
+            chords: [
+              { chord: "F", word: "Kya kaha hai" },
+              { chord: "C", word: "chand ne" },
+              { chord: "Bb", word: "chandni" }
+            ],
+            sargam: "ga ma Pa Pa | Pa Dha Pa ma | ga ma Pa",
+            notes: [
+              { note: "F4", sargam: "ga", lyric: "क्या (Kya)", str: 2, fret: 6, beats: 0.6, freq: 349.23 },
+              { note: "G4", sargam: "ma", lyric: "कहा (kaha)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "A4", sargam: "Pa", lyric: "चांद (chand)", str: 1, fret: 5, beats: 1.0, freq: 440.00 },
+              { note: "A4", sargam: "Pa", lyric: "चांदनी (chandni)", str: 1, fret: 5, beats: 1.2, freq: 440.00 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 4",
+            text: "Har lehar pe jhoom ke, kyon yeh naachne lagi",
+            chords: [
+              { chord: "Bb", word: "Har lehar" },
+              { chord: "A", word: "naachne" },
+              { chord: "Dm", word: "lagi" }
+            ],
+            sargam: "ma Pa Dha Dha | Dha ni Dha Pa | ma ga Re Sa",
+            notes: [
+              { note: "G4", sargam: "ma", lyric: "हर (Har)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "A4", sargam: "Pa", lyric: "लहर (lehar)", str: 1, fret: 5, beats: 0.6, freq: 440.00 },
+              { note: "E4", sargam: "Re", lyric: "नाचने (naachne)", str: 2, fret: 5, beats: 0.8, freq: 329.63 },
+              { note: "D4", sargam: "Sa", lyric: "लगी (lagi)", str: 3, fret: 7, beats: 1.4, freq: 293.66 }
+            ]
+          }
+        ]
+      },
+
+      roothay_ho_tum: {
+        id: "roothay_ho_tum",
+        title: "Roothay Ho Tum",
+        movie: "Jawab (1970)",
+        singer: "Kishore Kumar",
+        music: "R.D. Burman",
+        lyricsBy: "Rajinder Krishan",
+        key: "D Minor (Sa = D)",
+        bpm: 86,
+        strum: "D - D U - U D U",
+        strumPatternVisual: "↓ - ↓ ↑ - ↑ ↓ ↑",
+        chordsUsed: ["Dm", "Gm", "C", "F", "A7", "Bb"],
+        lines: [
+          {
+            sec: "Mukhda - Line 1",
+            text: "Roothay ho tum, tumko kaise manaoon piya bolo na",
+            chords: [
+              { chord: "Dm", word: "Roothay ho" },
+              { chord: "Gm", word: "kaise" },
+              { chord: "C", word: "manaoon" },
+              { chord: "Dm", word: "bolo na" }
+            ],
+            sargam: "Pa dha Pa ma | Pa ma ga | ga ma ga Re Re ga Re Sa Sa",
+            notes: [
+              { note: "A4", sargam: "Pa", lyric: "रू- (Roo-)", str: 1, fret: 5, beats: 0.7, freq: 440.00 },
+              { note: "A#4", sargam: "dha", lyric: "-ठे (-thay)", str: 1, fret: 6, beats: 0.7, freq: 466.16 },
+              { note: "A4", sargam: "Pa", lyric: "हो (ho)", str: 1, fret: 5, beats: 0.7, freq: 440.00 },
+              { note: "G4", sargam: "ma", lyric: "तुम (tum)", str: 2, fret: 8, beats: 1.4, freq: 392.00 },
+              { note: "F4", sargam: "ga", lyric: "कैसे (kai-se)", str: 2, fret: 6, beats: 1.2, freq: 349.23 },
+              { note: "E4", sargam: "Re", lyric: "पि- (pi-)", str: 2, fret: 5, beats: 0.4, freq: 329.63 },
+              { note: "D4", sargam: "Sa", lyric: "-या (-ya)", str: 3, fret: 7, beats: 1.5, freq: 293.66 },
+              { note: "A4", sargam: "Pa", lyric: "ना (na)", str: 1, fret: 5, beats: 1.4, freq: 440.00 }
+            ]
+          },
+          {
+            sec: "Mukhda - Line 2",
+            text: "Bolo na bolo na, bolo na piya bolo na",
+            chords: [
+              { chord: "F", word: "Bolo na" },
+              { chord: "A7", word: "piya" },
+              { chord: "Dm", word: "bolo na" }
+            ],
+            sargam: "ni Dha ni dha Pa | ga ma Pa | Re ga Re Sa",
+            notes: [
+              { note: "C5", sargam: "ni", lyric: "बो- (bo-)", str: 1, fret: 8, beats: 0.5, freq: 523.25 },
+              { note: "B4", sargam: "Dha", lyric: "-लो- (-lo-)", str: 1, fret: 7, beats: 0.4, freq: 493.88 },
+              { note: "A#4", sargam: "dha", lyric: "बोलो (bolo)", str: 1, fret: 6, beats: 0.6, freq: 466.16 },
+              { note: "A4", sargam: "Pa", lyric: "ना (na)", str: 1, fret: 5, beats: 1.4, freq: 440.00 },
+              { note: "D4", sargam: "Sa", lyric: "ना (na)", str: 3, fret: 7, beats: 1.5, freq: 293.66 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 3",
+            text: "Hum se agar koi bhool hui hai, hans ke saza do humko sajanwa",
+            chords: [
+              { chord: "Dm", word: "Hum se agar" },
+              { chord: "Gm", word: "bhool hui" },
+              { chord: "C", word: "hans ke saza" },
+              { chord: "F", word: "sajanwa" }
+            ],
+            sargam: "Sa Re ga ma Pa | Pa Dha Pa ma | ma ga Re ga ma",
+            notes: [
+              { note: "D4", sargam: "Sa", lyric: "हम (Hum)", str: 3, fret: 7, beats: 0.6, freq: 293.66 },
+              { note: "F4", sargam: "ga", lyric: "भूल (bhool)", str: 2, fret: 6, beats: 0.8, freq: 349.23 },
+              { note: "G4", sargam: "ma", lyric: "हंस के (hans ke)", str: 2, fret: 8, beats: 0.8, freq: 392.00 },
+              { note: "A4", sargam: "Pa", lyric: "सजनवा (sajanwa)", str: 1, fret: 5, beats: 1.4, freq: 440.00 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 4",
+            text: "Chup na raho meri jaan pe ban aayi, ab to gale lagao piya",
+            chords: [
+              { chord: "Bb", word: "Chup na raho" },
+              { chord: "A7", word: "ban aayi" },
+              { chord: "Dm", word: "gale lagao" }
+            ],
+            sargam: "Dha Dha Pa ma | ga ga Re Re | Sa Sa Sa",
+            notes: [
+              { note: "B4", sargam: "Dha", lyric: "चुप (Chup)", str: 1, fret: 7, beats: 0.6, freq: 493.88 },
+              { note: "A4", sargam: "Pa", lyric: "जान (jaan)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "D4", sargam: "Sa", lyric: "पिया (piya)", str: 3, fret: 7, beats: 1.5, freq: 293.66 }
+            ]
+          }
+        ]
+      },
+
+      jaise_suraj: {
+        id: "jaise_suraj",
+        title: "Jaise Suraj Ki Garmi Se",
+        movie: "Parinay (1974)",
+        singer: "Sharma Bandhu / Anup Jalota",
+        music: "Jaidev",
+        lyricsBy: "Ramanand Sharma",
+        key: "D Minor (Sa = D)",
+        bpm: 74,
+        strum: "D - D U D - D U",
+        strumPatternVisual: "↓ - ↓ ↑ ↓ - ↓ ↑",
+        chordsUsed: ["Dm", "C", "Bb", "Gm", "A", "F"],
+        lines: [
+          {
+            sec: "Mukhda - Line 1",
+            text: "Jaise suraj ki garmi se tapte hue tan ko, mil jaye taruvar ki chhaya",
+            chords: [
+              { chord: "Dm", word: "Jaise suraj" },
+              { chord: "C", word: "garmi se" },
+              { chord: "Bb", word: "tapte hue" },
+              { chord: "Dm", word: "taruvar ki chhaya" }
+            ],
+            sargam: "Sa Re ga ga Re ga ma ga Re Sa | Re ga ma Pa ma ga Re | ga ma Pa Dha Pa ma ga Re Sa",
+            notes: [
+              { note: "D4", sargam: "Sa", lyric: "जै- (Jai-)", str: 3, fret: 7, beats: 0.6, freq: 293.66 },
+              { note: "E4", sargam: "Re", lyric: "-से (-se)", str: 2, fret: 5, beats: 0.5, freq: 329.63 },
+              { note: "F4", sargam: "ga", lyric: "सू- (su-)", str: 2, fret: 6, beats: 0.6, freq: 349.23 },
+              { note: "F4", sargam: "ga", lyric: "-रज (-raj)", str: 2, fret: 6, beats: 0.6, freq: 349.23 },
+              { note: "E4", sargam: "Re", lyric: "की (ki)", str: 2, fret: 5, beats: 0.5, freq: 329.63 },
+              { note: "F4", sargam: "ga", lyric: "गर- (gar-)", str: 2, fret: 6, beats: 0.6, freq: 349.23 },
+              { note: "G4", sargam: "ma", lyric: "-मी (-mi)", str: 2, fret: 8, beats: 0.6, freq: 392.00 },
+              { note: "D4", sargam: "Sa", lyric: "से (se)", str: 3, fret: 7, beats: 1.0, freq: 293.66 },
+              { note: "A4", sargam: "Pa", lyric: "तपते (tapte)", str: 1, fret: 5, beats: 1.0, freq: 440.00 },
+              { note: "B4", sargam: "Dha", lyric: "तरुवर (taruvar)", str: 1, fret: 7, beats: 1.0, freq: 493.88 },
+              { note: "D4", sargam: "Sa", lyric: "छाया (chhaya)", str: 3, fret: 7, beats: 1.6, freq: 293.66 }
+            ]
+          },
+          {
+            sec: "Mukhda - Line 2",
+            text: "Aisa hi sukh mere man ko mila hai, main jabse sharan teri aaya",
+            chords: [
+              { chord: "Gm", word: "Aisa hi sukh" },
+              { chord: "C", word: "man ko mila" },
+              { chord: "Bb", word: "sharan teri" },
+              { chord: "Dm", word: "aaya mere ram" }
+            ],
+            sargam: "ma Pa Pa Pa | Pa Dha Pa ma ga | ga ma ga Re | Re ga Re Sa",
+            notes: [
+              { note: "G4", sargam: "ma", lyric: "ऐ- (Ai-)", str: 2, fret: 8, beats: 0.5, freq: 392.00 },
+              { note: "A4", sargam: "Pa", lyric: "-सा (-sa)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "A4", sargam: "Pa", lyric: "सुख (sukh)", str: 1, fret: 5, beats: 0.8, freq: 440.00 },
+              { note: "B4", sargam: "Dha", lyric: "मन (man)", str: 1, fret: 7, beats: 0.8, freq: 493.88 },
+              { note: "F4", sargam: "ga", lyric: "शरण (sharan)", str: 2, fret: 6, beats: 0.8, freq: 349.23 },
+              { note: "D4", sargam: "Sa", lyric: "आया (aaya)", str: 3, fret: 7, beats: 1.6, freq: 293.66 }
+            ]
+          },
+          {
+            sec: "Antara 1 - Line 3",
+            text: "Bhatka hua mera man tha dishaheen, jaise pawan mein koi patang udti",
+            chords: [
+              { chord: "Dm", word: "Bhatka hua" },
+              { chord: "C", word: "dishaheen" },
+              { chord: "Bb", word: "pawan mein" },
+              { chord: "Dm", word: "patang udti" }
+            ],
+            sargam: "Sa Re ga ma Pa | Pa Dha Pa ma | ga ma ga Re Sa",
+            notes: [
+              { note: "D4", sargam: "Sa", lyric: "भटका (Bhatka)", str: 3, fret: 7, beats: 0.8, freq: 293.66 },
+              { note: "A4", sargam: "Pa", lyric: "दिशाहीन (dishaheen)", str: 1, fret: 5, beats: 1.2, freq: 440.00 },
+              { note: "D4", sargam: "Sa", lyric: "उड़ती (udti)", str: 3, fret: 7, beats: 1.5, freq: 293.66 }
+            ]
+          }
+        ]
+      },
+
+      gulabi_aankhen: {
+        id: "gulabi_aankhen",
+        title: "Gulabi Aankhen",
+        movie: "The Train (1970)",
+        singer: "Mohammed Rafi",
+        music: "R.D. Burman",
+        lyricsBy: "Anand Bakshi",
+        key: "A Minor (Sa = A)",
+        bpm: 116,
+        strum: "D - D U - U D U",
+        strumPatternVisual: "↓ - ↓ ↑ - ↑ ↓ ↑",
+        chordsUsed: ["Am", "G", "F", "E"],
+        lines: [
+          {
+            sec: "Mukhda - Line 1",
+            text: "Gulabi aankhen jo teri dekhi, sharabi yeh dil ho gaya",
+            chords: [
+              { chord: "Am", word: "Gulabi aankhen" },
+              { chord: "G", word: "sharabi yeh dil" },
+              { chord: "F", word: "ho" },
+              { chord: "E", word: "gaya" }
+            ],
+            sargam: "Sa Sa Sa Sa Re ga | Re Re Re Re ga ma | ga ga ga ga ma Pa | Re Re Re",
+            notes: [
+              { note: "A3", sargam: "Sa", lyric: "गुला- (Gula-)", str: 3, fret: 2, beats: 0.5, freq: 220.00 },
+              { note: "A3", sargam: "Sa", lyric: "-बी (-bi)", str: 3, fret: 2, beats: 0.5, freq: 220.00 },
+              { note: "C4", sargam: "ga", lyric: "आंखें (aankhen)", str: 2, fret: 1, beats: 0.8, freq: 261.63 },
+              { note: "G3", sargam: "ni", lyric: "शराबी (sharabi)", str: 3, fret: 0, beats: 0.8, freq: 196.00 },
+              { note: "E4", sargam: "Pa", lyric: "गया (gaya)", str: 1, fret: 0, beats: 1.2, freq: 329.63 }
+            ]
+          },
+          {
+            sec: "Mukhda - Line 2",
+            text: "Sambhalo mujhko o mere yaaron, sambhalna mushkil ho gaya",
+            chords: [
+              { chord: "Am", word: "Sambhalo" },
+              { chord: "G", word: "o mere yaaron" },
+              { chord: "F", word: "mushkil" },
+              { chord: "E", word: "ho gaya" }
+            ],
+            sargam: "Sa Sa Sa Sa Re ga | Re Re Re Re ga ma | ga ga ga ga ma Pa | Re Re Re",
+            notes: [
+              { note: "A3", sargam: "Sa", lyric: "संभालो (Sambhalo)", str: 3, fret: 2, beats: 0.8, freq: 220.00 },
+              { note: "G3", sargam: "ni", lyric: "यारों (yaaron)", str: 3, fret: 0, beats: 0.8, freq: 196.00 },
+              { note: "E4", sargam: "Pa", lyric: "गया (gaya)", str: 1, fret: 0, beats: 1.2, freq: 329.63 }
+            ]
+          }
+        ]
+      },
+
+      kal_ho_naa_ho: {
+        id: "kal_ho_naa_ho",
+        title: "Kal Ho Naa Ho",
+        movie: "Kal Ho Naa Ho (2003)",
+        singer: "Sonu Nigam",
+        music: "Shankar-Ehsaan-Loy",
+        lyricsBy: "Javed Akhtar",
+        key: "C Major (Sa = C)",
+        bpm: 80,
+        strum: "D - D U - U D -",
+        strumPatternVisual: "↓ - ↓ ↑ - ↑ ↓ -",
+        chordsUsed: ["C", "Em", "F", "G", "Am"],
+        lines: [
+          {
+            sec: "Mukhda - Line 1",
+            text: "Har ghadi badal rahi hai roop zindagi, chhaon hai kabhi kabhi hai dhoop zindagi",
+            chords: [
+              { chord: "C", word: "Har ghadi" },
+              { chord: "Em", word: "roop zindagi" },
+              { chord: "F", word: "chhaon hai kabhi" },
+              { chord: "G", word: "dhoop zindagi" }
+            ],
+            sargam: "Sa Re Ga Ga Ga Ga Ga | Re Ga ma ma ma ma | Ga ma Pa Pa Pa Pa | ma Pa Dha",
+            notes: [
+              { note: "C4", sargam: "Sa", lyric: "हर (Har)", str: 2, fret: 1, beats: 0.6, freq: 261.63 },
+              { note: "E4", sargam: "Ga", lyric: "घड़ी (ghadi)", str: 1, fret: 0, beats: 0.8, freq: 329.63 },
+              { note: "F4", sargam: "ma", lyric: "रूप (roop)", str: 1, fret: 1, beats: 0.8, freq: 349.23 },
+              { note: "G4", sargam: "Pa", lyric: "ज़िंदगी (zindagi)", str: 1, fret: 3, beats: 1.2, freq: 392.00 }
+            ]
+          },
+          {
+            sec: "Mukhda - Line 2",
+            text: "Har pal yahan jee bhar jiyo, jo hai samaa kal ho na ho",
+            chords: [
+              { chord: "C", word: "Har pal yahan" },
+              { chord: "Em", word: "jee bhar jiyo" },
+              { chord: "F", word: "jo hai samaa" },
+              { chord: "G", word: "kal ho na ho" },
+              { chord: "C", word: "" }
+            ],
+            sargam: "Sa Re Ga Ga | Re Ga ma ma | Ga ma Pa Pa | Re Re Sa",
+            notes: [
+              { note: "C4", sargam: "Sa", lyric: "हर पल (Har pal)", str: 2, fret: 1, beats: 0.8, freq: 261.63 },
+              { note: "E4", sargam: "Ga", lyric: "जियो (jiyo)", str: 1, fret: 0, beats: 0.8, freq: 329.63 },
+              { note: "D4", sargam: "Re", lyric: "कल हो (kal ho)", str: 3, fret: 0, beats: 0.8, freq: 293.66 },
+              { note: "C4", sargam: "Sa", lyric: "ना हो (na ho)", str: 2, fret: 1, beats: 1.4, freq: 261.63 }
+            ]
+          }
+        ]
+      }
+    };
+
+    let activeSongId = 'chalo_ek_baar';
+    let isSongPlaying = false;
+    let songPlayStepTimer = null;
+    let activeSongNoteIdx = 0;
+    let activeSongLineIdx = 0;
+    let songPracticeScore = 0;
+    let isSongPracticeMicActive = true;
+    let songTempoMultiplier = 1.0;
+
+    function initSongsStudio() {
+      loadSongById(activeSongId);
+    }
+
+    function loadSongById(songId) {
+      const song = SONG_CATALOG[songId] || SONG_CATALOG.chalo_ek_baar;
+      activeSongId = song.id;
+
+      if (isSongPlaying) toggleSongPlayback();
+
+      activeSongNoteIdx = 0;
+      activeSongLineIdx = 0;
+
+      // Update Header Text & Pills
+      document.getElementById('song-display-title').innerHTML = `🎸 ${song.title}`;
+      document.getElementById('song-display-meta').textContent = `Movie: ${song.movie} • Singer: ${song.singer} • Music: ${song.music}`;
+      document.getElementById('song-pill-key').textContent = song.key;
+      document.getElementById('song-pill-chords').textContent = song.chordsUsed.join(', ');
+      document.getElementById('song-pill-strum').textContent = song.strum;
+      document.getElementById('song-pill-bpm').textContent = `${song.bpm} BPM`;
+      document.getElementById('song-tempo-slider').value = song.bpm;
+      document.getElementById('song-tempo-readout').textContent = `${song.bpm} BPM`;
+      document.getElementById('song-strum-pattern-visual').textContent = song.strumPatternVisual;
+
+      const dropdown = document.getElementById('song-selector-select');
+      if (dropdown) dropdown.value = songId;
+
+      // Render Chords Palette
+      const palette = document.getElementById('song-chords-palette');
+      if (palette) {
+        palette.innerHTML = '';
+        song.chordsUsed.forEach(ch => {
+          const btn = document.createElement('button');
+          btn.className = 'chord-tag-badge';
+          btn.style.cursor = 'pointer';
+          btn.innerHTML = `<span>▶️</span> ${ch}`;
+          btn.onclick = () => {
+            if (CHORD_PRESETS[ch]) {
+              currentFretboardState = [...CHORD_PRESETS[ch].frets];
+              renderFretboardState();
+            }
+            strumCurrentChord('down');
+          };
+          palette.appendChild(btn);
+        });
+      }
+
+      // Render Lyrics Scroll Container
+      renderSongLyrics(song);
+      updateLeadNoteDisplay(0);
+    }
+
+    function renderSongLyrics(song) {
+      const box = document.getElementById('lyrics-scroll-box');
+      if (!box) return;
+      box.innerHTML = '';
+
+      song.lines.forEach((line, lIdx) => {
+        const lineEl = document.createElement('div');
+        lineEl.className = `lyric-line-item ${lIdx === 0 ? 'active-line' : ''}`;
+        lineEl.id = `lyric-line-${lIdx}`;
+        lineEl.onclick = () => jumpToSongLine(lIdx);
+
+        let chordsHtml = '<div class="line-chords-row">';
+        line.chords.forEach(c => {
+          chordsHtml += `<span class="chord-tag-badge" id="chord-badge-${lIdx}-${c.chord}">${c.chord}</span>`;
+        });
+        chordsHtml += '</div>';
+
+        lineEl.innerHTML = `
+          <div class="line-section-header">${line.sec}</div>
+          ${chordsHtml}
+          <div class="line-words">${line.text}</div>
+          <div class="line-sargam">🎼 Sargam: ${line.sargam}</div>
+        `;
+        box.appendChild(lineEl);
+      });
+    }
+
+    function jumpToSongLine(lineIdx) {
+      activeSongLineIdx = lineIdx;
+      activeSongNoteIdx = 0;
+      updateActiveSongLineUI(lineIdx);
+      updateLeadNoteDisplay(0);
+    }
+
+    function updateActiveSongLineUI(lineIdx) {
+      document.querySelectorAll('.lyric-line-item').forEach((el, idx) => {
+        el.classList.toggle('active-line', idx === lineIdx);
+      });
+      const activeEl = document.getElementById(`lyric-line-${lineIdx}`);
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Update target chord indicator for mic play-along
+      const song = SONG_CATALOG[activeSongId];
+      if (song && song.lines[lineIdx] && song.lines[lineIdx].chords.length > 0) {
+        const targetCh = song.lines[lineIdx].chords[0].chord;
+        document.getElementById('eval-target-chord-label').textContent = `Target: ${targetCh}`;
+      }
+    }
+
+    function toggleSongPlayback() {
+      ensureAudio();
+      isSongPlaying = !isSongPlaying;
+
+      const playBtn = document.getElementById('btn-song-play');
+      const icon = document.getElementById('song-play-icon');
+      const text = document.getElementById('song-play-text');
+
+      if (isSongPlaying) {
+        if (playBtn) playBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        if (icon) icon.textContent = '⏸';
+        if (text) text.textContent = 'Pause Song';
+        stepSongPlaybackLoop();
+      } else {
+        if (playBtn) playBtn.style.background = 'linear-gradient(135deg, #ffb300, #ff8f00)';
+        if (icon) icon.textContent = '▶';
+        if (text) text.textContent = 'Play Guitar & Song';
+        if (songPlayStepTimer) {
+          clearTimeout(songPlayStepTimer);
+          songPlayStepTimer = null;
+        }
+      }
+    }
+
+    function restartSongPlayback() {
+      if (isSongPlaying) toggleSongPlayback();
+      activeSongLineIdx = 0;
+      activeSongNoteIdx = 0;
+      updateActiveSongLineUI(0);
+      updateLeadNoteDisplay(0);
+    }
+
+    function onSongTempoChange(val) {
+      document.getElementById('song-tempo-readout').textContent = `${val} BPM`;
+      const baseBpm = (SONG_CATALOG[activeSongId] || {}).bpm || 76;
+      songTempoMultiplier = parseFloat(val) / baseBpm;
+    }
+
+    function toggleSongPracticeMic() {
+      isSongPracticeMicActive = !isSongPracticeMicActive;
+      const toggleBtn = document.getElementById('btn-toggle-song-mic');
+      const label = document.getElementById('song-mic-status-label');
+      if (toggleBtn) toggleBtn.classList.toggle('active', isSongPracticeMicActive);
+      if (label) label.textContent = isSongPracticeMicActive ? 'ON' : 'OFF';
+
+      // Auto start microphone if user turns practice mode on
+      if (isSongPracticeMicActive && !isListening) {
+        toggleMicrophone();
+      }
+    }
+
+    function stepSongPlaybackLoop() {
+      if (!isSongPlaying) return;
+
+      const song = SONG_CATALOG[activeSongId];
+      if (!song) return;
+
+      const curLine = song.lines[activeSongLineIdx];
+      if (!curLine || !curLine.notes || curLine.notes.length === 0) {
+        // Loop back to start
+        activeSongLineIdx = 0;
+        activeSongNoteIdx = 0;
+        updateActiveSongLineUI(0);
+      }
+
+      const line = song.lines[activeSongLineIdx];
+      const noteItem = line.notes[activeSongNoteIdx];
+
+      if (noteItem) {
+        // Play lead melody note via physical acoustic guitar model
+        playPhysicalGuitarPluck(noteItem.freq, 0.85, 0.5, 0);
+
+        // Update fretboard & HUD
+        currentFretboardState = [-1, -1, -1, -1, -1, -1];
+        currentFretboardState[noteItem.str - 1] = noteItem.fret;
+        renderFretboardState();
+
+        updateLeadNoteDisplay(activeSongNoteIdx);
+
+        // Highlight chord tag
+        if (line.chords.length > 0) {
+          const chordIdx = Math.floor((activeSongNoteIdx / line.notes.length) * line.chords.length);
+          const currentCh = line.chords[chordIdx] ? line.chords[chordIdx].chord : line.chords[0].chord;
+          document.getElementById('eval-target-chord-label').textContent = `Target: ${currentCh}`;
+
+          // Trigger soft acoustic chord strum on phrase start
+          if (activeSongNoteIdx === 0 && CHORD_PRESETS[currentCh]) {
+            strumAcousticPhysical(CHORD_PRESETS[currentCh].frets, 'down', 0.55);
+          }
+        }
+      }
+
+      // Calculate beat duration based on song BPM
+      const bpm = parseInt(document.getElementById('song-tempo-slider').value) || song.bpm;
+      const beatDurationSec = 60 / bpm;
+      const noteDurationMs = (noteItem ? noteItem.beats : 0.6) * beatDurationSec * 1000;
+
+      activeSongNoteIdx++;
+      if (activeSongNoteIdx >= line.notes.length) {
+        activeSongNoteIdx = 0;
+        activeSongLineIdx = (activeSongLineIdx + 1) % song.lines.length;
+        updateActiveSongLineUI(activeSongLineIdx);
+      }
+
+      songPlayStepTimer = setTimeout(stepSongPlaybackLoop, Math.max(250, noteDurationMs));
+    }
+
+    function updateLeadNoteDisplay(noteIdx) {
+      const song = SONG_CATALOG[activeSongId];
+      if (!song) return;
+      const line = song.lines[activeSongLineIdx];
+      if (!line || !line.notes) return;
+      const note = line.notes[noteIdx] || line.notes[0];
+      if (!note) return;
+
+      document.getElementById('lead-active-western').textContent = note.note;
+      document.getElementById('lead-active-sargam').textContent = `${note.sargam} (${note.lyric || ''})`;
+      document.getElementById('lead-active-string').textContent = `${note.str}th String`;
+      document.getElementById('lead-active-fret').textContent = `${note.fret}th Fret`;
+      document.getElementById('lead-active-hz').textContent = `${note.freq.toFixed(1)} Hz`;
+      document.getElementById('song-note-counter').textContent = `${noteIdx + 1} / ${line.notes.length}`;
+    }
+
+    function checkPlayAlongLiveMatch(detectedChord) {
+      if (!isSongPracticeMicActive) return;
+
+      const heardLabel = document.getElementById('eval-heard-chord-label');
+      if (heardLabel) heardLabel.textContent = detectedChord;
+
+      const targetLabel = document.getElementById('eval-target-chord-label');
+      if (!targetLabel) return;
+      const targetChord = targetLabel.textContent.replace('Target: ', '').trim();
+
+      if (detectedChord === targetChord) {
+        songPracticeScore += 10;
+        const scoreEl = document.getElementById('song-practice-score');
+        if (scoreEl) scoreEl.textContent = songPracticeScore;
+
+        const badge = document.getElementById('eval-feedback-badge');
+        if (badge) {
+          badge.className = 'eval-match-indicator match-success';
+          badge.textContent = `✓ Matched ${detectedChord}! (+10 pts)`;
+          setTimeout(() => {
+            if (badge) {
+              badge.className = 'eval-match-indicator';
+              badge.textContent = 'Keep strumming along!';
+            }
+          }, 1400);
+        }
+      }
+    }
+
+
+    /* ==========================================================================
+       SONG SEARCH & CHORDS GENERATOR ENGINE
+       ========================================================================== */
+    const SEARCH_SONG_DATABASE = [
+      {
+        title: "Tum Hi Ho",
+        movie: "Aashiqui 2",
+        singer: "Arijit Singh",
+        key: "C# Minor (Sa = C#) / Transposed Dm",
+        bpm: 88,
+        strum: "D - D U - U D -",
+        diff: "Intermediate",
+        chords: ["Em", "Am", "D", "C", "B7"],
+        sargamHook: "Pa ma ga Re Sa | Re ga Re Sa ni | Sa Re ga ma Pa",
+        westernHook: "B4 A4 G4 F#4 E4 | F#4 G4 F#4 E4 D#4 | E4 F#4 G4 A4 B4",
+        lyrics: `[Em] Hum tere bin ab reh nahi sakte
+[Am] Tere bina kya wajood mera
+[D] Tujhse juda gar ho jaayenge
+[C] Toh khud se hi ho [B7] jaayenge judaa
+
+[Em] Kyunki tum hi ho, [Am] ab tum hi ho
+[D] Zindagi ab [C] tum hi [Em] ho
+[Em] Chain bhi, [Am] mera dard bhi
+[D] Meri aashiqui ab [C] tum hi [Em] ho`
+      },
+      {
+        title: "Kabira",
+        movie: "Yeh Jawaani Hai Deewani",
+        singer: "Tochi Raina, Rekha Bhardwaj",
+        key: "D Major (Sa = D)",
+        bpm: 84,
+        strum: "D - D - D U D U",
+        diff: "Beginner",
+        chords: ["D", "G", "A", "Bm"],
+        sargamHook: "Sa Re Ga Ga | Re Ga Pa | ma Ga Re Sa",
+        westernHook: "D4 E4 F#4 F#4 | E4 F#4 A4 | G4 F#4 E4 D4",
+        lyrics: `[D] Kaisi teri khudgarzi
+[G] Na dhoop chune na chhaaon
+[D] Kaisi teri khudgarzi
+[A] Kisi thor tike na paanv
+
+[D] Re Kabira maan jaa, [G] re Faqeera maan jaa
+[D] Aaja tujhko pukaare teri [A] parchhaaiyan
+[D] Re Kabira maan jaa, [G] re Faqeera maan jaa
+[D] Kaisa tu hai nirmohi kaisa [A] harjaaiya`
+      },
+      {
+        title: "Hotel California",
+        movie: "Eagles",
+        singer: "Don Henley",
+        key: "B Minor (Sa = B)",
+        bpm: 75,
+        strum: "D - D U - U D U",
+        diff: "Advanced",
+        chords: ["Am", "E", "G", "D", "F", "C", "Dm"],
+        sargamHook: "Sa ni Dha Pa | ma ga Re Sa",
+        westernHook: "B4 A4 G4 F#4 | E4 D4 C#4 B3",
+        lyrics: `[Am] On a dark desert highway, [E] cool wind in my hair
+[G] Warm smell of colitas, [D] rising up through the air
+[F] Up ahead in the distance, [C] I saw a shimmering light
+[Dm] My head grew heavy and my sight grew dim
+[E] I had to stop for the night
+
+Chorus:
+[F] Welcome to the Hotel [C] California
+Such a [E] lovely place (Such a lovely place)
+Such a [Am] lovely face`
+      },
+      {
+        title: "Wonderwall",
+        movie: "Oasis",
+        singer: "Liam Gallagher",
+        key: "F# Minor (Capo 2nd Fret: Em)",
+        bpm: 86,
+        strum: "D - D - D U D U D - D U",
+        diff: "Beginner",
+        chords: ["Em", "G", "D", "A", "C"],
+        sargamHook: "Sa Re ga | Re ga Pa | ma ga Re",
+        westernHook: "E4 F#4 G4 | F#4 G4 B4 | A4 G4 F#4",
+        lyrics: `[Em] Today is gonna be the day
+That they're [G] gonna throw it back to you
+[D] By now you should've somehow
+Realized [A] what you gotta do
+
+[C] And all the roads we have to [D] walk are winding [Em]
+[C] And all the lights that lead us [D] there are blinding [Em]
+[C] Because maybe, [Em] you're gonna be the one that [G] saves me
+And [C] after all, [Em] you're my [G] wonderwall`
+      },
+      {
+        title: "Kesariya",
+        movie: "Brahmastra",
+        singer: "Arijit Singh",
+        key: "C Major (Sa = C)",
+        bpm: 92,
+        strum: "D - D U - U D -",
+        diff: "Intermediate",
+        chords: ["C", "F", "G", "Am", "Dm"],
+        sargamHook: "Sa Re Ga | Ga ma Pa | Ga ma Re Sa",
+        westernHook: "C4 D4 E4 | E4 F4 G4 | E4 F4 D4 C4",
+        lyrics: `[C] Mujhko itna bataye koi
+[F] Kaise tujhse dil na lagaye koi
+[Am] Rabba ne tujhko banane mein
+[G] Kar di hai husn ki khaali tijoriyan
+
+[C] Kesariya tera [G] ishq hai piya
+[Am] Rang jaaun jo main [F] haath lagaun
+[C] Din beete saara [G] teri fikr mein
+[Am] Rain saari teri [F] khair manaun`
+      },
+      {
+        title: "Pani Da Rang",
+        movie: "Vicky Donor",
+        singer: "Ayushmann Khurrana",
+        key: "A Minor (Sa = A)",
+        bpm: 110,
+        strum: "D - D - D U D U",
+        diff: "Beginner",
+        chords: ["Am", "G", "F", "Em"],
+        sargamHook: "Sa Re ga Re Sa | ni Sa Re Sa",
+        westernHook: "A4 B4 C5 B4 A4 | G4 A4 B4 A4",
+        lyrics: `[Am] Pani da rang vekh ke
+[G] Pani da rang vekh ke
+[F] Akhiyaan 'ch hanju rul [Em] de
+[Am] Akhiyaan 'ch hanju rul de
+
+[Am] Mahiya na aaya mera, [G] mahiya na aaya
+[F] Ranjhana na aaya mera, [Em] mahiya na aaya`
+      },
+      {
+        title: "Channa Mereya",
+        movie: "Ae Dil Hai Mushkil",
+        singer: "Arijit Singh",
+        key: "D Major (Sa = D)",
+        bpm: 78,
+        strum: "D - D U - U D -",
+        diff: "Intermediate",
+        chords: ["D", "G", "A", "Bm", "Em"],
+        sargamHook: "Sa Re Ga Pa | ma Ga Re Ga | Re Sa ni Sa",
+        westernHook: "D4 E4 F#4 A4 | G4 F#4 E4 F#4 | E4 D4 C#4 D4",
+        lyrics: `[D] Achha chalta hoon, [G] duaon mein yaad rakhna
+[A] Mere zikr ka zubaan pe [D] swaad rakhna
+[Bm] Dil ke sandookon mein mere achhe [G] kaam rakhna
+[A] Chitthi taaron mein bhi mera tu [D] salaam rakhna
+
+[D] Andhera tera maine le liya
+Mera [G] ujla sitaara tere naam kiya
+[D] Channa mereya mereya, [G] channa mereya mereya
+[A] Channa mereya mereya [D] beliya`
+      },
+      {
+        title: "Jeena Jeena",
+        movie: "Badlapur",
+        singer: "Atif Aslam",
+        key: "F# Minor (Sa = F#)",
+        bpm: 82,
+        strum: "D - D - D U D U",
+        diff: "Intermediate",
+        chords: ["F#m", "D", "E", "A", "Bm"],
+        sargamHook: "Sa Re ga ma Pa | ma ga Re Sa",
+        westernHook: "F#4 G#4 A4 B4 C#5 | B4 A4 G#4 F#4",
+        lyrics: `[F#m] Dehleez pe mere dil ki
+Jo [D] rakhe hain tune kadam
+[E] Tere naam pe meri zindagi
+Likh [A] di mere [F#m] humdum
+
+[F#m] Haan seekha maine [D] jeena jeena kaise jeena
+[E] Haan seekha maine [A] jeena mere humdum`
+      }
+    ];
+
+    let currentSearchedSong = null;
+    let searchTransposeOffset = 0;
+
+    function initSongSearch() {
+      // If no song searched yet, display first song by default
+      if (!currentSearchedSong) {
+        displaySearchedSong(SEARCH_SONG_DATABASE[0]);
+      }
+    }
+
+    function quickSearchSong(title) {
+      document.getElementById('search-song-input').value = title;
+      executeSongSearch();
+    }
+
+    function executeSongSearch() {
+      const query = document.getElementById('search-song-input').value.trim().toLowerCase();
+      if (!query) return;
+
+      // Check against database
+      const match = SEARCH_SONG_DATABASE.find(s => s.title.toLowerCase().includes(query) || (s.movie && s.movie.toLowerCase().includes(query)));
+
+      if (match) {
+        displaySearchedSong(match);
+      } else {
+        // AI Dynamic Song Generator for ANY song name entered!
+        const generated = generateHarmonicSongData(document.getElementById('search-song-input').value.trim());
+        displaySearchedSong(generated);
+      }
+    }
+
+    function generateHarmonicSongData(title) {
+      // Deterministically generate musically coherent key, scale, chords & lyrics
+      const hash = title.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const keys = ["D Minor", "A Minor", "C Major", "G Major", "E Minor"];
+      const keyChoice = keys[hash % keys.length];
+
+      let chords = [];
+      if (keyChoice === "D Minor") chords = ["Dm", "C", "Bb", "Gm", "A", "F"];
+      else if (keyChoice === "A Minor") chords = ["Am", "G", "F", "Em", "C", "Dm"];
+      else if (keyChoice === "C Major") chords = ["C", "G", "Am", "F", "Em", "Dm"];
+      else if (keyChoice === "G Major") chords = ["G", "D", "Em", "C", "Am", "Bm"];
+      else chords = ["Em", "D", "C", "G", "Am", "B7"];
+
+      const bpms = [72, 78, 84, 90, 98, 108];
+      const bpmChoice = bpms[hash % bpms.length];
+
+      return {
+        title: title,
+        movie: "AI Generated Chord Chart",
+        singer: "Acoustic Guitar Arrangement",
+        key: `${keyChoice} (Smart Harmonics)`,
+        bpm: bpmChoice,
+        strum: "D - D U - U D -",
+        diff: "Custom Song",
+        chords: chords.slice(0, 4),
+        sargamHook: "Sa Re ga ma Pa | ma ga Re Sa | Sa ni Dha Pa Sa",
+        westernHook: "D4 E4 F4 G4 A4 | G4 F4 E4 D4 | D4 C4 Bb3 A3 D4",
+        lyrics: `Verse 1:
+[${chords[0]}] ${title} ki dhun pe, [${chords[1]}] dil yeh gaaye
+[${chords[2]}] Har lamha teri [${chords[3]}] yaadein laaye
+[${chords[0]}] Suron mein basi hai yeh [${chords[1]}] pyaari kahaani
+[${chords[2]}] Chhedo taaron ko [${chords[3]}] nishaani
+
+Chorus:
+[${chords[0]}] O ho ho... [${chords[1]}] ${title}
+[${chords[2]}] Gunje fizaon mein [${chords[3]}] ${title}
+[${chords[0]}] Har pal suhana, [${chords[1]}] har pal deewaana
+[${chords[2]}] Saath chale yeh [${chords[0]}] fasaana`
+      };
+    }
+
+    function displaySearchedSong(song) {
+      currentSearchedSong = song;
+      searchTransposeOffset = 0;
+      document.getElementById('res-transpose-display').textContent = '0';
+
+      document.getElementById('search-result-box').style.display = 'flex';
+      document.getElementById('res-song-title').textContent = song.title;
+      document.getElementById('res-song-meta').textContent = `Film/Artist: ${song.movie || 'Acoustic Hit'} • Singer: ${song.singer || 'Original'} • Key: ${song.key}`;
+      document.getElementById('res-pill-key').textContent = song.key;
+      document.getElementById('res-pill-bpm').textContent = `${song.bpm} BPM`;
+      document.getElementById('res-pill-strum').textContent = song.strum;
+      document.getElementById('res-pill-diff').textContent = song.diff || 'Intermediate';
+
+      renderSearchedChordDiagrams(song.chords);
+      document.getElementById('res-sargam-box').innerHTML = `
+        <strong>Sargam Notes:</strong> ${song.sargamHook}<br>
+        <span style="color:#94a3b8; font-size:0.8rem;">Western Notes: ${song.westernHook}</span>
+      `;
+      document.getElementById('res-lyrics-box').textContent = song.lyrics;
+    }
+
+    function renderSearchedChordDiagrams(chordList) {
+      const grid = document.getElementById('res-chord-diagrams-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      chordList.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'mini-chord-card';
+        const preset = CHORD_PRESETS[c];
+        const fretStr = preset ? preset.frets.map(f => f === -1 ? 'x' : f).join(' ') : '-';
+        item.innerHTML = `
+          <div class="mini-chord-name">${c}</div>
+          <div class="mini-chord-frets">${fretStr}</div>
+          <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem; margin-top:6px; width:100%;">🔊 Strum</button>
+        `;
+        item.onclick = () => {
+          if (preset) {
+            currentFretboardState = [...preset.frets];
+            renderFretboardState();
+          }
+          strumCurrentChord('down');
+        };
+        grid.appendChild(item);
+      });
+    }
+
+    function transposeSearchedSong(delta) {
+      if (!currentSearchedSong) return;
+      searchTransposeOffset += delta;
+      document.getElementById('res-transpose-display').textContent = (searchTransposeOffset > 0 ? '+' : '') + searchTransposeOffset;
+
+      const transposeChord = (ch) => {
+        const rootMatch = ch.match(/^[A-G][#b]?/);
+        if (!rootMatch) return ch;
+        const root = rootMatch[0];
+        const suffix = ch.slice(root.length);
+        const idx = NOTE_NAMES.indexOf(root);
+        if (idx === -1) return ch;
+        const newIdx = (idx + delta + 12) % 12;
+        return NOTE_NAMES[newIdx] + suffix;
+      };
+
+      currentSearchedSong.chords = currentSearchedSong.chords.map(transposeChord);
+      renderSearchedChordDiagrams(currentSearchedSong.chords);
+
+      // Transpose chords in lyrics text
+      currentSearchedSong.lyrics = currentSearchedSong.lyrics.replace(/\[([A-G][#b]?[^\]]*)\]/g, (m, ch) => {
+        return `[${transposeChord(ch)}]`;
+      });
+      document.getElementById('res-lyrics-box').textContent = currentSearchedSong.lyrics;
+    }
+
+    function playSearchedSongProgression() {
+      if (!currentSearchedSong) return;
+      ensureAudio();
+      let delay = 0;
+      currentSearchedSong.chords.forEach(ch => {
+        setTimeout(() => {
+          if (CHORD_PRESETS[ch]) {
+            currentFretboardState = [...CHORD_PRESETS[ch].frets];
+            renderFretboardState();
+            strumAcousticPhysical(CHORD_PRESETS[ch].frets, 'down', 0.65);
+          }
+        }, delay);
+        delay += 1000;
+      });
+    }
+
+    function loadSearchedSongInPlayAlong() {
+      if (!currentSearchedSong) return;
+
+      // Add to catalog if not present
+      const id = 'searched_' + Date.now();
+      SONG_CATALOG[id] = {
+        id: id,
+        title: currentSearchedSong.title,
+        movie: currentSearchedSong.movie,
+        singer: currentSearchedSong.singer,
+        music: "Acoustic Guitar",
+        lyricsBy: "Lyricist",
+        key: currentSearchedSong.key,
+        bpm: currentSearchedSong.bpm,
+        strum: currentSearchedSong.strum,
+        strumPatternVisual: "↓ - ↓ ↑ - ↑ ↓ -",
+        chordsUsed: currentSearchedSong.chords,
+        lines: [
+          {
+            sec: "Verse 1",
+            text: currentSearchedSong.title,
+            chords: currentSearchedSong.chords.map(c => ({ chord: c, word: "" })),
+            sargam: currentSearchedSong.sargamHook,
+            notes: [
+              { note: "D4", sargam: "Sa", lyric: currentSearchedSong.title, str: 3, fret: 7, beats: 1.0, freq: 293.66 },
+              { note: "F4", sargam: "ga", lyric: "Chords", str: 2, fret: 6, beats: 1.0, freq: 349.23 },
+              { note: "A4", sargam: "Pa", lyric: "Notes", str: 1, fret: 5, beats: 1.0, freq: 440.00 }
+            ]
+          }
+        ]
+      };
+
+      // Add option to dropdown if missing
+      const dropdown = document.getElementById('song-selector-select');
+      if (dropdown) {
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = `🔍 ${currentSearchedSong.title}`;
+        dropdown.appendChild(opt);
+        dropdown.value = id;
+      }
+
+      switchStudioTab('songs');
+      loadSongById(id);
+    }
   </script>
 </body>
 </html>
