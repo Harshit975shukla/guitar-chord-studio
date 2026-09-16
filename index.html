@@ -1,0 +1,2692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Guitar Chord Detective Studio - Noise-Filtering & Acoustic Guitar Engine</title>
+  <!-- PWA & Mobile Web App Meta -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GuitarStudio">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --panel-bg: rgba(14, 18, 30, 0.94);
+      --card-bg: rgba(20, 26, 44, 0.88);
+      --accent-gold: #ffb300;
+      --accent-amber: #ff8f00;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(255, 179, 0, 0.25);
+      --border-light: rgba(255, 255, 255, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Bar */
+    #top-bar {
+      padding: 12px 24px;
+      background: linear-gradient(180deg, rgba(16, 20, 34, 0.98) 0%, rgba(9, 12, 20, 0.92) 100%);
+      backdrop-filter: blur(14px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 30;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-icon {
+      font-size: 1.8rem;
+      filter: drop-shadow(0 0 8px rgba(255, 179, 0, 0.6));
+    }
+    .brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffd54f, #ff9100, #ff6d00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-light);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+    .badge.calibrated {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+    }
+
+    /* Main Container */
+    #main-container {
+      flex: 1;
+      padding: 20px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 20px;
+    }
+    @media (max-width: 1100px) {
+      #main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
+      position: relative;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* BIG HERO RESULT DISPLAY */
+    .chord-hero-box {
+      background: linear-gradient(145deg, rgba(20, 26, 46, 0.95), rgba(10, 14, 26, 0.98));
+      border: 2px solid var(--accent-gold);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 0 35px rgba(255, 179, 0, 0.18), inset 0 0 20px rgba(255, 179, 0, 0.05);
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .status-badge-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .chord-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #71717a;
+    }
+    .status-dot.listening {
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulse 1.5s infinite;
+    }
+    .status-dot.calibrating {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+      animation: pulse 0.8s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    .detected-chord-name {
+      font-size: 3.8rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 20%, #ffd54f 75%, #ff9100 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 24px rgba(255, 179, 0, 0.3);
+      min-height: 75px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .top-candidates-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0 12px 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .candidate-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .candidate-pill strong {
+      color: var(--accent-gold);
+    }
+
+    .chord-sub-info {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .info-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-pill strong {
+      color: var(--accent-cyan);
+    }
+
+    /* 7th NOTE DISAMBIGUATION INSPECTOR BANNER */
+    .seventh-inspector-box {
+      margin-top: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 179, 0, 0.3);
+      border-radius: 12px;
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 0.78rem;
+    }
+    .inspector-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .verdict-pill {
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .verdict-triad {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .verdict-seventh {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .inspector-meter-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 6px 0;
+    }
+    .seventh-meter-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .seventh-meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
+      transition: width 0.08s ease;
+    }
+    .seventh-meter-marker {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: #f43f5e;
+      z-index: 5;
+    }
+    .inspector-desc {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Meter */
+    .meter-box {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .meter-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .meter-container {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    .meter-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981 40%, #ffb300 75%, #f43f5e 95%);
+      transition: width 0.05s ease;
+    }
+    .meter-threshold-marker {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: #f43f5e;
+      z-index: 5;
+    }
+    .noise-floor-marker {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: #38bdf8;
+      z-index: 4;
+    }
+
+    /* Visualizers Section */
+    .visualizer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 768px) {
+      .visualizer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .vis-box {
+      background: rgba(10, 14, 24, 0.85);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .vis-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      justify-content: space-between;
+    }
+    canvas {
+      width: 100%;
+      height: 140px;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* 12-Tone Chroma Bar Chart */
+    .chroma-bars {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      height: 110px;
+      width: 100%;
+      padding: 0 4px 4px 4px;
+      gap: 4px;
+    }
+    .chroma-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .chroma-fill {
+      width: 100%;
+      background: linear-gradient(180deg, var(--accent-gold), rgba(255, 179, 0, 0.2));
+      border-radius: 4px 4px 0 0;
+      height: 4%;
+      transition: height 0.08s ease;
+      min-height: 3px;
+    }
+    .chroma-col.highlight .chroma-fill {
+      background: linear-gradient(180deg, #ff4081, #f50057);
+      box-shadow: 0 0 10px rgba(245, 0, 87, 0.7);
+    }
+    .chroma-note-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+    .chroma-col.highlight .chroma-note-name {
+      color: #ff80ab;
+      font-weight: 800;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+      color: #07090e;
+      box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 179, 0, 0.45);
+    }
+    .btn-calibrate {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+    }
+    .btn-calibrate:hover {
+      background: linear-gradient(135deg, #0369a1, #075985);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border-light);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-test-speaker {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-test-speaker:hover {
+      transform: translateY(-2px);
+    }
+    .btn-listen-active {
+      background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+      color: #fff !important;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.5) !important;
+      animation: micPulse 1.5s infinite;
+    }
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 28px rgba(239, 68, 68, 0.8); }
+    }
+
+    /* Sliders & Mode Controls */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 14px 16px;
+      border-radius: 10px;
+    }
+    .slider-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent-gold);
+      cursor: pointer;
+    }
+
+    .mode-toggle-group {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px;
+      border-radius: 8px;
+    }
+    .mode-pill {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-pill.active {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* Interactive Fretboard */
+    .fretboard-container {
+      background: #110d0a;
+      border: 2px solid #3e2723;
+      border-radius: 12px;
+      padding: 16px 12px 12px 12px;
+      overflow-x: auto;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+    .fretboard-board {
+      display: flex;
+      flex-direction: column;
+      min-width: 740px;
+      position: relative;
+    }
+    .fret-numbers {
+      display: flex;
+      margin-bottom: 6px;
+      padding-left: 54px;
+    }
+    .fret-num {
+      flex: 1;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #8d6e63;
+      font-weight: 700;
+    }
+    .fret-num.marker {
+      color: var(--accent-gold);
+    }
+
+    .guitar-string-row {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      position: relative;
+    }
+    .string-header {
+      width: 54px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .string-header .mute-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-light);
+      color: #f43f5e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .string-header .mute-btn.muted {
+      background: #f43f5e;
+      color: #fff;
+    }
+
+    .fret-cells-container {
+      flex: 1;
+      display: flex;
+      position: relative;
+    }
+    .string-wire {
+      position: absolute;
+      left: 0; right: 0; top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(180deg, #d4af37, #8c6d32, #3b2f15);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .str-6 { height: 4.2px; }
+    .str-5 { height: 3.4px; }
+    .str-4 { height: 2.6px; }
+    .str-3 { height: 2.0px; }
+    .str-2 { height: 1.5px; }
+    .str-1 { height: 1.1px; }
+
+    .fret-cell {
+      flex: 1;
+      height: 32px;
+      border-right: 2px solid #bcaaa4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      transition: background 0.15s ease;
+    }
+    .fret-cell:first-child {
+      border-left: 6px solid #efebe9;
+    }
+    .fret-cell:hover {
+      background: rgba(255, 179, 0, 0.15);
+    }
+    .fret-cell .finger-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(255, 179, 0, 0.9);
+      animation: popIn 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.3); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Right Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sound-style-box {
+      background: rgba(255, 179, 0, 0.08);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sound-style-box .label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .sound-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .sound-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .sound-btn.active {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 800;
+      border-color: var(--accent-gold);
+    }
+
+    /* Presets */
+    .preset-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .preset-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+    }
+    .preset-chip:hover {
+      background: var(--accent-gold);
+      color: #000;
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+    }
+    .preset-chip.active {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(255, 179, 0, 0.4);
+    }
+
+    /* Comparison Box */
+    .compare-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .compare-btn-row {
+      display: flex;
+      gap: 8px;
+    }
+    .compare-btn {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border-light);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .compare-btn:hover {
+      background: var(--accent-gold);
+      color: #000;
+    }
+
+    /* Detected History Log */
+    .history-log-box {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.78rem;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .history-item .hist-name {
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .history-item .hist-time {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    /* Theory Table */
+    .theory-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .theory-table th, .theory-table td {
+      padding: 7px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .theory-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .theory-table td strong {
+      color: var(--accent-cyan);
+    }
+
+    .diag-box {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: #bae6fd;
+    }
+    .diag-box strong {
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header id="top-bar">
+    <div class="brand">
+      <span class="brand-icon">🎸</span>
+      <div class="brand-text">
+        <h1>AI Guitar Chord Detective Studio</h1>
+        <p>GuitarTuna Noise Rejection • Spectral Subtraction • 5-Stage Acoustic Synthesis</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="badge" id="noise-reduction-badge">
+        <span>🔇</span> Noise Subtraction: <strong id="noise-status-text" style="color:#ffd54f;">Off (Click Calibrate)</strong>
+      </div>
+      <div class="badge active" id="trigger-mode-badge">
+        <span>⚡</span> Mode: Strum Onset Trigger
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main id="main-container">
+
+    <!-- LEFT COLUMN -->
+    <div class="primary-col">
+
+      <!-- BIG HERO RESULT CARD -->
+      <section class="chord-hero-box">
+        <div class="status-badge-row">
+          <div class="chord-status-badge">
+            <span class="status-dot" id="status-indicator"></span>
+            <span id="status-text">Ready • Click "Start Listening" or Test Speaker</span>
+          </div>
+          <div class="chord-status-badge" id="strum-hold-badge" style="display:none; background:rgba(255, 179, 0, 0.2); color:#ffd54f;">
+            <span>🎸</span> Strum Captured & Locked
+          </div>
+        </div>
+
+        <div class="detected-chord-name" id="display-chord-name">Ready</div>
+
+        <!-- Top 3 Probability Matches -->
+        <div class="top-candidates-row" id="candidates-row">
+          <span>Top Matches:</span>
+          <span class="candidate-pill" id="cand-1">#1 <strong>-</strong></span>
+          <span class="candidate-pill" id="cand-2">#2 <strong>-</strong></span>
+          <span class="candidate-pill" id="cand-3">#3 <strong>-</strong></span>
+        </div>
+
+        <div class="chord-sub-info">
+          <div class="info-pill">
+            <span>Root:</span> <strong id="info-root">-</strong>
+          </div>
+          <div class="info-pill">
+            <span>Quality:</span> <strong id="info-quality">-</strong>
+          </div>
+          <div class="info-pill">
+            <span>Notes:</span> <strong id="info-notes">-</strong>
+          </div>
+          <div class="info-pill">
+            <span>Sargam:</span> <strong id="info-sargam">-</strong>
+          </div>
+          <div class="info-pill">
+            <span>Match:</span> <strong id="info-confidence" style="color:var(--accent-emerald);">-</strong>
+          </div>
+        </div>
+
+        <!-- 7th NOTE DISAMBIGUATION INSPECTOR -->
+        <div class="seventh-inspector-box" id="seventh-inspector">
+          <div class="inspector-header">
+            <span>🔍 7th Note Disambiguation (Am vs Am7):</span>
+            <span class="verdict-pill verdict-triad" id="seventh-verdict-badge">Clean Triad (Am)</span>
+          </div>
+          <div class="inspector-meter-row">
+            <span>7th Note (<span id="seventh-note-label">G</span>):</span>
+            <div class="seventh-meter-track">
+              <div class="seventh-meter-fill" id="seventh-meter-fill" style="width: 25%;"></div>
+              <div class="seventh-meter-marker" id="seventh-marker" style="left: 55%;" title="Cutoff Threshold"></div>
+            </div>
+            <strong id="seventh-ratio-text" style="width: 85px; text-align:right;">25% / 55%</strong>
+          </div>
+          <div class="inspector-desc" id="seventh-desc">
+            G note energy is below threshold (natural acoustic overtone of C). Properly classified as <strong>A Minor (Am)</strong>.
+          </div>
+        </div>
+
+        <!-- Audio Volume / Peak Level Meter with Noise Floor Marker -->
+        <div class="meter-box">
+          <div class="meter-labels">
+            <span>Signal Level: <strong id="db-readout">-∞ dB</strong></span>
+            <span>Room Noise: <span id="noise-floor-label" style="color:#38bdf8;">Uncalibrated</span></span>
+            <span id="signal-quality-label" style="color:var(--text-muted);">Idle</span>
+          </div>
+          <div class="meter-container">
+            <div class="meter-bar" id="audio-meter"></div>
+            <div class="noise-floor-marker" id="noise-floor-marker" style="left: 20%;" title="Ambient Room Noise Floor"></div>
+            <div class="meter-threshold-marker" id="gate-marker" style="left: 32%;" title="Strum Trigger Threshold"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VISUALIZERS (FFT PEAKS & CHROMAGRAM) -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📊</span> Clean Spectrum (Post-Noise Subtraction) & 12-Tone Chromagram
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-muted);" id="detected-peaks-readout">Peaks: None</span>
+        </div>
+
+        <div class="visualizer-grid">
+          <!-- Frequency Spectrum Canvas -->
+          <div class="vis-box">
+            <div class="vis-label">
+              <span>🌊</span> Guitar Band Spectrum (75 Hz – 1250 Hz)
+              <span style="font-size:0.7rem; color:var(--accent-gold);">• Amber = Fundamental Strings</span>
+            </div>
+            <canvas id="canvas-spectrum"></canvas>
+          </div>
+
+          <!-- 12-Tone Chromagram Bars -->
+          <div class="vis-box">
+            <div class="vis-label">
+              <span>🎯</span> 12 Semitone Energy (C to B)
+              <span style="font-size:0.7rem; color:#ff4081;">• Pink = Active Chord Tones</span>
+            </div>
+            <div class="chroma-bars" id="chroma-bars-container">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons & Actions -->
+        <div class="btn-group">
+          <button class="btn btn-primary" id="btn-toggle-mic" onclick="toggleMicrophone()">
+            <span>🎙️</span> <span id="mic-btn-text">Start Listening (Microphone)</span>
+          </button>
+
+          <!-- 1-Click GuitarTuna Noise Calibration Button -->
+          <button class="btn btn-calibrate" id="btn-calibrate-noise" onclick="startNoiseCalibration()">
+            <span>🧹</span> <span id="calibrate-btn-text">Calibrate Room Noise (2s Silent Scan)</span>
+          </button>
+          
+          <button class="btn btn-secondary" onclick="strumCurrentChord('down')">
+            <span>🔊</span> Strum Chord Audio
+          </button>
+
+          <button class="btn btn-secondary" onclick="strumCurrentChord('arpeggio')">
+            <span>🎶</span> Arpeggio
+          </button>
+
+          <!-- Test Speaker Button -->
+          <button class="btn btn-test-speaker" onclick="testSpeakerSound()">
+            <span>📢</span> Test Speaker Sound
+          </button>
+
+          <button class="btn btn-secondary" onclick="clearFretboard()">
+            <span>🔄</span> Clear
+          </button>
+        </div>
+
+        <!-- Sensitivity, Noise Gate & GuitarTuna Trigger Controls -->
+        <div class="controls-grid">
+          <div class="slider-item">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Microphone Sensitivity:</span>
+              <strong id="gain-val" style="color:var(--accent-gold);">4.0x</strong>
+            </div>
+            <div class="slider-row">
+              <input type="range" id="mic-gain-slider" min="1" max="15" step="0.5" value="4.0" oninput="updateGain(this.value)">
+            </div>
+            <span style="font-size:0.7rem;">Increase if your guitar strum is quiet.</span>
+          </div>
+
+          <div class="slider-item">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Strum Trigger Threshold:</span>
+              <strong id="gate-val" style="color:var(--accent-rose);">14 dB</strong>
+            </div>
+            <div class="slider-row">
+              <input type="range" id="noise-gate-slider" min="5" max="50" step="1" value="14" oninput="updateNoiseGate(this.value)">
+            </div>
+            <span style="font-size:0.7rem;">Only guitar strums above this level are processed.</span>
+          </div>
+
+          <div class="slider-item">
+            <div style="display:flex; justify-content:space-between;">
+              <span>7th Note Strictness (Am vs Am7):</span>
+              <strong id="strict-val" style="color:var(--accent-cyan);">55%</strong>
+            </div>
+            <div class="slider-row">
+              <input type="range" id="seventh-strict-slider" min="30" max="85" step="5" value="55" oninput="updateSeventhStrictness(this.value)">
+            </div>
+            <span style="font-size:0.7rem;">Higher = Requires loud open G string for Am7.</span>
+          </div>
+
+          <div class="slider-item">
+            <div style="display:flex; justify-content:space-between;">
+              <span>Detection Trigger Style:</span>
+            </div>
+            <div class="mode-toggle-group">
+              <button class="mode-pill active" id="btn-trigger-guitartuna" onclick="setTriggerMode('guitartuna')">
+                🎸 GuitarTuna Strum Trigger
+              </button>
+              <button class="mode-pill" id="btn-trigger-continuous" onclick="setTriggerMode('continuous')">
+                ⏱️ Continuous Stream
+              </button>
+            </div>
+            <span style="font-size:0.7rem;">GuitarTuna mode only fires on real guitar strums!</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6-STRING INTERACTIVE GUITAR FRETBOARD -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎸</span> 6-String Guitar Neck & Fingerings (E A D G B E)
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Click any fret to change fingers | Click "X" to mute</span>
+        </div>
+
+        <div class="fretboard-container">
+          <div class="fretboard-board" id="fretboard-board">
+            <div class="fret-numbers">
+              <div class="fret-num">0 (Open)</div>
+              <div class="fret-num">1</div>
+              <div class="fret-num">2</div>
+              <div class="fret-num marker">3 •</div>
+              <div class="fret-num">4</div>
+              <div class="fret-num marker">5 •</div>
+              <div class="fret-num">6</div>
+              <div class="fret-num marker">7 •</div>
+              <div class="fret-num">8</div>
+              <div class="fret-num marker">9 •</div>
+              <div class="fret-num">10</div>
+              <div class="fret-num">11</div>
+              <div class="fret-num marker">12 ••</div>
+            </div>
+
+            <div id="fretboard-strings-rows">
+              <!-- Dynamically generated via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GUITARTUNA TECHNOLOGY EXPLAINER -->
+      <section class="diag-box">
+        <strong>💡 How GuitarTuna Cancels Background Noise & What We Implemented:</strong><br>
+        1. <strong>Spectral Noise Subtraction:</strong> When you click <em>"Calibrate Room Noise"</em>, the app takes a 2-second fingerprint of your fan, AC, or ambient hum. It then subtracts that exact noise footprint from every live microphone frame.<br>
+        2. <strong>Hardware Bandpass Filtering:</strong> Web Audio Biquad filters cut off low room rumbles (&lt; 75 Hz) and high-frequency clicks (&gt; 1300 Hz), focusing exclusively on the 6 guitar strings.<br>
+        3. <strong>Strum Onset Triggering (Attack Detection):</strong> Instead of constantly analyzing noisy air, the engine sleeps until you strike a chord. The sudden energy surge triggers analysis during the clean 150ms–400ms ringing sustain phase, then locks the result!
+      </section>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- DIRECT AM VS AM7 COMPARISON BENCHMARK -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🔬</span> Test: Am vs Am7 Direct
+          </div>
+        </div>
+        <div class="compare-box">
+          <div style="font-size:0.75rem; color:var(--text-muted);">Click to compare how the engine tells them apart:</div>
+          <div class="compare-btn-row">
+            <button class="compare-btn" onclick="loadChordPreset('Am')">
+              ▶️ Play <strong>Am</strong> (A-C-E)<br>
+              <span style="font-size:0.68rem; color:#6ee7b7;">3rd string fretted (A3)</span>
+            </button>
+            <button class="compare-btn" onclick="loadChordPreset('Am7')">
+              ▶️ Play <strong>Am7</strong> (A-C-E-G)<br>
+              <span style="font-size:0.68rem; color:#ffd54f;">3rd string open (G3!)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOUND SYNTHESIZER TYPE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🔊</span> Acoustic Sound Engine
+          </div>
+        </div>
+
+        <div class="sound-style-box">
+          <div class="label" style="font-size:0.8rem; font-weight:700; color:#ffd54f; margin-bottom:6px;">Acoustic Guitar Model:</div>
+          <div class="sound-buttons">
+            <button class="sound-btn active" id="btn-sound-dreadnought" onclick="setAcousticModel('dreadnought')">
+              🎸 Dreadnought Steel
+            </button>
+            <button class="sound-btn" id="btn-sound-nylon" onclick="setAcousticModel('nylon')">
+              🪕 Spanish Nylon
+            </button>
+            <button class="sound-btn" id="btn-sound-twelve" onclick="setAcousticModel('twelve')">
+              ✨ 12-String Shimmer
+            </button>
+          </div>
+
+          <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Strum Style:</span>
+            <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="strumCurrentChord('down')">⬇️ Downstrum</button>
+            <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="strumCurrentChord('up')">⬆️ Upstrum</button>
+            <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="strumCurrentChord('arpeggio')">🎶 Fingerpick</button>
+            <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="strumCurrentChord('roll')">🌊 Flamenco Roll</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK CHORD PRESETS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⚡</span> Quick Guitar Chords
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Click to Strum</span>
+        </div>
+
+        <div style="font-size:0.72rem; text-transform:uppercase; color:var(--accent-gold); font-weight:700; margin-bottom:6px;">
+          Standard Open Chords:
+        </div>
+        <div class="preset-chip-grid">
+          <div class="preset-chip" onclick="loadChordPreset('C')">C Maj</div>
+          <div class="preset-chip" onclick="loadChordPreset('D')">D Maj</div>
+          <div class="preset-chip active" onclick="loadChordPreset('Dm')">D min</div>
+          <div class="preset-chip" onclick="loadChordPreset('E')">E Maj</div>
+          <div class="preset-chip" onclick="loadChordPreset('Em')">E min</div>
+          <div class="preset-chip" onclick="loadChordPreset('F')">F Maj</div>
+          <div class="preset-chip" onclick="loadChordPreset('G')">G Maj</div>
+          <div class="preset-chip" onclick="loadChordPreset('A')">A Maj</div>
+          <div class="preset-chip" onclick="loadChordPreset('Am')">A min</div>
+          <div class="preset-chip" onclick="loadChordPreset('Am7')">Am7</div>
+          <div class="preset-chip" onclick="loadChordPreset('B7')">B7</div>
+          <div class="preset-chip" onclick="loadChordPreset('Cadd9')">Cadd9</div>
+        </div>
+
+        <div style="font-size:0.72rem; text-transform:uppercase; color:var(--accent-cyan); font-weight:700; margin:14px 0 6px 0;">
+          Songs from Gumrah & Asli Naqli:
+        </div>
+        <div class="preset-chip-grid">
+          <div class="preset-chip" onclick="loadChordPreset('Dm')">Dm (Gumrah)</div>
+          <div class="preset-chip" onclick="loadChordPreset('F#m')">F#m (Original)</div>
+          <div class="preset-chip" onclick="loadChordPreset('G#m')">G#m (Asli Naqli)</div>
+          <div class="preset-chip" onclick="loadChordPreset('A')">A (Dominant)</div>
+        </div>
+      </div>
+
+      <!-- STRUM DETECTION HISTORY LOG -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📜</span> Chord Recognition Log
+          </div>
+          <button style="background:none; border:none; color:var(--accent-gold); font-size:0.75rem; cursor:pointer;" onclick="clearHistoryLog()">Clear</button>
+        </div>
+
+        <div class="history-log-box" id="history-log">
+          <div class="history-item">
+            <span class="hist-name">Dm (D Minor)</span>
+            <span style="color:var(--text-muted);">D - F - A</span>
+            <span class="hist-time">Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MUSIC THEORY CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📖</span> Theory & Scale Formula
+          </div>
+        </div>
+        <table class="theory-table">
+          <tr>
+            <th>Formula</th>
+            <td id="theory-formula">1 - b3 - 5 (Root, Minor 3rd, 5th)</td>
+          </tr>
+          <tr>
+            <th>Intervals</th>
+            <td id="theory-intervals">Root, Minor 3rd, Perfect 5th</td>
+          </tr>
+          <tr>
+            <th>Sargam</th>
+            <td id="theory-sargam">Sa - ga(komal) - Pa</td>
+          </tr>
+          <tr>
+            <th>Mood</th>
+            <td id="theory-emotion">Melancholic, Poetic, Nostalgic</td>
+          </tr>
+          <tr>
+            <th>Song Context</th>
+            <td id="theory-context">"Chalo Ek Baar Phir Se", "Roothay Ho Tum"</td>
+          </tr>
+        </table>
+      </div>
+
+    </aside>
+  </main>
+
+  <script>
+    /* ==========================================================================
+       AI GUITAR CHORD DETECTIVE - HIGH-PRECISION AUDIO & ACOUSTIC SYNTHESIZER
+       ========================================================================== */
+
+    const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const SARGAM_NAMES = ["Sa", "re", "Re", "ga", "Ga", "ma", "Ma", "Pa", "dha", "Dha", "ni", "Ni"];
+
+    // Standard Guitar Tuning
+    const GUITAR_STRINGS = [
+      { name: "E4 (1st)", openMidi: 64, openNote: "E", gaugeClass: "str-1", baseFreq: 329.63 },
+      { name: "B3 (2nd)", openMidi: 59, openNote: "B", gaugeClass: "str-2", baseFreq: 246.94 },
+      { name: "G3 (3rd)", openMidi: 55, openNote: "G", gaugeClass: "str-3", baseFreq: 196.00 },
+      { name: "D3 (4th)", openMidi: 50, openNote: "D", gaugeClass: "str-4", baseFreq: 146.83 },
+      { name: "A2 (5th)", openMidi: 45, openNote: "A", gaugeClass: "str-5", baseFreq: 110.00 },
+      { name: "E2 (6th)", openMidi: 40, openNote: "E", gaugeClass: "str-6", baseFreq: 82.41 }
+    ];
+
+    const CHORD_PRESETS = {
+      "C":     { frets: [0, 1, 0, 2, 3, -1], name: "C Major", root: "C", quality: "Major" },
+      "D":     { frets: [2, 3, 2, 0, -1, -1], name: "D Major", root: "D", quality: "Major" },
+      "Dm":    { frets: [1, 3, 2, 0, -1, -1], name: "D Minor", root: "D", quality: "Minor" },
+      "E":     { frets: [0, 0, 1, 2, 2, 0], name: "E Major", root: "E", quality: "Major" },
+      "Em":    { frets: [0, 0, 0, 2, 2, 0], name: "E Minor", root: "E", quality: "Minor" },
+      "F":     { frets: [1, 1, 2, 3, 3, 1], name: "F Major", root: "F", quality: "Major" },
+      "G":     { frets: [3, 0, 0, 0, 2, 3], name: "G Major", root: "G", quality: "Major" },
+      "A":     { frets: [0, 2, 2, 2, 0, -1], name: "A Major", root: "A", quality: "Major" },
+      "Am":    { frets: [0, 1, 2, 2, 0, -1], name: "A Minor", root: "A", quality: "Minor" },
+      "Am7":   { frets: [0, 1, 0, 2, 0, -1], name: "A Minor 7", root: "A", quality: "Minor 7th" },
+      "B7":    { frets: [2, 0, 2, 1, 2, -1], name: "B7 (Dominant)", root: "B", quality: "7th" },
+      "Cadd9": { frets: [3, 3, 0, 2, 3, -1], name: "Cadd9", root: "C", quality: "Add9" },
+      "Dsus4": { frets: [3, 3, 2, 0, -1, -1], name: "Dsus4", root: "D", quality: "Sus4" },
+      "F#m":   { frets: [2, 2, 2, 4, 4, 2], name: "F# Minor", root: "F#", quality: "Minor" },
+      "G#m":   { frets: [4, 4, 4, 6, 6, 4], name: "G# Minor", root: "G#", quality: "Minor" }
+    };
+
+    const CHORD_TEMPLATES = [
+      { name: "Major", short: "", weights: [1.3, -0.6, -0.3, -0.7, 1.1, -0.4, -0.6, 1.0, -0.6, -0.4, -0.5, -0.05], formula: "1 - 3 - 5", intervals: "Root, Major 3rd, Perfect 5th" },
+      { name: "Minor", short: "m", weights: [1.3, -0.6, -0.3, 1.1, -0.7, -0.4, -0.6, 1.0, -0.4, -0.5, -0.05, -0.5], formula: "1 - b3 - 5", intervals: "Root, Minor 3rd, Perfect 5th" },
+      { name: "Dominant 7th", short: "7", weights: [1.2, -0.5, -0.3, -0.6, 1.0, -0.4, -0.5, 0.9, -0.5, -0.4, 0.9, -0.5], formula: "1 - 3 - 5 - b7", intervals: "Root, Maj 3rd, 5th, Min 7th" },
+      { name: "Major 7th", short: "maj7", weights: [1.2, -0.5, -0.3, -0.6, 1.0, -0.4, -0.5, 0.9, -0.5, -0.4, -0.5, 0.9], formula: "1 - 3 - 5 - 7", intervals: "Root, Maj 3rd, 5th, Maj 7th" },
+      { name: "Minor 7th", short: "m7", weights: [1.2, -0.5, -0.3, 1.0, -0.6, -0.4, -0.5, 0.9, -0.5, -0.4, 0.9, -0.5], formula: "1 - b3 - 5 - b7", intervals: "Root, Min 3rd, 5th, Min 7th" },
+      { name: "Suspended 4th", short: "sus4", weights: [1.3, -0.5, -0.3, -0.6, -0.6, 1.1, -0.5, 1.0, -0.5, -0.4, -0.4, -0.5], formula: "1 - 4 - 5", intervals: "Root, Perfect 4th, Perfect 5th" },
+      { name: "Suspended 2nd", short: "sus2", weights: [1.3, -0.5, 1.1, -0.6, -0.6, -0.4, -0.5, 1.0, -0.5, -0.4, -0.4, -0.5], formula: "1 - 2 - 5", intervals: "Root, Major 2nd, Perfect 5th" },
+      { name: "Power Chord (5)", short: "5", weights: [1.4, -0.5, -0.4, -0.5, -0.5, -0.4, -0.5, 1.2, -0.5, -0.4, -0.4, -0.5], formula: "1 - 5", intervals: "Root, Perfect 5th" },
+      { name: "Diminished", short: "dim", weights: [1.2, -0.5, -0.4, 1.1, -0.6, -0.4, 1.0, -0.6, -0.5, -0.4, -0.4, -0.5], formula: "1 - b3 - b5", intervals: "Root, Minor 3rd, Diminished 5th" },
+      { name: "Augmented", short: "aug", weights: [1.2, -0.5, -0.4, -0.6, 1.1, -0.4, -0.5, -0.6, 1.0, -0.4, -0.4, -0.5], formula: "1 - 3 - #5", intervals: "Root, Major 3rd, Augmented 5th" }
+    ];
+
+    // State Variables
+    let currentFretboardState = [1, 3, 2, 0, -1, -1];
+    let isListening = false;
+    let audioCtx = null;
+    let micStream = null;
+    let analyserNode = null;
+    let micGainNode = null;
+    let highpassFilter = null;
+    let lowpassFilter = null;
+    let animationFrameId = null;
+    let micGainMultiplier = 4.0;
+    let noiseGateThreshold = 14.0; // dB
+    let seventhStrictness = 0.55;
+    let triggerMode = 'guitartuna';
+    let acousticModelType = 'dreadnought';
+    let lastLockedChord = null;
+    let lockCooldownTimer = null;
+    let candidateVoteHistory = [];
+    let stableLockedDecision = null;
+
+    // GUITARTUNA NOISE CANCELLATION STATE
+    let isCalibratingNoise = false;
+    let noiseCalibrationFrames = 0;
+    let noiseProfileAmps = null;
+    let isNoiseProfileActive = false;
+    let measuredNoiseFloorDb = -75;
+
+    // STRUM ONSET DETECTION STATE
+    let prevFrameBandEnergy = 0;
+    let strumOnsetHoldFrames = 0;
+    let strumRingoutFrames = 0;
+
+    let smoothedChroma = new Float32Array(12);
+
+    /* ==========================================================================
+       SETUP ON PAGE LOAD & BROWSER AUDIO UNLOCK
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initChromaBarsUI();
+      buildFretboardUI();
+      renderFretboardState();
+      analyzeFretboardChord();
+      initCanvases();
+    });
+
+    // Unlock Web Audio immediately on first user interaction anywhere on page
+    ['mousedown', 'touchstart', 'keydown', 'click'].forEach(evt => {
+      window.addEventListener(evt, ensureAudio, { once: true });
+    });
+
+    function initChromaBarsUI() {
+      const container = document.getElementById('chroma-bars-container');
+      container.innerHTML = '';
+      for (let i = 0; i < 12; i++) {
+        const col = document.createElement('div');
+        col.className = 'chroma-col';
+        col.id = `chroma-col-${i}`;
+        col.innerHTML = `
+          <div class="chroma-fill" id="chroma-fill-${i}"></div>
+          <div class="chroma-note-name">${NOTE_NAMES[i]}</div>
+        `;
+        container.appendChild(col);
+      }
+    }
+
+    function buildFretboardUI() {
+      const rowsContainer = document.getElementById('fretboard-strings-rows');
+      rowsContainer.innerHTML = '';
+
+      for (let s = 0; s < 6; s++) {
+        const strInfo = GUITAR_STRINGS[s];
+        const row = document.createElement('div');
+        row.className = 'guitar-string-row';
+
+        const header = document.createElement('div');
+        header.className = 'string-header';
+        header.innerHTML = `
+          <div class="mute-btn" id="mute-btn-${s}" onclick="toggleMuteString(${s})" title="Mute String">X</div>
+          <span>${strInfo.openNote}</span>
+        `;
+        row.appendChild(header);
+
+        const cellsContainer = document.createElement('div');
+        cellsContainer.className = 'fret-cells-container';
+
+        const wire = document.createElement('div');
+        wire.className = `string-wire ${strInfo.gaugeClass}`;
+        cellsContainer.appendChild(wire);
+
+        for (let f = 0; f <= 12; f++) {
+          const cell = document.createElement('div');
+          cell.className = 'fret-cell';
+          cell.id = `fret-cell-${s}-${f}`;
+          cell.title = `String ${s+1}, Fret ${f}`;
+          cell.onclick = () => onFretCellClick(s, f);
+          cellsContainer.appendChild(cell);
+        }
+
+        row.appendChild(cellsContainer);
+        rowsContainer.appendChild(row);
+      }
+    }
+
+    function onFretCellClick(stringIndex, fretIndex) {
+      if (currentFretboardState[stringIndex] === fretIndex) {
+        currentFretboardState[stringIndex] = 0;
+      } else {
+        currentFretboardState[stringIndex] = fretIndex;
+      }
+      renderFretboardState();
+      analyzeFretboardChord();
+      strumCurrentChord('down');
+    }
+
+    function toggleMuteString(stringIndex) {
+      if (currentFretboardState[stringIndex] === -1) {
+        currentFretboardState[stringIndex] = 0;
+      } else {
+        currentFretboardState[stringIndex] = -1;
+      }
+      renderFretboardState();
+      analyzeFretboardChord();
+    }
+
+    function clearFretboard() {
+      currentFretboardState = [0, 0, 0, 0, 0, 0];
+      renderFretboardState();
+      analyzeFretboardChord();
+    }
+
+    function loadChordPreset(key) {
+      const preset = CHORD_PRESETS[key];
+      if (!preset) return;
+
+      currentFretboardState = [...preset.frets];
+      renderFretboardState();
+      analyzeFretboardChord();
+
+      document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+      const activeChip = Array.from(document.querySelectorAll('.preset-chip')).find(el => el.textContent.trim().startsWith(key));
+      if (activeChip) activeChip.classList.add('active');
+
+      strumCurrentChord('down');
+    }
+
+    function renderFretboardState() {
+      for (let s = 0; s < 6; s++) {
+        const fret = currentFretboardState[s];
+        const muteBtn = document.getElementById(`mute-btn-${s}`);
+
+        if (muteBtn) {
+          if (fret === -1) muteBtn.classList.add('muted');
+          else muteBtn.classList.remove('muted');
+        }
+
+        for (let f = 0; f <= 12; f++) {
+          const cell = document.getElementById(`fret-cell-${s}-${f}`);
+          if (!cell) continue;
+          cell.innerHTML = '';
+
+          if (fret === f && fret !== -1) {
+            const dot = document.createElement('div');
+            dot.className = 'finger-dot';
+            const midi = GUITAR_STRINGS[s].openMidi + f;
+            dot.textContent = NOTE_NAMES[midi % 12];
+            cell.appendChild(dot);
+          }
+        }
+      }
+    }
+
+    function analyzeFretboardChord() {
+      const activeNotesSet = new Set();
+      let lowestMidi = 999;
+      let lowestNote = "";
+
+      for (let s = 5; s >= 0; s--) {
+        const fret = currentFretboardState[s];
+        if (fret !== -1) {
+          const midi = GUITAR_STRINGS[s].openMidi + fret;
+          const noteName = NOTE_NAMES[midi % 12];
+          activeNotesSet.add(noteName);
+          if (midi < lowestMidi) {
+            lowestMidi = midi;
+            lowestNote = noteName;
+          }
+        }
+      }
+
+      if (activeNotesSet.size === 0) {
+        updateHeroDisplay("Muted", "-", "-", "-", "-", "0%");
+        return;
+      }
+
+      const activeNoteArray = Array.from(activeNotesSet);
+      const semitoneBits = new Array(12).fill(0);
+      activeNoteArray.forEach(n => {
+        semitoneBits[NOTE_NAMES.indexOf(n)] = 1;
+      });
+
+      let bestMatch = null;
+      let highestScore = -999;
+
+      for (let rootIndex = 0; rootIndex < 12; rootIndex++) {
+        const rootName = NOTE_NAMES[rootIndex];
+
+        CHORD_TEMPLATES.forEach(tpl => {
+          let score = 0;
+          for (let interval = 0; interval < 12; interval++) {
+            const noteIndex = (rootIndex + interval) % 12;
+            const isNoteActive = semitoneBits[noteIndex];
+            const weight = tpl.weights[interval];
+
+            if (weight > 0) {
+              if (isNoteActive) score += weight * 2;
+              else score -= weight * 1.5;
+            } else if (weight < 0 && isNoteActive) {
+              score += weight * 3;
+            }
+          }
+
+          if (lowestNote === rootName) score += 1.5;
+
+          if (score > highestScore) {
+            highestScore = score;
+            bestMatch = {
+              chordName: `${rootName} ${tpl.name}`,
+              shortName: `${rootName}${tpl.short}`,
+              root: rootName,
+              quality: tpl.name,
+              formula: tpl.formula,
+              intervals: tpl.intervals,
+              inversion: lowestNote !== rootName ? `/${lowestNote}` : "",
+              score: score
+            };
+          }
+        });
+      }
+
+      if (bestMatch && highestScore > 0) {
+        const fullDisplay = `${bestMatch.shortName}${bestMatch.inversion}`;
+        const confidence = Math.min(99, Math.max(70, Math.round(55 + highestScore * 10))) + "%";
+        const notesStr = activeNoteArray.join(" - ");
+
+        const sargamStr = activeNoteArray.map(n => {
+          const rootIdx = NOTE_NAMES.indexOf(bestMatch.root);
+          const noteIdx = NOTE_NAMES.indexOf(n);
+          const diff = (noteIdx - rootIdx + 12) % 12;
+          return SARGAM_NAMES[diff];
+        }).join(" - ");
+
+        updateHeroDisplay(fullDisplay, bestMatch.root, bestMatch.quality, notesStr, sargamStr, confidence);
+        updateTheoryTable(bestMatch);
+      }
+    }
+
+    function updateHeroDisplay(chordName, root, quality, notes, sargam, confidence) {
+      document.getElementById('display-chord-name').innerHTML = chordName;
+      document.getElementById('info-root').textContent = root;
+      document.getElementById('info-quality').textContent = quality;
+      document.getElementById('info-notes').textContent = notes;
+      document.getElementById('info-sargam').textContent = sargam;
+      document.getElementById('info-confidence').innerHTML = confidence;
+    }
+
+    function updateTheoryTable(match) {
+      document.getElementById('theory-formula').textContent = match.formula;
+      document.getElementById('theory-intervals').textContent = match.intervals;
+      let emotion = "Harmonious, Bright";
+      let context = "Chalo Ek Baar Phir Se, Gumrah";
+      if (match.quality.includes("Minor")) {
+        emotion = "Melancholic, Deep, Soulful";
+      } else if (match.quality.includes("7th")) {
+        emotion = "Bluesy, Suspenseful";
+      }
+      document.getElementById('theory-emotion').textContent = emotion;
+      document.getElementById('theory-context').textContent = context;
+    }
+
+    /* ==========================================================================
+       AUTHENTIC MULTI-STAGE ACOUSTIC GUITAR PHYSICAL ENGINE
+       ========================================================================== */
+    cachedAcousticBus = null;
+
+    function setAcousticModel(model) {
+      acousticModelType = model;
+      const dreadBtn = document.getElementById('btn-sound-dreadnought');
+      const nylonBtn = document.getElementById('btn-sound-nylon');
+      const twelveBtn = document.getElementById('btn-sound-twelve');
+
+      if (dreadBtn) dreadBtn.classList.toggle('active', model === 'dreadnought');
+      if (nylonBtn) nylonBtn.classList.toggle('active', model === 'nylon');
+      if (twelveBtn) twelveBtn.classList.toggle('active', model === 'twelve');
+
+      // Update bus filtering for selected acoustic guitar model
+      if (cachedAcousticBus) {
+        updateAcousticBusSettings(cachedAcousticBus);
+      }
+
+      // Quick preview pluck so user hears immediate acoustic feedback
+      strumCurrentChord('down');
+    }
+
+    async function ensureAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function createWoodenBodyImpulse(ctx, duration = 0.22) {
+      const sampleRate = ctx.sampleRate;
+      const numSamples = Math.floor(sampleRate * duration);
+      const buffer = ctx.createBuffer(2, numSamples, sampleRate);
+      const left = buffer.getChannelData(0);
+      const right = buffer.getChannelData(1);
+
+      // Early wood reflections (soundhole & cavity boundaries)
+      const reflections = [
+        { t: 0.0014, g: 0.75 },
+        { t: 0.0031, g: -0.60 },
+        { t: 0.0052, g: 0.45 },
+        { t: 0.0078, g: -0.35 },
+        { t: 0.0115, g: 0.28 },
+        { t: 0.0162, g: -0.22 }
+      ];
+
+      reflections.forEach(r => {
+        const idx = Math.floor(r.t * sampleRate);
+        if (idx < numSamples) {
+          left[idx] += r.g;
+          right[idx] += r.g * 0.88;
+        }
+      });
+
+      // Diffuse wooden box air decay
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const decay = Math.exp(-t * 16.0);
+        left[i] += (Math.random() * 2 - 1) * decay * 0.35;
+        right[i] += (Math.random() * 2 - 1) * decay * 0.35;
+      }
+
+      // Normalize
+      let peak = 0;
+      for (let i = 0; i < numSamples; i++) {
+        if (Math.abs(left[i]) > peak) peak = Math.abs(left[i]);
+        if (Math.abs(right[i]) > peak) peak = Math.abs(right[i]);
+      }
+      if (peak > 0) {
+        for (let i = 0; i < numSamples; i++) {
+          left[i] /= peak;
+          right[i] /= peak;
+        }
+      }
+
+      return buffer;
+    }
+
+    function getAcousticMasterBus(ctx) {
+      if (cachedAcousticBus && cachedAcousticBus.ctx === ctx) {
+        return cachedAcousticBus;
+      }
+
+      const input = ctx.createGain();
+      input.gain.value = 1.0;
+
+      // 1. Helmholtz soundhole air cavity resonance (gives deep acoustic body boom)
+      const helmholtz = ctx.createBiquadFilter();
+      helmholtz.type = 'peaking';
+      helmholtz.frequency.value = 102;
+      helmholtz.Q.value = 3.8;
+      helmholtz.gain.value = 8.0;
+
+      // 2. Solid spruce/cedar soundboard breathing mode
+      const topPlate = ctx.createBiquadFilter();
+      topPlate.type = 'peaking';
+      topPlate.frequency.value = 208;
+      topPlate.Q.value = 3.2;
+      topPlate.gain.value = 6.5;
+
+      // 3. Rosewood/mahogany back plate cavity resonance
+      const backPlate = ctx.createBiquadFilter();
+      backPlate.type = 'peaking';
+      backPlate.frequency.value = 400;
+      backPlate.Q.value = 2.5;
+      backPlate.gain.value = 3.5;
+
+      // 4. Phosphor bronze string chime / pick sparkle
+      const sparkle = ctx.createBiquadFilter();
+      sparkle.type = 'peaking';
+      sparkle.frequency.value = 3100;
+      sparkle.Q.value = 2.0;
+      sparkle.gain.value = 3.0;
+
+      // 5. Wood soundboard natural acoustic roll-off (eliminates digital harshness)
+      const woodRollOff = ctx.createBiquadFilter();
+      woodRollOff.type = 'lowpass';
+      woodRollOff.frequency.value = 6000;
+      woodRollOff.Q.value = 0.707;
+
+      // 6. Wooden body chamber convolver
+      const dryGain = ctx.createGain();
+      dryGain.gain.value = 0.82;
+
+      const wetGain = ctx.createGain();
+      wetGain.gain.value = 0.18;
+
+      let convolver = null;
+      try {
+        convolver = ctx.createConvolver();
+        convolver.buffer = createWoodenBodyImpulse(ctx, 0.22);
+      } catch (e) {
+        convolver = null;
+      }
+
+      // 7. Master acoustic limiter / compressor (prevents strum distortion)
+      const limiter = ctx.createDynamicsCompressor();
+      limiter.threshold.value = -1.5;
+      limiter.knee.value = 3.0;
+      limiter.ratio.value = 12.0;
+      limiter.attack.value = 0.002;
+      limiter.release.value = 0.12;
+
+      const masterOut = ctx.createGain();
+      masterOut.gain.value = 1.35; // Clean, loud acoustic output
+
+      // Wire acoustic filter graph:
+      // input -> helmholtz -> topPlate -> backPlate -> sparkle -> woodRollOff
+      input.connect(helmholtz);
+      helmholtz.connect(topPlate);
+      topPlate.connect(backPlate);
+      backPlate.connect(sparkle);
+      sparkle.connect(woodRollOff);
+
+      // Dry / Wet Wood Body Convolution
+      woodRollOff.connect(dryGain);
+      dryGain.connect(limiter);
+
+      if (convolver) {
+        woodRollOff.connect(convolver);
+        convolver.connect(wetGain);
+        wetGain.connect(limiter);
+      }
+
+      limiter.connect(masterOut);
+      masterOut.connect(ctx.destination);
+
+      // If mic analyzer is on, also feed for visual feedback
+      if (typeof analyserNode !== 'undefined' && analyserNode) {
+        masterOut.connect(analyserNode);
+      }
+
+      cachedAcousticBus = {
+        ctx,
+        input,
+        helmholtz,
+        topPlate,
+        backPlate,
+        sparkle,
+        woodRollOff,
+        dryGain,
+        wetGain,
+        masterOut
+      };
+
+      updateAcousticBusSettings(cachedAcousticBus);
+      return cachedAcousticBus;
+    }
+
+    function updateAcousticBusSettings(bus) {
+      if (!bus) return;
+      if (acousticModelType === 'nylon') {
+        // Spanish nylon: warmer, mellow highs, prominent cedar warmth
+        bus.helmholtz.gain.value = 9.0;
+        bus.helmholtz.frequency.value = 98;
+        bus.topPlate.gain.value = 7.0;
+        bus.backPlate.gain.value = 4.5;
+        bus.sparkle.gain.value = -2.0; // Soft singing trebles, no metal bite
+        bus.woodRollOff.frequency.value = 4500;
+        bus.wetGain.gain.value = 0.22;
+      } else if (acousticModelType === 'twelve') {
+        // 12-string shimmer: bright octave presence, wide airy sparkle
+        bus.helmholtz.gain.value = 6.0;
+        bus.helmholtz.frequency.value = 104;
+        bus.topPlate.gain.value = 5.0;
+        bus.backPlate.gain.value = 3.0;
+        bus.sparkle.gain.value = 5.5; // Sparkling octave presence
+        bus.woodRollOff.frequency.value = 7500;
+        bus.wetGain.gain.value = 0.24;
+      } else {
+        // Standard steel dreadnought: full punch, deep body bass, crisp bronze chime
+        bus.helmholtz.gain.value = 8.0;
+        bus.helmholtz.frequency.value = 102;
+        bus.topPlate.gain.value = 6.5;
+        bus.backPlate.gain.value = 3.5;
+        bus.sparkle.gain.value = 3.2;
+        bus.woodRollOff.frequency.value = 6000;
+        bus.wetGain.gain.value = 0.18;
+      }
+    }
+
+    async function testSpeakerSound() {
+      await ensureAudio();
+      const ctx = audioCtx;
+      const now = ctx.currentTime + 0.02;
+
+      // Play a rich, authentic acoustic G Major chord
+      const gChordNotes = [
+        { s: 5, freq: 98.00 },   // G2 (6th str, fret 3)
+        { s: 4, freq: 123.47 },  // B2 (5th str, fret 2)
+        { s: 3, freq: 146.83 },  // D3 (4th str open)
+        { s: 2, freq: 196.00 },  // G3 (3rd str open)
+        { s: 1, freq: 246.94 },  // B3 (2nd str open)
+        { s: 0, freq: 392.00 }   // G4 (1st str, fret 3)
+      ];
+
+      gChordNotes.forEach((n, idx) => {
+        playAcousticStringPhysical(n.freq, now + idx * 0.024, n.s, 1.0);
+      });
+    }
+
+    async function strumCurrentChord(style = 'down') {
+      await ensureAudio();
+      const ctx = audioCtx;
+      const now = ctx.currentTime + 0.015;
+
+      const activeStrings = [];
+      for (let s = 0; s < 6; s++) {
+        if (currentFretboardState[s] !== -1) {
+          activeStrings.push(s);
+        }
+      }
+      if (activeStrings.length === 0) return;
+
+      let order = [];
+      let baseStagger = 0.022;
+
+      if (style === 'up') {
+        // Upstrum: high E down to low E
+        order = [...activeStrings].sort((a, b) => a - b);
+        baseStagger = 0.020;
+      } else if (style === 'arpeggio') {
+        // Fingerpicking pattern
+        order = [...activeStrings].sort((a, b) => b - a);
+        baseStagger = 0.110;
+      } else if (style === 'roll') {
+        // Fast Spanish / Flamenco roll
+        order = [...activeStrings].sort((a, b) => b - a);
+        baseStagger = 0.012;
+      } else {
+        // Standard downstrum: low E up to high E
+        order = [...activeStrings].sort((a, b) => b - a);
+        baseStagger = 0.022;
+      }
+
+      order.forEach((s, idx) => {
+        const fret = currentFretboardState[s];
+        const midi = GUITAR_STRINGS[s].openMidi + fret;
+        const freq = 440 * Math.pow(2, (midi - 69) / 12);
+
+        // Natural strum timing humanization
+        const delay = idx * baseStagger + (Math.random() * 0.003);
+        const velocity = style === 'arpeggio' ? 0.95 : (0.85 + (5 - s) * 0.03);
+
+        playAcousticStringPhysical(freq, now + delay, s, velocity);
+
+        // In 12-string mode, trigger octave chorus pair on lower 4 strings
+        if (acousticModelType === 'twelve' && s >= 2) {
+          playAcousticStringPhysical(freq * 2.002, now + delay + 0.004, s, velocity * 0.65, true);
+        }
+      });
+    }
+
+    function playAcousticStringPhysical(freq, startTime, stringIndex, velocity = 1.0, isOctave = false) {
+      if (!audioCtx) return;
+      const ctx = audioCtx;
+      const now = Math.max(ctx.currentTime + 0.004, startTime);
+      const sampleRate = ctx.sampleRate;
+      const duration = isOctave ? 1.6 : 2.8;
+      const numSamples = Math.floor(sampleRate * duration);
+
+      // 1. EXACT ALLPASS FRACTIONAL DELAY (Concert-pitch accuracy, eliminates sour chords)
+      const exactDelay = sampleRate / freq;
+      let N = Math.floor(exactDelay - 0.5);
+      let frac = (exactDelay - 0.5) - N;
+      if (frac < 0.1) {
+        N -= 1;
+        frac += 1.0;
+      }
+      const C = (1 - frac) / (1 + frac);
+
+      // 2. PICK STRIKE COMB FILTER (Comb notches eliminate buzzy electronic timbre)
+      const isNylon = acousticModelType === 'nylon';
+      const pluckRatio = isNylon ? 0.20 : 0.14; // Pluck position (1/5th for classical, 1/7th for steel)
+      const pluckDelay = Math.max(2, Math.round(N * pluckRatio));
+
+      // 3. PRE-FILTERED EXCITATION (Simulates pick stiffness & fingernail elasticity)
+      const pickHardness = isNylon ? 0.85 : (acousticModelType === 'twelve' ? 0.35 : 0.42);
+      const noiseSeed = new Float32Array(N + 1);
+      let flt = 0;
+      for (let i = 0; i <= N; i++) {
+        const raw = Math.random() * 2 - 1;
+        flt = flt * pickHardness + raw * (1 - pickHardness);
+        noiseSeed[i] = flt;
+      }
+
+      // Comb-filtered excitation
+      const delayLine = new Float32Array(N);
+      for (let i = 0; i < N; i++) {
+        const delayed = i >= pluckDelay ? noiseSeed[i - pluckDelay] : 0;
+        delayLine[i] = noiseSeed[i] - delayed;
+      }
+
+      // 4. PHYSICAL STRING DECAY & LOSS FACTORS
+      const baseLoss = isNylon ? 0.990 : 0.995;
+      const stringLossBonus = (5 - stringIndex) * 0.0006;
+      const lossFactor = Math.min(0.9982, baseLoss + stringLossBonus);
+      const S = isNylon ? 0.44 : 0.50; // Internal dispersion damping
+
+      const audioBuffer = ctx.createBuffer(1, numSamples, sampleRate);
+      const channelData = audioBuffer.getChannelData(0);
+
+      let delayIdx = 0;
+      let allpassPrevIn = 0;
+      let allpassPrevOut = 0;
+      let filterPrev = 0;
+
+      // Pluck contact transient envelope (10ms plectrum click)
+      const clickSamples = Math.min(numSamples, Math.floor(sampleRate * 0.012));
+
+      for (let i = 0; i < numSamples; i++) {
+        const outSample = delayLine[delayIdx];
+
+        // Loop lowpass damping
+        const lowpassed = outSample * S + filterPrev * (1 - S);
+        filterPrev = lowpassed;
+
+        // Fractional delay allpass filter
+        const allpassIn = lowpassed * lossFactor;
+        const allpassOut = C * allpassIn + allpassPrevIn - C * allpassPrevOut;
+        allpassPrevIn = allpassIn;
+        allpassPrevOut = allpassOut;
+
+        delayLine[delayIdx] = allpassOut;
+        delayIdx = (delayIdx + 1) % N;
+
+        // Add soft physical pick contact click in first 10ms
+        let click = 0;
+        if (i < clickSamples && !isOctave) {
+          const env = Math.exp(-i / (sampleRate * 0.0028));
+          click = (Math.random() * 2 - 1) * (isNylon ? 0.04 : 0.12) * env;
+        }
+
+        channelData[i] = outSample + click;
+      }
+
+      // 5. WEB AUDIO PLAYBACK GRAPH
+      const bufferSource = ctx.createBufferSource();
+      bufferSource.buffer = audioBuffer;
+
+      // Dynamic string damping envelope
+      const stringGain = ctx.createGain();
+      const peakVol = 0.55 * velocity * (isOctave ? 0.6 : 1.0);
+      stringGain.gain.setValueAtTime(0.0001, now);
+      stringGain.gain.linearRampToValueAtTime(peakVol, now + 0.003);
+      stringGain.gain.exponentialRampToValueAtTime(peakVol * 0.35, now + 0.20);
+      stringGain.gain.exponentialRampToValueAtTime(0.00001, now + duration);
+
+      // Stereo Panorama: Spatialize strings across acoustic soundstage
+      let panner = null;
+      if (ctx.createStereoPanner) {
+        panner = ctx.createStereoPanner();
+        const panMap = [-0.28, -0.17, -0.06, 0.06, 0.17, 0.28];
+        const basePan = panMap[stringIndex] || 0;
+        panner.pan.setValueAtTime(isOctave ? -basePan : basePan, now);
+      }
+
+      // Route through Master Acoustic Wood Body Bus
+      const bus = getAcousticMasterBus(ctx);
+
+      if (panner) {
+        bufferSource.connect(stringGain);
+        stringGain.connect(panner);
+        panner.connect(bus.input);
+      } else {
+        bufferSource.connect(stringGain);
+        stringGain.connect(bus.input);
+      }
+
+      bufferSource.start(now);
+    }
+
+    /* ==========================================================================
+       GUITARTUNA NOISE CANCELLATION & SPECTRAL SUBTRACTION CALIBRATION
+       ========================================================================== */
+    async function startNoiseCalibration() {
+      if (!isListening) {
+        await startMicrophone();
+      }
+      if (!isListening) return;
+
+      isCalibratingNoise = true;
+      noiseCalibrationFrames = 0;
+      const bufferLength = analyserNode.frequencyBinCount;
+      noiseProfileAmps = new Float32Array(bufferLength).fill(0);
+
+      document.getElementById('calibrate-btn-text').textContent = "Scanning Silence... (2s)";
+      document.getElementById('status-indicator').className = "status-dot calibrating";
+      document.getElementById('status-text').textContent = "Calibrating Ambient Room Noise • Stay Silent...";
+      document.getElementById('signal-quality-label').textContent = "Measuring Noise Profile";
+      document.getElementById('signal-quality-label').style.color = "var(--accent-cyan)";
+    }
+
+    function completeNoiseCalibration(avgMaxDb) {
+      isCalibratingNoise = false;
+      isNoiseProfileActive = true;
+      measuredNoiseFloorDb = avgMaxDb;
+
+      document.getElementById('calibrate-btn-text').textContent = "Re-Calibrate Room Noise (2s)";
+      document.getElementById('status-indicator').className = "status-dot listening";
+      document.getElementById('status-text').textContent = "Noise Subtraction Active • Strum Guitar";
+      document.getElementById('noise-status-text').textContent = `Active (${Math.round(measuredNoiseFloorDb)} dB Subtracted)`;
+      document.getElementById('noise-status-text').style.color = "#38bdf8";
+      document.getElementById('noise-reduction-badge').className = "badge calibrated";
+
+      document.getElementById('noise-floor-label').textContent = `${Math.round(measuredNoiseFloorDb)} dB`;
+      
+      const noisePct = Math.max(0, Math.min(100, (measuredNoiseFloorDb + 75) * 1.66));
+      document.getElementById('noise-floor-marker').style.left = `${noisePct}%`;
+
+      const optimalGate = Math.max(10, Math.round(noisePct + 8));
+      updateNoiseGate((optimalGate / 100) * 50);
+    }
+
+    function setTriggerMode(mode) {
+      triggerMode = mode;
+      document.getElementById('btn-trigger-guitartuna').classList.toggle('active', mode === 'guitartuna');
+      document.getElementById('btn-trigger-continuous').classList.toggle('active', mode === 'continuous');
+      const badge = document.getElementById('trigger-mode-badge');
+      if (mode === 'guitartuna') {
+        badge.innerHTML = '<span>⚡</span> Mode: GuitarTuna Strum Trigger';
+        badge.className = 'badge active';
+      } else {
+        badge.innerHTML = '<span>⏱️</span> Mode: Continuous Stream';
+        badge.className = 'badge';
+      }
+    }
+
+    /* ==========================================================================
+       REAL-TIME AUDIO INITIALIZATION (WITH BIQUAD HARDWARE FILTERS)
+       ========================================================================== */
+    async function toggleMicrophone() {
+      if (isListening) stopMicrophone();
+      else await startMicrophone();
+    }
+
+    async function startMicrophone() {
+      try {
+        const ctx = await ensureAudio();
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false,
+            channelCount: 1,
+            sampleRate: { ideal: 44100 }
+          }
+        });
+
+        micStream = stream;
+        const source = ctx.createMediaStreamSource(stream);
+
+        // Hardware Highpass Filter (kills sub-bass rumble < 75 Hz)
+        highpassFilter = ctx.createBiquadFilter();
+        highpassFilter.type = 'highpass';
+        highpassFilter.frequency.value = 75;
+        highpassFilter.Q.value = 0.707;
+
+        // Hardware Lowpass Filter (kills hiss & clicks > 1300 Hz)
+        lowpassFilter = ctx.createBiquadFilter();
+        lowpassFilter.type = 'lowpass';
+        lowpassFilter.frequency.value = 1300;
+        lowpassFilter.Q.value = 0.707;
+
+        micGainNode = ctx.createGain();
+        micGainNode.gain.value = micGainMultiplier;
+
+        analyserNode = ctx.createAnalyser();
+        analyserNode.fftSize = 4096;
+        analyserNode.smoothingTimeConstant = 0.12;
+
+        source.connect(highpassFilter);
+        highpassFilter.connect(lowpassFilter);
+        lowpassFilter.connect(micGainNode);
+        micGainNode.connect(analyserNode);
+
+        isListening = true;
+        document.getElementById('btn-toggle-mic').classList.add('btn-listen-active');
+        document.getElementById('mic-btn-text').textContent = "Listening... (Click to Stop)";
+        document.getElementById('status-indicator').className = "status-dot listening";
+        document.getElementById('status-text').textContent = "Microphone Active • Strum Guitar";
+        document.getElementById('signal-quality-label').textContent = "Listening";
+        document.getElementById('signal-quality-label').style.color = "var(--accent-emerald)";
+
+        audioProcessingLoop();
+      } catch (err) {
+        console.error("Microphone access error:", err);
+        alert("Microphone could not be accessed. Please verify that microphone permissions are allowed in your browser settings!");
+      }
+    }
+
+    function stopMicrophone() {
+      isListening = false;
+      if (micStream) {
+        micStream.getTracks().forEach(track => track.stop());
+        micStream = null;
+      }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      document.getElementById('btn-toggle-mic').classList.remove('btn-listen-active');
+      document.getElementById('mic-btn-text').textContent = "Start Listening (Microphone)";
+      document.getElementById('status-indicator').className = "status-dot";
+      document.getElementById('status-text').textContent = "Microphone Stopped";
+      document.getElementById('signal-quality-label').textContent = "Idle";
+      document.getElementById('signal-quality-label').style.color = "var(--text-muted)";
+      document.getElementById('audio-meter').style.width = "0%";
+      document.getElementById('db-readout').textContent = "-∞ dB";
+    }
+
+    function updateGain(val) {
+      micGainMultiplier = parseFloat(val);
+      document.getElementById('gain-val').textContent = `${parseFloat(val).toFixed(1)}x`;
+      if (micGainNode) micGainNode.gain.value = micGainMultiplier;
+    }
+
+    function updateNoiseGate(val) {
+      noiseGateThreshold = parseFloat(val);
+      document.getElementById('gate-val').textContent = `${Math.round(val)} dB`;
+      document.getElementById('gate-threshold-label').textContent = `${Math.round(val)} dB`;
+      const pct = Math.min(100, Math.max(5, (noiseGateThreshold / 50) * 100));
+      document.getElementById('gate-marker').style.left = `${pct}%`;
+    }
+
+    function updateSeventhStrictness(val) {
+      seventhStrictness = parseFloat(val) / 100;
+      document.getElementById('strict-val').textContent = `${val}%`;
+      document.getElementById('seventh-marker').style.left = `${val}%`;
+    }
+
+    /* ==========================================================================
+       GUITAR POSITION LOCATOR FOR SINGLE NOTES
+       ========================================================================== */
+    function findGuitarPosition(midi) {
+      const roundMidi = Math.round(midi);
+      const candidates = [];
+      GUITAR_STRINGS.forEach(str => {
+        const fret = roundMidi - str.openMidi;
+        if (fret >= 0 && fret <= 15) {
+          candidates.push({
+            stringIndex: str.stringIndex,
+            stringName: str.name,
+            fret: fret
+          });
+        }
+      });
+      candidates.sort((a, b) => a.fret - b.fret);
+      return candidates[0] || null;
+    }
+
+    /* ==========================================================================
+       MAIN AUDIO LOOP: REAL-TIME DUAL SINGLE-NOTE & CHORD DETECTOR
+       ========================================================================== */
+    function audioProcessingLoop() {
+      if (!isListening || !analyserNode) return;
+
+      const bufferLength = analyserNode.frequencyBinCount;
+      const freqData = new Float32Array(bufferLength);
+      analyserNode.getFloatFrequencyData(freqData);
+
+      let maxDb = -120;
+      for (let i = 0; i < bufferLength; i++) {
+        if (freqData[i] > maxDb) maxDb = freqData[i];
+      }
+
+      const meterVal = Math.max(0, Math.min(100, (maxDb + 75) * 1.66));
+      document.getElementById('audio-meter').style.width = `${meterVal}%`;
+      document.getElementById('db-readout').textContent = `${Math.round(maxDb)} dB`;
+
+      // 1. NOISE CALIBRATION ROUTINE
+      if (isCalibratingNoise) {
+        noiseCalibrationFrames++;
+        for (let b = 0; b < bufferLength; b++) {
+          const linAmp = Math.pow(10, freqData[b] / 20);
+          noiseProfileAmps[b] += linAmp;
+        }
+
+        if (noiseCalibrationFrames >= 80) {
+          for (let b = 0; b < bufferLength; b++) {
+            noiseProfileAmps[b] /= noiseCalibrationFrames;
+          }
+          completeNoiseCalibration(maxDb);
+        }
+        animationFrameId = requestAnimationFrame(audioProcessingLoop);
+        return;
+      }
+
+      drawSpectrum(freqData);
+
+      // 2. GUITARTUNA SPECTRAL SUBTRACTION:
+      const cleanAmps = new Float32Array(bufferLength);
+      let totalGuitarBandEnergy = 0;
+      const oversubtraction = 1.35;
+
+      for (let b = 0; b < bufferLength; b++) {
+        const rawAmp = Math.pow(10, freqData[b] / 20);
+        if (isNoiseProfileActive && noiseProfileAmps) {
+          cleanAmps[b] = Math.max(0, rawAmp - noiseProfileAmps[b] * oversubtraction);
+        } else {
+          cleanAmps[b] = rawAmp;
+        }
+        totalGuitarBandEnergy += cleanAmps[b];
+      }
+
+      // 3. LOW-LATENCY STRUM & NOTE ATTACK DETECTION
+      const energyFlux = totalGuitarBandEnergy - prevFrameBandEnergy;
+      prevFrameBandEnergy = totalGuitarBandEnergy;
+
+      const minEnergyThreshold = isNoiseProfileActive ? 0.018 : 0.035;
+      const minDbThreshold = isNoiseProfileActive ? (measuredNoiseFloorDb + 2.5) : -68;
+      const isSignalPresent = (totalGuitarBandEnergy > minEnergyThreshold) && (maxDb > minDbThreshold) && (meterVal >= (noiseGateThreshold / 50) * 100);
+
+      if (!isSignalPresent) {
+        document.getElementById('signal-quality-label').textContent = "Listening • Pluck Note or Strum Chord...";
+        document.getElementById('signal-quality-label').style.color = "var(--text-muted)";
+        for (let i = 0; i < 12; i++) smoothedChroma[i] *= 0.82;
+        updateChromaUI(smoothedChroma, -1);
+        animationFrameId = requestAnimationFrame(audioProcessingLoop);
+        return;
+      }
+
+      // Fast-attack snap: if a new strum or pluck onset occurs, immediately reset chroma so new note/chord appears in 16ms!
+      const isNewAttack = energyFlux > 0.040;
+      if (isNewAttack) {
+        document.getElementById('signal-quality-label').textContent = "⚡ Attack Captured (Instant)";
+        document.getElementById('signal-quality-label').style.color = "var(--accent-gold)";
+      } else {
+        document.getElementById('signal-quality-label').textContent = "String Ringing Clear";
+        document.getElementById('signal-quality-label').style.color = "var(--accent-emerald)";
+      }
+
+      // 4. Peak Extraction with Sub-Bin Parabolic Interpolation (Sub-Hertz Precision)
+      const sampleRate = audioCtx.sampleRate;
+      const binWidth = sampleRate / analyserNode.fftSize;
+      const rawChroma = new Float32Array(12);
+      const detectedPeaks = [];
+
+      const minBin = Math.floor(75 / binWidth);
+      const maxBin = Math.min(bufferLength - 2, Math.ceil(1100 / binWidth));
+
+      for (let b = minBin; b <= maxBin; b++) {
+        const val = cleanAmps[b];
+        if (val > 0.0022 && val > cleanAmps[b - 1] && val > cleanAmps[b + 1]) {
+          // Sub-bin parabolic peak interpolation
+          const alpha = cleanAmps[b - 1];
+          const beta = cleanAmps[b];
+          const gamma = cleanAmps[b + 1];
+          const delta = 0.5 * (alpha - gamma) / (alpha - 2 * beta + gamma + 1e-9);
+          const interpBin = b + delta;
+          const peakFreq = interpBin * binWidth;
+
+          const midi = 69 + 12 * Math.log2(peakFreq / 440);
+          const nearestPitch = Math.round(midi);
+          const pitchClass = ((nearestPitch % 12) + 12) % 12;
+
+          const freqWeight = Math.min(2.5, Math.max(0.65, peakFreq / 240));
+          rawChroma[pitchClass] += val * freqWeight;
+
+          detectedPeaks.push({
+            freq: peakFreq,
+            midi: midi,
+            note: NOTE_NAMES[pitchClass],
+            amp: val,
+            pc: pitchClass
+          });
+        }
+      }
+
+      // Harmonic overtone whitening (suppress 2nd and 3rd harmonics of low strings)
+      detectedPeaks.forEach(pk => {
+        if (pk.freq < 380 && pk.amp > 0.035) {
+          const thirdMidi = Math.round(69 + 12 * Math.log2((pk.freq * 3) / 440));
+          const thirdPc = ((thirdMidi % 12) + 12) % 12;
+          rawChroma[thirdPc] = Math.max(0, rawChroma[thirdPc] - pk.amp * 0.35);
+
+          const secondMidi = Math.round(69 + 12 * Math.log2((pk.freq * 2) / 440));
+          const secondPc = ((secondMidi % 12) + 12) % 12;
+          rawChroma[secondPc] = Math.max(0, rawChroma[secondPc] - pk.amp * 0.20);
+        }
+      });
+
+      if (detectedPeaks.length > 0) {
+        detectedPeaks.sort((a, b) => b.amp - a.amp);
+        const topPeaksStr = detectedPeaks.slice(0, 4).map(p => `${p.note}(${Math.round(p.freq)}Hz)`).join(', ');
+        document.getElementById('detected-peaks-readout').textContent = `Clean Peaks: ${topPeaksStr}`;
+      }
+
+      // Normalize rawChroma
+      let maxChroma = 0;
+      let totalChroma = 0;
+      for (let i = 0; i < 12; i++) {
+        if (rawChroma[i] > maxChroma) maxChroma = rawChroma[i];
+        totalChroma += rawChroma[i];
+      }
+      if (maxChroma > 0.0001) {
+        for (let i = 0; i < 12; i++) rawChroma[i] /= maxChroma;
+      }
+
+      // Dynamic Smoothing: on new attack, instant snap (zero delay); on sustain, smooth gently
+      if (isNewAttack) {
+        for (let i = 0; i < 12; i++) smoothedChroma[i] = rawChroma[i];
+      } else {
+        const alpha = 0.50; // Responsive tracking
+        for (let i = 0; i < 12; i++) {
+          smoothedChroma[i] = (1 - alpha) * smoothedChroma[i] + alpha * rawChroma[i];
+        }
+      }
+
+      // 5. SINGLE NOTE vs POLYPHONIC CHORD DISCRIMINATION
+      let activePitchClasses = 0;
+      let dominantPc = -1;
+      let maxChromaEnergy = 0;
+      let sumEnergy = 0;
+      for (let i = 0; i < 12; i++) {
+        sumEnergy += smoothedChroma[i];
+        if (smoothedChroma[i] > maxChromaEnergy) {
+          maxChromaEnergy = smoothedChroma[i];
+          dominantPc = i;
+        }
+        if (smoothedChroma[i] > 0.28) {
+          activePitchClasses++;
+        }
+      }
+
+      // Find lowest plausible fundamental frequency (75Hz to 450Hz) with solid amplitude
+      const strongestPeak = detectedPeaks[0];
+      const lowCandidates = detectedPeaks.filter(p => p.freq >= 75 && p.freq <= 450 && p.amp >= (strongestPeak ? strongestPeak.amp * 0.25 : 0));
+      lowCandidates.sort((a, b) => a.freq - b.freq);
+      const f0 = (lowCandidates.length > 0) ? lowCandidates[0].freq : (strongestPeak ? strongestPeak.freq : 0);
+
+      // Check harmonic multiples of candidate f0
+      let harmonicMatchCount = 0;
+      detectedPeaks.forEach(p => {
+        const ratio = p.freq / (f0 || 1);
+        const near = Math.round(ratio);
+        if (near >= 1 && near <= 7 && Math.abs(ratio - near) < 0.09) {
+          harmonicMatchCount++;
+        }
+      });
+
+      const isSingleNote = (activePitchClasses <= 1) || 
+                           (maxChromaEnergy / (sumEnergy + 1e-6) >= 0.56) ||
+                           (detectedPeaks.length > 0 && harmonicMatchCount >= detectedPeaks.length * 0.70 && activePitchClasses <= 2);
+
+      // =========================================================================
+      // PATH A: SINGLE NOTE DETECTED (PLUCKED STRING / MELODY NOTE)
+      // =========================================================================
+      if (isSingleNote && f0 >= 75) {
+        const midi = 69 + 12 * Math.log2(f0 / 440);
+        const roundMidi = Math.round(midi);
+        const noteName = NOTE_NAMES[((roundMidi % 12) + 12) % 12];
+        const octave = Math.floor(roundMidi / 12) - 1;
+        const cents = Math.round((midi - roundMidi) * 100);
+        const noteFullName = `${noteName}${octave}`;
+        const guitarPos = findGuitarPosition(roundMidi);
+        const sargamName = SARGAM_NAMES[((roundMidi % 12) + 12) % 12] || "-";
+
+        const centsSign = cents > 0 ? `+${cents}¢` : (cents < 0 ? `${cents}¢` : "±0¢");
+        const tunerVerdict = Math.abs(cents) <= 4 ? "🎯 Perfect Pitch" : (cents < 0 ? "♭ Slightly Flat" : "♯ Slightly Sharp");
+        const tunerColor = Math.abs(cents) <= 4 ? "var(--accent-emerald)" : (Math.abs(cents) <= 12 ? "var(--accent-gold)" : "var(--accent-rose)");
+
+        // Update Big Hero Display for Single Note
+        document.getElementById('display-chord-name').innerHTML = `Note: <span style="color:#38bdf8;">${noteFullName}</span>`;
+        document.getElementById('info-root').textContent = noteFullName;
+        document.getElementById('info-quality').textContent = "Single Note";
+        document.getElementById('info-notes').textContent = `${f0.toFixed(1)} Hz (${centsSign})`;
+        document.getElementById('info-sargam').textContent = sargamName;
+        document.getElementById('info-confidence').innerHTML = `<span style="color:${tunerColor}">${tunerVerdict}</span>`;
+
+        // Update Candidates Row
+        document.getElementById('cand-1').innerHTML = `#1 <strong>${noteFullName}</strong> (${f0.toFixed(1)} Hz)`;
+        document.getElementById('cand-2').innerHTML = `#2 <strong>${tunerVerdict}</strong> (${centsSign})`;
+        if (guitarPos) {
+          document.getElementById('cand-3').innerHTML = `#3 <strong>${guitarPos.stringName}</strong> (Fret ${guitarPos.fret})`;
+        } else {
+          document.getElementById('cand-3').innerHTML = `#3 <strong>Single String</strong>`;
+        }
+
+        // Hide 7th chord inspector for single notes
+        document.getElementById('seventh-inspector').style.display = 'none';
+
+        // Update status badge
+        const holdBadge = document.getElementById('strum-hold-badge');
+        holdBadge.style.display = 'inline-flex';
+        holdBadge.innerHTML = `<span>🎵</span> Note ${noteFullName} (${f0.toFixed(1)} Hz)`;
+        holdBadge.style.background = 'rgba(56, 189, 248, 0.2)';
+        holdBadge.style.color = '#38bdf8';
+
+        // Light up single note on Fretboard
+        if (guitarPos) {
+          currentFretboardState = [-1, -1, -1, -1, -1, -1];
+          currentFretboardState[guitarPos.stringIndex] = guitarPos.fret;
+          renderFretboardState();
+        }
+
+        updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(noteName));
+      } 
+      // =========================================================================
+      // PATH B: POLYPHONIC CHORD DETECTED (STRUMMED CHORD)
+      // =========================================================================
+      else {
+        // Show 7th inspector when chords are played
+        document.getElementById('seventh-inspector').style.display = 'block';
+
+        const matches = [];
+        for (let root = 0; root < 12; root++) {
+          const rootName = NOTE_NAMES[root];
+          CHORD_TEMPLATES.forEach(tpl => {
+            let dotProduct = 0;
+            let normTemplate = 0;
+            let normChroma = 0;
+
+            for (let i = 0; i < 12; i++) {
+              const tplWeight = tpl.weights[i];
+              const chromaVal = smoothedChroma[(root + i) % 12];
+              dotProduct += tplWeight * chromaVal;
+              normTemplate += tplWeight * tplWeight;
+              normChroma += chromaVal * chromaVal;
+            }
+
+            const correlation = dotProduct / (Math.sqrt(normTemplate) * Math.sqrt(normChroma) + 1e-5);
+            matches.push({
+              name: `${rootName} ${tpl.name}`,
+              short: `${rootName}${tpl.short}`,
+              root: rootName,
+              quality: tpl.name,
+              formula: tpl.formula,
+              intervals: tpl.intervals,
+              corr: correlation
+            });
+          });
+        }
+
+        // Add Incumbent Hysteresis Bonus to current locked chord (stops flickering)
+        matches.forEach(m => {
+          if (lastLockedChord === m.short) {
+            m.corr += 0.08;
+          }
+        });
+
+        matches.sort((a, b) => b.corr - a.corr);
+        let best = matches[0];
+
+        // 7th Note Disambiguation & Gating Engine (Am vs Am7)
+        const rootIdx = NOTE_NAMES.indexOf(best.root);
+        const isMinor = best.quality.includes("Minor") || best.quality.includes("m7");
+        const triadQuality = isMinor ? "Minor" : "Major";
+        const triadMatch = matches.find(m => m.root === best.root && m.quality === triadQuality);
+
+        const seventhInterval = (best.quality === "Major 7th") ? 11 : 10;
+        const thirdInterval = isMinor ? 3 : 4;
+        const seventhNoteName = NOTE_NAMES[(rootIdx + seventhInterval) % 12];
+
+        const rootEnergy = smoothedChroma[rootIdx];
+        const thirdEnergy = smoothedChroma[(rootIdx + thirdInterval) % 12];
+        const fifthEnergy = smoothedChroma[(rootIdx + 7) % 12];
+        const seventhEnergy = smoothedChroma[(rootIdx + seventhInterval) % 12];
+
+        const triadAvg = (rootEnergy + thirdEnergy + fifthEnergy) / 3;
+        const seventhRatio = seventhEnergy / (triadAvg + 0.001);
+
+        updateSeventhInspectorUI(best.root, isMinor, seventhNoteName, seventhRatio);
+
+        if (best.quality.includes("7") || best.quality.includes("7th")) {
+          if (triadMatch && seventhRatio < seventhStrictness) {
+            best = triadMatch;
+          }
+        }
+
+        // Consensus Voting Buffer (eliminates 1-frame transient flicker)
+        candidateVoteHistory.push(best.short);
+        if (candidateVoteHistory.length > 4) candidateVoteHistory.shift();
+        const voteCount = candidateVoteHistory.filter(c => c === best.short).length;
+        const isConsensusWinner = (voteCount >= 2) || (lastLockedChord === best.short);
+
+        if (matches.length >= 3) {
+          document.getElementById('cand-1').innerHTML = `#1 <strong>${matches[0].short}</strong> (${Math.round(Math.max(0, matches[0].corr * 100))}%)`;
+          document.getElementById('cand-2').innerHTML = `#2 <strong>${matches[1].short}</strong> (${Math.round(Math.max(0, matches[1].corr * 100))}%)`;
+          document.getElementById('cand-3').innerHTML = `#3 <strong>${matches[2].short}</strong> (${Math.round(Math.max(0, matches[2].corr * 100))}%)`;
+        }
+
+        if (best && best.corr > 0.20 && isConsensusWinner) {
+          const confidencePct = Math.min(99, Math.round(best.corr * 100)) + "%";
+
+          const activeNotes = [];
+          for (let i = 0; i < 12; i++) {
+            if (smoothedChroma[i] > 0.32) activeNotes.push(NOTE_NAMES[i]);
+          }
+          const notesStr = activeNotes.length > 0 ? activeNotes.join(" - ") : best.root;
+
+          updateHeroDisplay(best.short, best.root, best.quality, notesStr, "Chord Detected", confidencePct);
+          updateTheoryTable(best);
+          updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(best.root));
+
+          const holdBadge = document.getElementById('strum-hold-badge');
+          holdBadge.style.display = 'inline-flex';
+          holdBadge.innerHTML = `<span>🎸</span> Chord: ${best.short}`;
+          holdBadge.style.background = 'rgba(255, 179, 0, 0.2)';
+          holdBadge.style.color = '#ffd54f';
+          clearTimeout(lockCooldownTimer);
+          lockCooldownTimer = setTimeout(() => {
+            holdBadge.style.display = 'none';
+          }, 1500);
+
+          if (CHORD_PRESETS[best.short]) {
+            currentFretboardState = [...CHORD_PRESETS[best.short].frets];
+            renderFretboardState();
+          }
+
+          if (lastLockedChord !== best.short) {
+            lastLockedChord = best.short;
+            addChordToHistoryLog(best.short, best.name, notesStr);
+          }
+        } else {
+          updateChromaUI(smoothedChroma, -1);
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(audioProcessingLoop);
+    }
+
+    function updateSeventhInspectorUI(root, isMinor, seventhNote, ratio) {
+      document.getElementById('seventh-note-label').textContent = seventhNote;
+      const pct = Math.min(100, Math.round(ratio * 100));
+      const reqPct = Math.round(seventhStrictness * 100);
+
+      document.getElementById('seventh-meter-fill').style.width = `${pct}%`;
+      document.getElementById('seventh-ratio-text').textContent = `${pct}% / ${reqPct}% req`;
+
+      const badge = document.getElementById('seventh-verdict-badge');
+      const desc = document.getElementById('seventh-desc');
+
+      if (ratio >= seventhStrictness) {
+        badge.className = 'verdict-pill verdict-seventh';
+        badge.textContent = `7th Chord (${root}${isMinor ? 'm7' : '7'})`;
+        desc.innerHTML = `<strong>${seventhNote}</strong> string is ringing with strong intentional energy (${pct}% &ge; ${reqPct}%). Confirmed <strong>${root}${isMinor ? 'm7' : '7'}</strong>.`;
+      } else {
+        badge.className = 'verdict-pill verdict-triad';
+        badge.textContent = `Clean Triad (${root}${isMinor ? 'm' : ''})`;
+        desc.innerHTML = `<strong>${seventhNote}</strong> energy is only ${pct}% (below ${reqPct}% threshold; acoustic overtone). Resolved to <strong>${root}${isMinor ? 'm' : ''} Triad</strong>.`;
+      }
+    }
+
+    function updateChromaUI(chromaArr, rootIdx) {
+      for (let i = 0; i < 12; i++) {
+        const fill = document.getElementById(`chroma-fill-${i}`);
+        const col = document.getElementById(`chroma-col-${i}`);
+        if (!fill || !col) continue;
+
+        const pct = Math.min(100, Math.round(chromaArr[i] * 100));
+        fill.style.height = `${pct}%`;
+
+        if (pct > 50 || i === rootIdx) col.classList.add('highlight');
+        else col.classList.remove('highlight');
+      }
+    }
+
+    function addChordToHistoryLog(shortName, fullName, notes) {
+      const logBox = document.getElementById('history-log');
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML = `
+        <span class="hist-name">${shortName} (${fullName})</span>
+        <span style="color:var(--text-muted);">${notes}</span>
+        <span class="hist-time">${timeStr}</span>
+      `;
+      logBox.insertBefore(item, logBox.firstChild);
+      if (logBox.children.length > 25) logBox.removeChild(logBox.lastChild);
+    }
+
+    function clearHistoryLog() {
+      document.getElementById('history-log').innerHTML = '';
+      lastLockedChord = null;
+    }
+
+    function initCanvases() {
+      const canvas = document.getElementById('canvas-spectrum');
+      canvas.width = canvas.clientWidth * window.devicePixelRatio || 320;
+      canvas.height = canvas.clientHeight * window.devicePixelRatio || 140;
+    }
+
+    function drawSpectrum(freqData) {
+      const canvas = document.getElementById('canvas-spectrum');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let y = 0; y < h; y += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const gradient = ctx.createLinearGradient(0, h, 0, 0);
+      gradient.addColorStop(0, 'rgba(255, 179, 0, 0.1)');
+      gradient.addColorStop(0.6, 'rgba(255, 179, 0, 0.6)');
+      gradient.addColorStop(1, 'rgba(56, 189, 248, 0.9)');
+
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+
+      const binsToDraw = Math.min(freqData.length, 320);
+      const step = w / binsToDraw;
+
+      for (let i = 0; i < binsToDraw; i++) {
+        const db = freqData[i];
+        const norm = Math.max(0, Math.min(1, (db + 90) / 75));
+        const y = h - (norm * h);
+        const x = i * step;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      ctx.strokeStyle = '#ffb300';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Register Service Worker for PWA (offline & installable mobile app)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.log('Service Worker registration note:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
