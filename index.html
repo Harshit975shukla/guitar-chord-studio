@@ -1465,6 +1465,337 @@
       line-height: 1.6;
     }
 
+
+    /* ==========================================================================
+       ADVANCED SUITE: RHYTHM/TABLA, TAB TRANSCRIBER, MIDI, VIDEO & LOOPER
+       ========================================================================== */
+
+    /* 1. FLOATING / PERSISTENT RHYTHM BAR */
+    .rhythm-dock-container {
+      background: linear-gradient(180deg, rgba(16, 22, 38, 0.98), rgba(9, 13, 24, 0.96));
+      border-top: 1px solid var(--border-subtle);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      position: sticky;
+      bottom: 0;
+    }
+    .rhythm-dock-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .rhythm-select-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+    .rhythm-select-pill option {
+      background: #0d1222;
+      color: #fff;
+    }
+    .rhythm-beat-indicators {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .rhythm-beat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.1s ease;
+    }
+    .rhythm-beat-dot.sam-beat {
+      border: 1.5px solid var(--accent-gold);
+    }
+    .rhythm-beat-dot.active-beat {
+      background: var(--accent-gold);
+      box-shadow: 0 0 10px var(--accent-gold);
+      transform: scale(1.3);
+    }
+
+    /* 2. AI TAB TRANSCRIBER STYLES */
+    .transcriber-container {
+      max-width: 1250px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .tab-sheet-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .tab-viewport-pre {
+      background: #090d16;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 14px;
+      padding: 20px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+      user-select: text;
+    }
+    .tab-sargam-line {
+      color: #ffd54f;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .tab-notes-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .tab-note-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .tab-note-chip:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+    .tab-note-chip strong {
+      color: var(--accent-gold);
+    }
+
+    /* 3. MULTI-TRACK LOOPER STYLES */
+    .looper-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .looper-master-card {
+      background: linear-gradient(145deg, rgba(20, 26, 48, 0.95), rgba(12, 16, 30, 0.98));
+      border: 1px solid var(--accent-purple);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(168, 85, 247, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .looper-hud-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .looper-progress-wheel {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent-purple) 0%, rgba(255, 255, 255, 0.1) 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+      transition: background 0.05s linear;
+    }
+    .looper-wheel-inner {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #0d111d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent-purple);
+    }
+    .looper-tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .looper-tracks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .looper-track-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1.5px solid var(--border-light);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: all 0.2s;
+    }
+    .looper-track-box.recording {
+      border-color: #f43f5e;
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.4);
+    }
+    .looper-track-box.playing {
+      border-color: #10b981;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+    }
+    .track-rec-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .track-rec-btn.idle {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+    .track-rec-btn.rec-active {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: #fff;
+      animation: recordGlow 1.2s infinite alternate;
+    }
+    .track-rec-btn.play-active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+    }
+
+    /* 4. SPLIT-SCREEN VIDEO RECORDER STYLES */
+    .video-studio-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .video-stage-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 45px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+    .video-viewport-wrapper {
+      width: 100%;
+      max-width: 860px;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    }
+    #camera-video-element {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    #video-overlay-canvas {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .video-controls-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* 5. WEB MIDI MODAL & STATUS */
+    .midi-badge-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      color: #c084fc;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .midi-badge-btn:hover {
+      background: rgba(168, 85, 247, 0.25);
+      border-color: var(--accent-purple);
+      color: #fff;
+    }
+    .midi-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .midi-modal-card {
+      background: #0f1424;
+      border: 1.5px solid var(--accent-purple);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 540px;
+      width: 90%;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
 /* ==========================================================================
        STUDIO TAB NAVIGATION & ADVANCED SUITE STYLES
        ========================================================================== */
@@ -2086,6 +2417,9 @@
     </div>
 
     <div class="top-actions">
+        <button class="midi-badge-btn" id="btn-open-midi-modal" onclick="openMidiModal()">
+          <span>🎹</span> Web MIDI: <span id="top-midi-status">Ready</span>
+        </button>
       <div class="badge" id="noise-reduction-badge">
         <span>🔇</span> Noise Subtraction: <strong id="noise-status-text" style="color:#ffd54f;">Off (Click Calibrate)</strong>
       </div>
@@ -2106,6 +2440,18 @@
       </button>
       <button class="studio-tab-btn" id="tab-btn-search" onclick="switchStudioTab('search')">
         <span>🔍</span> Song Search & Chords <span class="tab-badge" style="background:#38bdf8; color:#000;">Instant Notes</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-looper" onclick="switchStudioTab('looper')">
+        <span>🔁</span> Multi-Track Looper <span class="tab-badge" style="background:#a855f7; color:#fff;">3 Tracks</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-transcriber" onclick="switchStudioTab('transcriber')">
+        <span>📝</span> AI Tab Transcriber <span class="tab-badge">Audio to Tab</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-video" onclick="switchStudioTab('video')">
+        <span>📹</span> Video Studio <span class="tab-badge" style="background:#ef4444; color:#fff;">Webcam HUD</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-rhythm" onclick="switchStudioTab('rhythm')">
+        <span>🥁</span> Tabla & Drums <span class="tab-badge">Keharwa/Pop</span>
       </button>
       <button class="studio-tab-btn" id="tab-btn-tuner" onclick="switchStudioTab('tuner')">
         <span>🎸</span> Headstock Tuner <span class="tab-badge">GuitarTuna</span>
@@ -2753,6 +3099,369 @@
             <!-- Lyrics rendered here -->
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MULTI-TRACK ACOUSTIC LOOPER -->
+  <div class="studio-tab-pane" id="pane-looper">
+    <div class="looper-container">
+      <div class="looper-master-card">
+        <div class="looper-hud-row">
+          <div>
+            <h2 style="font-size:1.6rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px;">
+              <span>🔁</span> Multi-Track Acoustic Looper Station
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">
+              Layer rhythm chords, melodic lead riffs, and percussion with seamless loop quantization
+            </p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:14px;">
+            <!-- Circular Progress Wheel -->
+            <div class="looper-progress-wheel" id="looper-wheel">
+              <div class="looper-wheel-inner">
+                <span id="looper-bar-beat" style="font-size:0.9rem;">1.1</span>
+                <span style="font-size:0.65rem; color:var(--text-muted);">LOOP</span>
+              </div>
+            </div>
+
+            <!-- Master Loop Controls -->
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-primary" id="btn-looper-master-play" onclick="toggleLooperMaster()">
+                  <span>▶️</span> Master Play
+                </button>
+                <button class="btn btn-secondary" onclick="stopLooperMaster()">
+                  <span>⏹️</span> Stop
+                </button>
+                <button class="btn btn-secondary" onclick="clearAllLooperTracks()">
+                  <span>🔄</span> Reset All
+                </button>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-muted);">
+                <span>Length:</span>
+                <select id="looper-bar-length" style="background:rgba(0,0,0,0.5); border:1px solid var(--border-light); color:#fff; border-radius:6px; padding:2px 8px; font-size:0.75rem;">
+                  <option value="4">4 Bars (16 Beats)</option>
+                  <option value="2">2 Bars (8 Beats)</option>
+                  <option value="8">8 Bars (32 Beats)</option>
+                </select>
+                <span>BPM: <strong id="looper-bpm-label" style="color:var(--accent-gold);">80</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Tracks Grid -->
+        <div class="looper-tracks-grid">
+          <!-- Track 1: Rhythm Chords -->
+          <div class="looper-track-box" id="looper-track-0">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:1.1rem; color:var(--accent-gold);">Track 1: Rhythm Chords</strong>
+              <span class="badge" id="trk-status-0">Empty</span>
+            </div>
+            <button class="track-rec-btn idle" id="btn-rec-track-0" onclick="toggleTrackRecord(0)">
+              <span>●</span> Record Rhythm Bed
+            </button>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Vol:</span>
+              <input type="range" min="0" max="1" step="0.05" value="0.9" oninput="setTrackVolume(0, this.value)" style="flex:1;">
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleTrackMute(0)" id="btn-mute-0">Mute</button>
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem; color:#f43f5e;" onclick="clearTrack(0)">🗑️</button>
+            </div>
+          </div>
+
+          <!-- Track 2: Melodic Lead -->
+          <div class="looper-track-box" id="looper-track-1">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:1.1rem; color:var(--accent-cyan);">Track 2: Lead Solo Riff</strong>
+              <span class="badge" id="trk-status-1">Empty</span>
+            </div>
+            <button class="track-rec-btn idle" id="btn-rec-track-1" onclick="toggleTrackRecord(1)">
+              <span>●</span> Overdub Lead Riff
+            </button>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Vol:</span>
+              <input type="range" min="0" max="1" step="0.05" value="0.9" oninput="setTrackVolume(1, this.value)" style="flex:1;">
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleTrackMute(1)" id="btn-mute-1">Mute</button>
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem; color:#f43f5e;" onclick="clearTrack(1)">🗑️</button>
+            </div>
+          </div>
+
+          <!-- Track 3: Percussion / Harmonies -->
+          <div class="looper-track-box" id="looper-track-2">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:1.1rem; color:var(--accent-purple);">Track 3: Harmonies / Taps</strong>
+              <span class="badge" id="trk-status-2">Empty</span>
+            </div>
+            <button class="track-rec-btn idle" id="btn-rec-track-2" onclick="toggleTrackRecord(2)">
+              <span>●</span> Overdub Layer 3
+            </button>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Vol:</span>
+              <input type="range" min="0" max="1" step="0.05" value="0.9" oninput="setTrackVolume(2, this.value)" style="flex:1;">
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem;" onclick="toggleTrackMute(2)" id="btn-mute-2">Mute</button>
+              <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem; color:#f43f5e;" onclick="clearTrack(2)">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: AI TAB TRANSCRIBER -->
+  <div class="studio-tab-pane" id="pane-transcriber">
+    <div class="transcriber-container">
+      <div class="tab-sheet-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 style="font-size:1.6rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px;">
+              <span>📝</span> AI Audio-to-Guitar Tab Transcriber
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">
+              Pluck any melody on your physical guitar — sub-hertz onset tracking writes real guitar tablature in real time!
+            </p>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-toggle-transcribing" onclick="toggleLiveTranscribing()">
+              <span id="transcribe-btn-icon">🎙️</span> <span id="transcribe-btn-text">Start Live Tab Writing</span>
+            </button>
+            <button class="btn btn-secondary" onclick="playTranscribedTabAudio()">
+              <span>▶️</span> Audition Tab
+            </button>
+            <button class="btn btn-secondary" onclick="copyTranscribedTab()">
+              <span>📋</span> Copy Tab
+            </button>
+            <button class="btn btn-secondary" onclick="downloadTabTxt()">
+              <span>⬇️</span> Download .txt
+            </button>
+            <button class="btn btn-secondary" onclick="clearTranscribedTab()">
+              <span>🔄</span> Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Tablature Viewport (ASCII & Interactive) -->
+        <pre class="tab-viewport-pre" id="tab-viewport-pre">
+e|-----------------------------------------------------------------|
+B|-----------------------------------------------------------------|
+G|-----------------------------------------------------------------|
+D|-----------------------------------------------------------------|
+A|-----------------------------------------------------------------|
+E|-----------------------------------------------------------------|
+Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
+        </pre>
+
+        <!-- Transcribed Notes History Grid -->
+        <div>
+          <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700; margin-bottom:8px;">
+            Captured Note Log (Click any note to hear sound):
+          </div>
+          <div class="tab-notes-grid" id="tab-notes-logged-grid">
+            <span style="color:var(--text-muted); font-size:0.8rem;">No notes recorded yet. Pluck a string!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SPLIT-SCREEN VIDEO PERFORMANCE RECORDER -->
+  <div class="studio-tab-pane" id="pane-video">
+    <div class="video-studio-container">
+      <div class="video-stage-card">
+        <div style="text-align:center;">
+          <h2 style="font-size:1.6rem; font-weight:800; color:#fff; display:flex; align-items:center; justify-content:center; gap:10px;">
+            <span>📹</span> Video Studio & Social Cover Recorder
+          </h2>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+            Record full video covers with real-time HUD (detected chords, fretboard tabs & audio visualizer) burned in!
+          </p>
+        </div>
+
+        <!-- Video Viewport with Canvas HUD Overlay -->
+        <div class="video-viewport-wrapper">
+          <video id="camera-video-element" autoplay playsinline muted></video>
+          <canvas id="video-overlay-canvas" width="1280" height="720"></canvas>
+        </div>
+
+        <!-- Video Controls Bar -->
+        <div class="video-controls-row">
+          <button class="btn btn-secondary" id="btn-toggle-webcam" onclick="toggleWebcam()">
+            <span>📷</span> Enable Camera
+          </button>
+          <button class="btn btn-primary" id="btn-video-record" onclick="toggleVideoRecording()" style="background:linear-gradient(135deg, #ef4444, #b91c1c);">
+            <span id="video-rec-icon">🔴</span> <span id="video-rec-text">Record Video Cover</span>
+          </button>
+          <span id="video-rec-timer-badge" class="badge" style="font-size:0.9rem; font-weight:700; font-family:monospace; display:none;">
+            00:00
+          </span>
+          <a id="btn-video-download" class="btn btn-secondary" style="display:none; text-decoration:none;" download="guitar_cover_hud.webm">
+            ⬇️ Download Video (.webm)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: TABLA & PERCUSSION STUDIO -->
+  <div class="studio-tab-pane" id="pane-rhythm">
+    <div class="looper-container">
+      <div class="song-hero-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 style="font-size:1.6rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px;">
+              <span>🥁</span> Acoustic Tabla, Cajón & Percussion Accompaniment
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">
+              Authentic synthesized Indian classical Thekas & western cajón rhythms to accompany your guitar
+            </p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary" id="btn-rhythm-master-toggle" onclick="toggleRhythmPlayback()">
+              <span id="rhythm-btn-icon">▶️</span> <span id="rhythm-btn-text">Start Rhythm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Rhythm Selection Cards -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:14px; margin-top:10px;">
+          <div class="mini-chord-card active-rhythm" id="rhy-card-keharwa" onclick="selectRhythmPreset('keharwa')">
+            <div style="font-size:1.1rem; font-weight:800; color:var(--accent-gold);">Keharwa Taal (8 Beats)</div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Dha Ge Na Ti Na Ke Dhi Na</div>
+            <div style="font-size:0.68rem; color:#6ee7b7; margin-top:4px;">Bollywood, Ghazal, Folk</div>
+          </div>
+
+          <div class="mini-chord-card" id="rhy-card-dadra" onclick="selectRhythmPreset('dadra')">
+            <div style="font-size:1.1rem; font-weight:800; color:var(--accent-gold);">Dadra Taal (6 Beats)</div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Dha Dhi Na Dha Tu Na</div>
+            <div style="font-size:0.68rem; color:#6ee7b7; margin-top:4px;">Waltz, Bhajan, Light Classical</div>
+          </div>
+
+          <div class="mini-chord-card" id="rhy-card-pop_cajon" onclick="selectRhythmPreset('pop_cajon')">
+            <div style="font-size:1.1rem; font-weight:800; color:var(--accent-cyan);">Acoustic Pop Cajón (4/4)</div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Kick - Hat - Snare - Hat</div>
+            <div style="font-size:0.68rem; color:#6ee7b7; margin-top:4px;">Ed Sheeran, Pop Strumming</div>
+          </div>
+
+          <div class="mini-chord-card" id="rhy-card-teentaal" onclick="selectRhythmPreset('teentaal')">
+            <div style="font-size:1.1rem; font-weight:800; color:var(--accent-purple);">TeenTaal (16 Beats)</div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Dha Dhin Dhin Dha (x4)</div>
+            <div style="font-size:0.68rem; color:#6ee7b7; margin-top:4px;">Classical Instrumental Solo</div>
+          </div>
+
+          <div class="mini-chord-card" id="rhy-card-shaker_groove" onclick="selectRhythmPreset('shaker_groove')">
+            <div style="font-size:1.1rem; font-weight:800; color:#ffd54f;">Acoustic Shaker & Rim</div>
+            <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">16th-Note Egg Shaker</div>
+            <div style="font-size:0.68rem; color:#6ee7b7; margin-top:4px;">Unplugged Ballads</div>
+          </div>
+        </div>
+
+        <!-- Volume & Tempo Controls -->
+        <div style="display:flex; flex-wrap:wrap; gap:20px; background:rgba(0,0,0,0.3); padding:16px; border-radius:14px; border:1px solid var(--border-light);">
+          <div style="flex:1; min-width:180px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+              <span>Rhythm Tempo:</span>
+              <strong id="rhythm-tempo-val" style="color:var(--accent-gold);">80 BPM</strong>
+            </div>
+            <input type="range" min="50" max="160" value="80" oninput="setRhythmBpm(this.value)" style="width:100%;">
+          </div>
+
+          <div style="flex:1; min-width:180px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+              <span>Tabla / Cajón Bass Volume:</span>
+              <strong id="rhythm-bass-vol-val">80%</strong>
+            </div>
+            <input type="range" min="0" max="1" step="0.05" value="0.8" oninput="setRhythmBassVol(this.value)" style="width:100%;">
+          </div>
+
+          <div style="flex:1; min-width:180px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+              <span>Dayan / Shaker Volume:</span>
+              <strong id="rhythm-treble-vol-val">75%</strong>
+            </div>
+            <input type="range" min="0" max="1" step="0.05" value="0.75" oninput="setRhythmTrebleVol(this.value)" style="width:100%;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSISTENT BOTTOM RHYTHM DOCK BAR -->
+  <div class="rhythm-dock-container">
+    <div class="rhythm-dock-left">
+      <button class="btn btn-primary" id="btn-dock-rhythm-toggle" style="padding:6px 16px; font-size:0.85rem;" onclick="toggleRhythmPlayback()">
+        <span id="dock-rhythm-icon">▶️</span> <span id="dock-rhythm-text">Rhythm</span>
+      </button>
+
+      <select class="rhythm-select-pill" id="dock-rhythm-select" onchange="selectRhythmPreset(this.value)">
+        <option value="keharwa">🥁 Tabla: Keharwa Taal (8 Beats)</option>
+        <option value="dadra">🥁 Tabla: Dadra Taal (6 Beats)</option>
+        <option value="pop_cajon">🎸 Acoustic Pop Cajón (4/4)</option>
+        <option value="teentaal">🥁 Tabla: TeenTaal (16 Beats)</option>
+        <option value="shaker_groove">🌾 Acoustic Shaker & Rim</option>
+      </select>
+
+      <div class="rhythm-beat-indicators" id="dock-beat-dots">
+        <!-- Beat dots populated by JS -->
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:0.8rem; color:var(--text-muted);">BPM:</span>
+      <input type="range" min="50" max="160" value="80" id="dock-tempo-slider" oninput="setRhythmBpm(this.value)" style="width:90px;">
+      <strong id="dock-tempo-readout" style="color:var(--accent-gold); font-size:0.85rem; width:45px;">80</strong>
+      <button class="btn btn-secondary" style="padding:4px 10px; font-size:0.75rem;" onclick="switchStudioTab('rhythm')">🎛️ Full Controls</button>
+    </div>
+  </div>
+
+  <!-- WEB MIDI SETTINGS MODAL -->
+  <div class="midi-modal-backdrop" id="midi-modal" onclick="if(event.target===this) closeMidiModal()">
+    <div class="midi-modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:1.3rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+          <span>🎹</span> Web MIDI Controller Output
+        </h3>
+        <button class="btn btn-secondary" style="padding:4px 10px;" onclick="closeMidiModal()">✕</button>
+      </div>
+
+      <p style="font-size:0.82rem; color:var(--text-muted);">
+        Output your acoustic guitar plucks and chords as real-time MIDI notes directly to FL Studio, Ableton, GarageBand, or virtual synth instruments.
+      </p>
+
+      <div>
+        <label style="font-size:0.78rem; font-weight:700; color:var(--accent-purple);">Target MIDI Output Device:</label>
+        <select id="midi-device-select" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border-light); color:#fff; padding:8px 12px; border-radius:10px; margin-top:4px; font-size:0.85rem;" onchange="selectMidiOutput(this.value)">
+          <option value="virtual_internal">Internal Polyphonic Synth (No External Software Needed)</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:12px;">
+        <div style="flex:1;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">MIDI Channel:</label>
+          <select id="midi-channel-select" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border-light); color:#fff; padding:6px; border-radius:8px; font-size:0.8rem;">
+            <option value="1">Channel 1</option>
+            <option value="2">Channel 2</option>
+            <option value="3">Channel 3</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Velocity Response:</label>
+          <select id="midi-vel-select" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border-light); color:#fff; padding:6px; border-radius:8px; font-size:0.8rem;">
+            <option value="dynamic">Dynamic (Pluck Strength)</option>
+            <option value="fixed">Fixed (100 Velocity)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.3); border-radius:10px; padding:10px; font-size:0.78rem; color:#e9d5ff;">
+        <span>💡</span> <strong>Tip:</strong> If using a DAW (FL Studio / Logic / Ableton), select your virtual MIDI port (like <em>loopMIDI</em> on Windows or <em>IAC Driver</em> on Mac) to record your real guitar as software instrument MIDI tracks!
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn btn-primary" onclick="testMidiNote()">
+          🔊 Test MIDI Chord (C Major)
+        </button>
       </div>
     </div>
   </div>
@@ -4275,6 +4984,9 @@
         }
 
         updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(noteName));
+
+        // Hook to AI Tab Transcriber and Web MIDI Output
+        onSingleNoteDetectedForTranscriberAndMidi(roundMidi, noteFullName, sargamName, guitarPos, f0);
       } 
       // PATH B: POLYPHONIC CHORD DETECTED
       else {
@@ -4388,6 +5100,9 @@
 
           // Check against active play-along song chord!
           checkPlayAlongLiveMatch(best.short);
+
+          // Hook to Web MIDI Output for Chords
+          onChordDetectedForMidi(best.short);
 
           if (CHORD_PRESETS[best.short]) {
             currentFretboardState = [...CHORD_PRESETS[best.short].frets];
@@ -4545,7 +5260,7 @@
       }
 
       // Update tab buttons
-      const buttons = ['detector', 'songs', 'search', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
+      const buttons = ['detector', 'songs', 'search', 'looper', 'transcriber', 'video', 'rhythm', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
       buttons.forEach(id => {
         const btn = document.getElementById('tab-btn-' + id);
         const pane = document.getElementById('pane-' + id);
@@ -4561,6 +5276,14 @@
         initSongsStudio();
       } else if (tabId === 'search') {
         initSongSearch();
+      } else if (tabId === 'transcriber') {
+        initTabTranscriber();
+      } else if (tabId === 'looper') {
+        initLooperStudio();
+      } else if (tabId === 'video') {
+        initVideoStudio();
+      } else if (tabId === 'rhythm') {
+        initRhythmStudio();
       } else if (tabId === 'tuner') {
         updateTunerUI();
       } else if (tabId === 'trainer') {
@@ -6467,6 +7190,971 @@ Chorus:
       switchStudioTab('songs');
       loadSongById(id);
     }
+
+    /* ==========================================================================
+       1. ACOUSTIC TABLA, CAJON & PERCUSSION ACCOMPANIMENT ENGINE
+       ========================================================================== */
+    let isRhythmPlaying = false;
+    let rhythmStepTimer = null;
+    let currentRhythmBeat = 0;
+    let rhythmBpm = 80;
+    let rhythmBassVol = 0.8;
+    let rhythmTrebleVol = 0.75;
+    let activeRhythmPresetKey = 'keharwa';
+
+    const RHYTHM_PRESETS = {
+      keharwa: {
+        name: "Keharwa Taal (8 Beats)",
+        beats: 8,
+        pattern: [
+          { name: "Dha", type: "bayan_dayan", vel: 1.0, sam: true },
+          { name: "Ge",  type: "bayan",       vel: 0.8 },
+          { name: "Na",  type: "dayan_na",    vel: 0.9 },
+          { name: "Ti",  type: "dayan_tin",   vel: 0.7 },
+          { name: "Na",  type: "dayan_na",    vel: 0.9 },
+          { name: "Ke",  type: "dayan_ta",    vel: 0.6 },
+          { name: "Dhi", type: "bayan_dayan", vel: 0.9 },
+          { name: "Na",  type: "dayan_na",    vel: 0.85 }
+        ]
+      },
+      dadra: {
+        name: "Dadra Taal (6 Beats)",
+        beats: 6,
+        pattern: [
+          { name: "Dha", type: "bayan_dayan", vel: 1.0, sam: true },
+          { name: "Dhi", type: "bayan_dayan", vel: 0.85 },
+          { name: "Na",  type: "dayan_na",    vel: 0.8 },
+          { name: "Dha", type: "bayan_dayan", vel: 0.95 },
+          { name: "Tu",  type: "bayan",       vel: 0.75 },
+          { name: "Na",  type: "dayan_na",    vel: 0.8 }
+        ]
+      },
+      pop_cajon: {
+        name: "Acoustic Pop Cajón (4/4)",
+        beats: 8,
+        pattern: [
+          { name: "Bass",  type: "cajon_bass",  vel: 1.0, sam: true },
+          { name: "Shk",   type: "shaker",      vel: 0.5 },
+          { name: "Snare", type: "cajon_snare", vel: 0.9 },
+          { name: "Shk",   type: "shaker",      vel: 0.6 },
+          { name: "Bass",  type: "cajon_bass",  vel: 0.85 },
+          { name: "Shk",   type: "shaker",      vel: 0.55 },
+          { name: "Snare", type: "cajon_snare", vel: 0.95 },
+          { name: "Shk",   type: "shaker",      vel: 0.7 }
+        ]
+      },
+      teentaal: {
+        name: "TeenTaal (16 Beats)",
+        beats: 16,
+        pattern: [
+          { name: "Dha",  type: "bayan_dayan", vel: 1.0, sam: true },
+          { name: "Dhin", type: "bayan_dayan", vel: 0.85 },
+          { name: "Dhin", type: "bayan_dayan", vel: 0.85 },
+          { name: "Dha",  type: "bayan_dayan", vel: 0.9 },
+          { name: "Dha",  type: "bayan_dayan", vel: 0.9 },
+          { name: "Dhin", type: "bayan_dayan", vel: 0.85 },
+          { name: "Dhin", type: "bayan_dayan", vel: 0.85 },
+          { name: "Dha",  type: "bayan_dayan", vel: 0.9 },
+          { name: "Dha",  type: "dayan_na",    vel: 0.85 },
+          { name: "Tin",  type: "dayan_tin",   vel: 0.75 },
+          { name: "Tin",  type: "dayan_tin",   vel: 0.75 },
+          { name: "Ta",   type: "dayan_ta",    vel: 0.7 },
+          { name: "Ta",   type: "dayan_ta",    vel: 0.75 },
+          { name: "Dhin", type: "bayan_dayan", vel: 0.9 },
+          { name: "Dhin", type: "bayan_dayan", vel: 0.9 },
+          { name: "Dha",  type: "bayan_dayan", vel: 1.0 }
+        ]
+      },
+      shaker_groove: {
+        name: "Acoustic Shaker & Rim (16th)",
+        beats: 8,
+        pattern: [
+          { name: "Shk", type: "shaker",      vel: 0.9, sam: true },
+          { name: "Shk", type: "shaker",      vel: 0.4 },
+          { name: "Rim", type: "cajon_snare", vel: 0.8 },
+          { name: "Shk", type: "shaker",      vel: 0.5 },
+          { name: "Shk", type: "shaker",      vel: 0.85 },
+          { name: "Shk", type: "shaker",      vel: 0.45 },
+          { name: "Rim", type: "cajon_snare", vel: 0.85 },
+          { name: "Shk", type: "shaker",      vel: 0.6 }
+        ]
+      }
+    };
+
+    function initRhythmStudio() {
+      updateRhythmDotsUI();
+    }
+
+    function selectRhythmPreset(key) {
+      activeRhythmPresetKey = key;
+      document.querySelectorAll('[id^="rhy-card-"]').forEach(c => c.classList.remove('active-rhythm'));
+      const card = document.getElementById('rhy-card-' + key);
+      if (card) card.classList.add('active-rhythm');
+
+      const dockSelect = document.getElementById('dock-rhythm-select');
+      if (dockSelect) dockSelect.value = key;
+
+      currentRhythmBeat = 0;
+      updateRhythmDotsUI();
+    }
+
+    function updateRhythmDotsUI() {
+      const preset = RHYTHM_PRESETS[activeRhythmPresetKey];
+      const container = document.getElementById('dock-beat-dots');
+      if (!container || !preset) return;
+      container.innerHTML = '';
+      for (let b = 0; b < preset.beats; b++) {
+        const dot = document.createElement('div');
+        dot.className = 'rhythm-beat-dot' + (b === 0 ? ' sam-beat' : '');
+        dot.id = 'rhy-dot-' + b;
+        container.appendChild(dot);
+      }
+    }
+
+    function toggleRhythmPlayback() {
+      ensureAudio();
+      isRhythmPlaying = !isRhythmPlaying;
+
+      const mainBtn = document.getElementById('btn-rhythm-master-toggle');
+      const dockBtn = document.getElementById('btn-dock-rhythm-toggle');
+      const icon = document.getElementById('rhythm-btn-icon');
+      const text = document.getElementById('rhythm-btn-text');
+      const dockIcon = document.getElementById('dock-rhythm-icon');
+
+      if (isRhythmPlaying) {
+        if (icon) icon.textContent = '⏸';
+        if (text) text.textContent = 'Stop Rhythm';
+        if (dockIcon) dockIcon.textContent = '⏸';
+        currentRhythmBeat = 0;
+        stepRhythmLoop();
+      } else {
+        if (icon) icon.textContent = '▶️';
+        if (text) text.textContent = 'Start Rhythm';
+        if (dockIcon) dockIcon.textContent = '▶️';
+        if (rhythmStepTimer) clearTimeout(rhythmStepTimer);
+        document.querySelectorAll('.rhythm-beat-dot').forEach(d => d.classList.remove('active-beat'));
+      }
+    }
+
+    function setRhythmBpm(val) {
+      rhythmBpm = parseInt(val);
+      const valLabel = document.getElementById('rhythm-tempo-val');
+      const dockSlider = document.getElementById('dock-tempo-slider');
+      const dockReadout = document.getElementById('dock-tempo-readout');
+      if (valLabel) valLabel.textContent = rhythmBpm + ' BPM';
+      if (dockSlider) dockSlider.value = rhythmBpm;
+      if (dockReadout) dockReadout.textContent = rhythmBpm;
+    }
+
+    function setRhythmBassVol(val) {
+      rhythmBassVol = parseFloat(val);
+      const readout = document.getElementById('rhythm-bass-vol-val');
+      if (readout) readout.textContent = Math.round(rhythmBassVol * 100) + '%';
+    }
+
+    function setRhythmTrebleVol(val) {
+      rhythmTrebleVol = parseFloat(val);
+      const readout = document.getElementById('rhythm-treble-vol-val');
+      if (readout) readout.textContent = Math.round(rhythmTrebleVol * 100) + '%';
+    }
+
+    function stepRhythmLoop() {
+      if (!isRhythmPlaying) return;
+
+      const preset = RHYTHM_PRESETS[activeRhythmPresetKey];
+      if (!preset) return;
+
+      const stroke = preset.pattern[currentRhythmBeat];
+      if (stroke) {
+        synthesizePercussionStroke(stroke.type, stroke.vel);
+      }
+
+      // Update beat visual indicators
+      document.querySelectorAll('.rhythm-beat-dot').forEach((d, idx) => {
+        d.classList.toggle('active-beat', idx === currentRhythmBeat);
+      });
+
+      currentRhythmBeat = (currentRhythmBeat + 1) % preset.beats;
+      const stepDurationMs = (60 / rhythmBpm / 2) * 1000;
+      rhythmStepTimer = setTimeout(stepRhythmLoop, Math.max(120, stepDurationMs));
+    }
+
+    function synthesizePercussionStroke(type, vel) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+
+      if (type === 'bayan_dayan') {
+        playTablaBayan(now, vel * rhythmBassVol);
+        playTablaDayan(now, 'na', vel * rhythmTrebleVol);
+      } else if (type === 'bayan') {
+        playTablaBayan(now, vel * rhythmBassVol);
+      } else if (type === 'dayan_na') {
+        playTablaDayan(now, 'na', vel * rhythmTrebleVol);
+      } else if (type === 'dayan_tin') {
+        playTablaDayan(now, 'tin', vel * rhythmTrebleVol);
+      } else if (type === 'dayan_ta') {
+        playTablaDayan(now, 'ta', vel * rhythmTrebleVol);
+      } else if (type === 'cajon_bass') {
+        playCajonBass(now, vel * rhythmBassVol);
+      } else if (type === 'cajon_snare') {
+        playCajonSnare(now, vel * rhythmTrebleVol);
+      } else if (type === 'shaker') {
+        playShakerSound(now, vel * rhythmTrebleVol);
+      }
+    }
+
+    function playTablaBayan(time, vol) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      // Classic Bayan pitch modulation (slides down then stabilizes)
+      osc.frequency.setValueAtTime(145, time);
+      osc.frequency.exponentialRampToValueAtTime(95, time + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(80, time + 0.35);
+
+      gain.gain.setValueAtTime(vol * 0.95, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.45);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + 0.48);
+    }
+
+    function playTablaDayan(time, stroke, vol) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+
+      // Dayan metallic tuned bell-like resonance
+      osc.type = stroke === 'na' ? 'triangle' : 'sine';
+      const baseFreq = stroke === 'na' ? 587.33 : (stroke === 'tin' ? 440 : 660);
+      osc.frequency.setValueAtTime(baseFreq, time);
+
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(baseFreq, time);
+      filter.Q.setValueAtTime(14, time);
+
+      const decay = stroke === 'ta' ? 0.06 : (stroke === 'na' ? 0.28 : 0.18);
+      gain.gain.setValueAtTime(vol * 0.7, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + decay + 0.02);
+    }
+
+    function playCajonBass(time, vol) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(110, time);
+      osc.frequency.exponentialRampToValueAtTime(55, time + 0.12);
+
+      gain.gain.setValueAtTime(vol * 1.1, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.28);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + 0.3);
+    }
+
+    function playCajonSnare(time, vol) {
+      // Snare snap: filtered white noise
+      const bufferSize = audioCtx.sampleRate * 0.12;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(1800, time);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(vol * 0.65, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(time);
+    }
+
+    function playShakerSound(time, vol) {
+      const bufferSize = audioCtx.sampleRate * 0.05;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(4500, time);
+      filter.Q.setValueAtTime(2.5, time);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(vol * 0.45, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(time);
+    }
+
+
+    /* ==========================================================================
+       2. AI AUDIO-TO-GUITAR TAB TRANSCRIBER ENGINE
+       ========================================================================== */
+    let isLiveTranscribingActive = false;
+    let transcribedNotesList = [];
+    let lastTranscribedMidi = -1;
+    let lastTranscribedTime = 0;
+
+    function initTabTranscriber() {
+      updateTranscribedTabDisplay();
+    }
+
+    function toggleLiveTranscribing() {
+      isLiveTranscribingActive = !isLiveTranscribingActive;
+      const btn = document.getElementById('btn-toggle-transcribing');
+      const icon = document.getElementById('transcribe-btn-icon');
+      const text = document.getElementById('transcribe-btn-text');
+
+      if (isLiveTranscribingActive) {
+        if (btn) btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        if (icon) icon.textContent = '⏹️';
+        if (text) text.textContent = 'Stop Transcribing';
+        if (!isListening) toggleMicrophone();
+      } else {
+        if (btn) btn.style.background = '';
+        if (icon) icon.textContent = '🎙️';
+        if (text) text.textContent = 'Start Live Tab Writing';
+      }
+    }
+
+    function onSingleNoteDetectedForTranscriberAndMidi(midi, fullName, sargam, guitarPos, hz) {
+      // 1. Send to Web MIDI Output
+      sendMidiNoteOn(midi, 95);
+
+      // 2. Feed into AI Tab Transcriber
+      if (!isLiveTranscribingActive || !guitarPos) return;
+
+      const now = Date.now();
+      // Debounce duplicate hits within 280ms
+      if (midi === lastTranscribedMidi && (now - lastTranscribedTime < 280)) return;
+
+      lastTranscribedMidi = midi;
+      lastTranscribedTime = now;
+
+      transcribedNotesList.push({
+        note: fullName,
+        sargam: sargam,
+        midi: midi,
+        str: guitarPos.stringIndex + 1, // 1 to 6
+        fret: guitarPos.fret,
+        hz: hz
+      });
+
+      if (transcribedNotesList.length > 32) transcribedNotesList.shift();
+      updateTranscribedTabDisplay();
+    }
+
+    function updateTranscribedTabDisplay() {
+      const pre = document.getElementById('tab-viewport-pre');
+      const grid = document.getElementById('tab-notes-logged-grid');
+      if (!pre) return;
+
+      if (transcribedNotesList.length === 0) {
+        pre.textContent = `e|-----------------------------------------------------------------|
+B|-----------------------------------------------------------------|
+G|-----------------------------------------------------------------|
+D|-----------------------------------------------------------------|
+A|-----------------------------------------------------------------|
+E|-----------------------------------------------------------------|
+Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)`;
+        if (grid) grid.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">No notes recorded yet. Pluck a string!</span>';
+        return;
+      }
+
+      // Build 6-string ASCII Tab
+      const strLines = ['e|', 'B|', 'G|', 'D|', 'A|', 'E|'];
+      let sargamLine = 'S|';
+
+      transcribedNotesList.forEach(n => {
+        const fretStr = n.fret.toString().padEnd(2, '-');
+        for (let s = 1; s <= 6; s++) {
+          if (n.str === s) {
+            strLines[s - 1] += `--${fretStr}--`;
+          } else {
+            strLines[s - 1] += '----';
+          }
+        }
+        sargamLine += ` ${n.sargam.padEnd(3, ' ')}`;
+      });
+
+      for (let s = 0; s < 6; s++) strLines[s] += '|';
+      sargamLine += '|';
+
+      pre.textContent = strLines.join('\n') + '\n' + sargamLine;
+
+      // Render Notes Log Chips
+      if (grid) {
+        grid.innerHTML = '';
+        transcribedNotesList.forEach((n, idx) => {
+          const chip = document.createElement('div');
+          chip.className = 'tab-note-chip';
+          chip.innerHTML = `<span>🎸</span> <strong>${n.note}</strong> (${n.sargam}) • Str ${n.str}, Fret ${n.fret}`;
+          chip.onclick = () => playPhysicalGuitarPluck(n.hz, 0.9, 0.5, 0);
+          grid.appendChild(chip);
+        });
+      }
+    }
+
+    function playTranscribedTabAudio() {
+      ensureAudio();
+      if (transcribedNotesList.length === 0) return;
+      let delay = 0;
+      transcribedNotesList.forEach(n => {
+        setTimeout(() => {
+          playPhysicalGuitarPluck(n.hz, 0.9, 0.5, 0);
+        }, delay);
+        delay += 350;
+      });
+    }
+
+    function copyTranscribedTab() {
+      const pre = document.getElementById('tab-viewport-pre');
+      if (!pre) return;
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        alert("Guitar Tab copied to clipboard!");
+      });
+    }
+
+    function downloadTabTxt() {
+      const pre = document.getElementById('tab-viewport-pre');
+      if (!pre) return;
+      const blob = new Blob([pre.textContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'guitar_tab_transcribed.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearTranscribedTab() {
+      transcribedNotesList = [];
+      updateTranscribedTabDisplay();
+    }
+
+
+    /* ==========================================================================
+       3. WEB MIDI OUTPUT CONTROLLER & VIRTUAL SYNTH ENGINE
+       ========================================================================== */
+    let midiAccess = null;
+    let selectedMidiOutput = null;
+    let isMidiSupported = false;
+    let lastMidiNoteSent = -1;
+
+    function initWebMidi() {
+      if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess({ sysex: false }).then(onMidiSuccess, onMidiFailure);
+      } else {
+        const status = document.getElementById('top-midi-status');
+        if (status) status.textContent = 'Virtual Synth';
+      }
+    }
+
+    function onMidiSuccess(access) {
+      midiAccess = access;
+      isMidiSupported = true;
+      const status = document.getElementById('top-midi-status');
+      if (status) status.textContent = 'Active (Ready)';
+
+      const select = document.getElementById('midi-device-select');
+      if (!select) return;
+
+      const outputs = Array.from(midiAccess.outputs.values());
+      outputs.forEach(out => {
+        const opt = document.createElement('option');
+        opt.value = out.id;
+        opt.textContent = `🎹 ${out.name} (${out.manufacturer || 'MIDI'})`;
+        select.appendChild(opt);
+      });
+
+      if (outputs.length > 0) {
+        selectedMidiOutput = outputs[0];
+      }
+    }
+
+    function onMidiFailure(err) {
+      console.log("Web MIDI note:", err);
+      const status = document.getElementById('top-midi-status');
+      if (status) status.textContent = 'Virtual Synth';
+    }
+
+    function openMidiModal() {
+      document.getElementById('midi-modal').style.display = 'flex';
+    }
+
+    function closeMidiModal() {
+      document.getElementById('midi-modal').style.display = 'none';
+    }
+
+    function selectMidiOutput(id) {
+      if (id === 'virtual_internal') {
+        selectedMidiOutput = null;
+      } else if (midiAccess) {
+        selectedMidiOutput = midiAccess.outputs.get(id);
+      }
+    }
+
+    function sendMidiNoteOn(pitch, velocity = 90) {
+      if (selectedMidiOutput) {
+        const channel = parseInt(document.getElementById('midi-channel-select')?.value || 1) - 1;
+        selectedMidiOutput.send([0x90 + channel, pitch, velocity]);
+        setTimeout(() => {
+          selectedMidiOutput.send([0x80 + channel, pitch, 0]);
+        }, 300);
+      } else {
+        // Fallback: Virtual Polyphonic Synth Audio
+        playVirtualSynthVoice(pitch, velocity);
+      }
+    }
+
+    function playVirtualSynthVoice(pitch, velocity) {
+      if (!audioCtx) return;
+      const freq = 440 * Math.pow(2, (pitch - 69) / 12);
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(freq * 3, audioCtx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(freq, audioCtx.currentTime + 0.35);
+
+      gain.gain.setValueAtTime((velocity / 127) * 0.18, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.42);
+    }
+
+    function onChordDetectedForMidi(chordName) {
+      const preset = CHORD_PRESETS[chordName];
+      if (!preset) return;
+      preset.frets.forEach((fret, s) => {
+        if (fret !== -1) {
+          const midi = GUITAR_STRINGS[s].openMidi + fret;
+          sendMidiNoteOn(midi, 85);
+        }
+      });
+    }
+
+    function testMidiNote() {
+      ensureAudio();
+      onChordDetectedForMidi('C');
+    }
+
+
+    /* ==========================================================================
+       4. SPLIT-SCREEN VIDEO PERFORMANCE RECORDER (WEBCAM + HUD OVERLAY)
+       ========================================================================== */
+    let webcamStream = null;
+    let videoMediaRecorder = null;
+    let recordedVideoChunks = [];
+    let isVideoRecording = false;
+    let videoOverlayAnimId = null;
+    let videoRecStartTime = 0;
+    let videoRecTimerInterval = null;
+
+    function initVideoStudio() {
+      // Auto enable camera if not active
+      if (!webcamStream) toggleWebcam();
+    }
+
+    async function toggleWebcam() {
+      const videoEl = document.getElementById('camera-video-element');
+      const btn = document.getElementById('btn-toggle-webcam');
+
+      if (webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+        if (videoEl) videoEl.srcObject = null;
+        if (btn) btn.innerHTML = '<span>📷</span> Enable Camera';
+        if (videoOverlayAnimId) cancelAnimationFrame(videoOverlayAnimId);
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+          audio: false
+        });
+        webcamStream = stream;
+        if (videoEl) videoEl.srcObject = stream;
+        if (btn) btn.innerHTML = '<span>📷</span> Disable Camera';
+        startVideoCanvasCompositor();
+      } catch (err) {
+        console.error("Camera access error:", err);
+        alert("Webcam could not be opened. Please check camera permissions!");
+      }
+    }
+
+    function startVideoCanvasCompositor() {
+      const canvas = document.getElementById('video-overlay-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function drawOverlay() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Top HUD Banner
+        ctx.fillStyle = 'rgba(10, 14, 26, 0.75)';
+        ctx.fillRect(20, 20, 360, 48);
+        ctx.strokeStyle = '#ffb300';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(20, 20, 360, 48);
+
+        ctx.fillStyle = '#ffb300';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.fillText('🎸 AI Guitar Chord Studio', 36, 46);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Live Performance Record', 36, 60);
+
+        // 2. Lower-Third Chord Display Graphic
+        const chordName = document.getElementById('display-chord-name')?.textContent || 'Ready';
+        ctx.fillStyle = 'rgba(12, 16, 32, 0.88)';
+        ctx.beginPath();
+        ctx.roundRect(20, canvas.height - 110, 380, 80, 16);
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffd54f';
+        ctx.font = 'bold 36px sans-serif';
+        ctx.fillText(chordName, 40, canvas.height - 56);
+
+        const quality = document.getElementById('info-quality')?.textContent || 'Guitar Engine';
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText(quality, 40, canvas.height - 38);
+
+        videoOverlayAnimId = requestAnimationFrame(drawOverlay);
+      }
+      drawOverlay();
+    }
+
+    function toggleVideoRecording() {
+      if (isVideoRecording) stopVideoRecording();
+      else startVideoRecording();
+    }
+
+    function startVideoRecording() {
+      const canvas = document.getElementById('video-overlay-canvas');
+      const videoEl = document.getElementById('camera-video-element');
+      if (!webcamStream || !canvas) {
+        alert("Please enable the camera first!");
+        return;
+      }
+
+      // Create composite canvas stream
+      const stream = canvas.captureStream(30);
+
+      // Add microphone audio if available
+      if (micStream && micStream.getAudioTracks().length > 0) {
+        stream.addTrack(micStream.getAudioTracks()[0]);
+      }
+
+      recordedVideoChunks = [];
+      try {
+        videoMediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8,opus' });
+      } catch (e) {
+        videoMediaRecorder = new MediaRecorder(stream);
+      }
+
+      videoMediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) recordedVideoChunks.push(e.data);
+      };
+
+      videoMediaRecorder.onstop = () => {
+        const blob = new Blob(recordedVideoChunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const downloadBtn = document.getElementById('btn-video-download');
+        if (downloadBtn) {
+          downloadBtn.href = url;
+          downloadBtn.style.display = 'inline-flex';
+        }
+      };
+
+      videoMediaRecorder.start(100);
+      isVideoRecording = true;
+
+      const recBtn = document.getElementById('btn-video-record');
+      const recIcon = document.getElementById('video-rec-icon');
+      const recText = document.getElementById('video-rec-text');
+      const timerBadge = document.getElementById('video-rec-timer-badge');
+
+      if (recBtn) recBtn.style.background = '#059669';
+      if (recIcon) recIcon.textContent = '⏹️';
+      if (recText) recText.textContent = 'Stop & Save Video';
+      if (timerBadge) timerBadge.style.display = 'inline-flex';
+
+      videoRecStartTime = Date.now();
+      videoRecTimerInterval = setInterval(() => {
+        const sec = Math.floor((Date.now() - videoRecStartTime) / 1000);
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        if (timerBadge) timerBadge.textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function stopVideoRecording() {
+      if (videoMediaRecorder && videoMediaRecorder.state !== 'inactive') {
+        videoMediaRecorder.stop();
+      }
+      isVideoRecording = false;
+
+      const recBtn = document.getElementById('btn-video-record');
+      const recIcon = document.getElementById('video-rec-icon');
+      const recText = document.getElementById('video-rec-text');
+      if (recBtn) recBtn.style.background = 'linear-gradient(135deg, #ef4444, #b91c1c)';
+      if (recIcon) recIcon.textContent = '🔴';
+      if (recText) recText.textContent = 'Record Video Cover';
+      if (videoRecTimerInterval) clearInterval(videoRecTimerInterval);
+    }
+
+
+    /* ==========================================================================
+       5. MULTI-TRACK ACOUSTIC LOOPER ENGINE
+       ========================================================================== */
+    const LOOPER_TRACKS = [
+      { id: 0, status: 'empty', volume: 0.9, muted: false, buffer: null, sourceNode: null },
+      { id: 1, status: 'empty', volume: 0.9, muted: false, buffer: null, sourceNode: null },
+      { id: 2, status: 'empty', volume: 0.9, muted: false, buffer: null, sourceNode: null }
+    ];
+
+    let activeLooperRecTrackIdx = -1;
+    let looperLoopLengthBars = 4;
+    let looperBpm = 80;
+    let isLooperMasterPlaying = false;
+    let looperProgressAnimId = null;
+    let looperCycleStartTime = 0;
+    let looperTrackMediaRecorder = null;
+    let looperRecordedTrackChunks = [];
+
+    function initLooperStudio() {
+      // Initial render of tracks
+      LOOPER_TRACKS.forEach((t, i) => updateLooperTrackUI(i));
+    }
+
+    function toggleTrackRecord(trackIdx) {
+      ensureAudio();
+      if (!isListening) toggleMicrophone();
+
+      if (activeLooperRecTrackIdx === trackIdx) {
+        // Stop recording
+        stopTrackRecording(trackIdx);
+      } else {
+        // Start recording this track
+        startTrackRecording(trackIdx);
+      }
+    }
+
+    function startTrackRecording(trackIdx) {
+      activeLooperRecTrackIdx = trackIdx;
+      const track = LOOPER_TRACKS[trackIdx];
+      track.status = 'recording';
+
+      const box = document.getElementById('looper-track-' + trackIdx);
+      const btn = document.getElementById('btn-rec-track-' + trackIdx);
+      const status = document.getElementById('trk-status-' + trackIdx);
+
+      if (box) box.className = 'looper-track-box recording';
+      if (btn) {
+        btn.className = 'track-rec-btn rec-active';
+        btn.innerHTML = '<span>⏹️</span> Finish Loop';
+      }
+      if (status) {
+        status.textContent = 'RECORDING';
+        status.style.color = '#f43f5e';
+      }
+
+      if (!isLooperMasterPlaying) {
+        toggleLooperMaster();
+      }
+
+      // Record audio buffer using MediaRecorder
+      if (micStream) {
+        looperRecordedTrackChunks = [];
+        looperTrackMediaRecorder = new MediaRecorder(micStream);
+        looperTrackMediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) looperRecordedTrackChunks.push(e.data);
+        };
+        looperTrackMediaRecorder.onstop = async () => {
+          const blob = new Blob(looperRecordedTrackChunks);
+          const arrayBuffer = await blob.arrayBuffer();
+          audioCtx.decodeAudioData(arrayBuffer, decoded => {
+            track.buffer = decoded;
+            track.status = 'ready';
+            updateLooperTrackUI(trackIdx);
+            playLooperTrack(trackIdx);
+          });
+        };
+        looperTrackMediaRecorder.start();
+      }
+    }
+
+    function stopTrackRecording(trackIdx) {
+      if (looperTrackMediaRecorder && looperTrackMediaRecorder.state !== 'inactive') {
+        looperTrackMediaRecorder.stop();
+      }
+      activeLooperRecTrackIdx = -1;
+      const track = LOOPER_TRACKS[trackIdx];
+      track.status = 'ready';
+      updateLooperTrackUI(trackIdx);
+    }
+
+    function updateLooperTrackUI(trackIdx) {
+      const track = LOOPER_TRACKS[trackIdx];
+      const box = document.getElementById('looper-track-' + trackIdx);
+      const btn = document.getElementById('btn-rec-track-' + trackIdx);
+      const status = document.getElementById('trk-status-' + trackIdx);
+
+      if (!box || !btn || !status) return;
+
+      if (track.status === 'ready') {
+        box.className = 'looper-track-box playing';
+        btn.className = 'track-rec-btn play-active';
+        btn.innerHTML = '<span>▶️</span> Playing Loop';
+        status.textContent = 'ACTIVE LOOP';
+        status.style.color = '#10b981';
+      } else if (track.status === 'empty') {
+        box.className = 'looper-track-box';
+        btn.className = 'track-rec-btn idle';
+        btn.innerHTML = '<span>●</span> Record Track';
+        status.textContent = 'Empty';
+        status.style.color = 'var(--text-muted)';
+      }
+    }
+
+    function toggleTrackMute(trackIdx) {
+      const track = LOOPER_TRACKS[trackIdx];
+      track.muted = !track.muted;
+      const btn = document.getElementById('btn-mute-' + trackIdx);
+      if (btn) btn.style.background = track.muted ? '#f43f5e' : '';
+    }
+
+    function setTrackVolume(trackIdx, val) {
+      LOOPER_TRACKS[trackIdx].volume = parseFloat(val);
+    }
+
+    function clearTrack(trackIdx) {
+      const track = LOOPER_TRACKS[trackIdx];
+      track.status = 'empty';
+      track.buffer = null;
+      if (track.sourceNode) {
+        try { track.sourceNode.stop(); } catch(e){}
+        track.sourceNode = null;
+      }
+      updateLooperTrackUI(trackIdx);
+    }
+
+    function clearAllLooperTracks() {
+      LOOPER_TRACKS.forEach((t, i) => clearTrack(i));
+      stopLooperMaster();
+    }
+
+    function toggleLooperMaster() {
+      ensureAudio();
+      isLooperMasterPlaying = !isLooperMasterPlaying;
+      const btn = document.getElementById('btn-looper-master-play');
+
+      if (isLooperMasterPlaying) {
+        if (btn) btn.innerHTML = '<span>⏸</span> Pause Master';
+        looperCycleStartTime = audioCtx.currentTime;
+        startLooperProgressLoop();
+        LOOPER_TRACKS.forEach((t, i) => playLooperTrack(i));
+      } else {
+        stopLooperMaster();
+      }
+    }
+
+    function stopLooperMaster() {
+      isLooperMasterPlaying = false;
+      const btn = document.getElementById('btn-looper-master-play');
+      if (btn) btn.innerHTML = '<span>▶️</span> Master Play';
+      if (looperProgressAnimId) cancelAnimationFrame(looperProgressAnimId);
+
+      LOOPER_TRACKS.forEach(t => {
+        if (t.sourceNode) {
+          try { t.sourceNode.stop(); } catch(e){}
+          t.sourceNode = null;
+        }
+      });
+      document.getElementById('looper-bar-beat').textContent = '1.1';
+    }
+
+    function playLooperTrack(trackIdx) {
+      const track = LOOPER_TRACKS[trackIdx];
+      if (!track.buffer || !audioCtx || track.muted) return;
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = track.buffer;
+      source.loop = true;
+
+      const gain = audioCtx.createGain();
+      gain.gain.value = track.volume;
+
+      source.connect(gain);
+      gain.connect(audioCtx.destination);
+      source.start();
+      track.sourceNode = source;
+    }
+
+    function startLooperProgressLoop() {
+      const wheel = document.getElementById('looper-wheel');
+      const beatLabel = document.getElementById('looper-bar-beat');
+      const bars = parseInt(document.getElementById('looper-bar-length')?.value || 4);
+      const beatsTotal = bars * 4;
+      const cycleDurationSec = (60 / looperBpm) * beatsTotal;
+
+      function updateProgress() {
+        if (!isLooperMasterPlaying) return;
+        const elapsed = (audioCtx.currentTime - looperCycleStartTime) % cycleDurationSec;
+        const progressPct = (elapsed / cycleDurationSec) * 100;
+        if (wheel) wheel.style.background = `conic-gradient(var(--accent-purple) ${progressPct}%, rgba(255,255,255,0.1) ${progressPct}%)`;
+
+        const currentBeat = Math.floor((elapsed / (60 / looperBpm))) + 1;
+        const barNum = Math.floor((currentBeat - 1) / 4) + 1;
+        const subBeat = ((currentBeat - 1) % 4) + 1;
+        if (beatLabel) beatLabel.textContent = `${barNum}.${subBeat}`;
+
+        looperProgressAnimId = requestAnimationFrame(updateProgress);
+      }
+      updateProgress();
+    }
+
+    // Auto initialize Web MIDI and Rhythm on window load
+    window.addEventListener('load', () => {
+      initWebMidi();
+      updateRhythmDotsUI();
+    });
   </script>
 </body>
 </html>
