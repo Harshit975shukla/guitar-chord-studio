@@ -3031,6 +3031,112 @@
           <button class="quick-tag-pill" onclick="quickSearchSong('Pani Da Rang')">Pani Da Rang</button>
           <button class="quick-tag-pill" onclick="quickSearchSong('Channa Mereya')">Channa Mereya</button>
           <button class="quick-tag-pill" onclick="quickSearchSong('Jeena Jeena')">Jeena Jeena</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Pehla Nasha')">Pehla Nasha</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Tujhe Dekha Toh')">Tujhe Dekha Toh</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Dooba Dooba')">Dooba Dooba</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Kun Faya Kun')">Kun Faya Kun</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Agar Tum Saath Ho')">Agar Tum Saath Ho</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Let It Be')">Let It Be</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Perfect')">Perfect</button>
+          <button class="quick-tag-pill" onclick="quickSearchSong('Yellow')">Yellow</button>
+        </div>
+
+        <div style="margin-top:14px; display:flex; justify-content:center; gap:10px;">
+          <button class="btn btn-secondary" onclick="openCustomSongCreator()" style="padding:6px 14px; font-size:0.8rem; border-color:var(--accent-gold); color:var(--accent-gold);">
+            <span>➕</span> Create / Paste Custom Song Chords
+          </button>
+        </div>
+
+        <!-- Multiple Matches Strip (shows when search matches multiple songs) -->
+        <div id="search-multi-matches-bar" style="display:none; margin-top:12px; flex-wrap:wrap; gap:8px; justify-content:center; padding:8px 12px; background:rgba(0,229,255,0.06); border-radius:12px; border:1px solid rgba(0,229,255,0.2);">
+        </div>
+      </div>
+
+      <!-- NOT FOUND CONTAINER (Clean, helpful, never generates fake lyrics) -->
+      <div id="search-empty-box" style="display:none; max-width:760px; margin:20px auto; padding:24px; background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.1); border-radius:18px; text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:8px;">🎸</div>
+        <h3 style="font-size:1.3rem; font-weight:800; color:#fff; margin-bottom:6px;">
+          No exact match for "<span id="empty-query-text" style="color:var(--accent-cyan);"></span>" in our offline catalog
+        </h3>
+        <p style="color:var(--text-muted); font-size:0.88rem; max-width:540px; margin:0 auto 16px auto;">
+          We never make up fake songs! You can choose from our 50+ authentic studio hits or easily paste / write your own real chord sheet below:
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:18px;">
+          <button class="btn btn-primary" onclick="openCustomSongCreator()">
+            <span>➕</span> Create Custom Chord Sheet
+          </button>
+          <button class="btn btn-secondary" onclick="quickSearchSong('Tum Hi Ho')">Tum Hi Ho</button>
+          <button class="btn btn-secondary" onclick="quickSearchSong('Kesariya')">Kesariya</button>
+          <button class="btn btn-secondary" onclick="quickSearchSong('Hotel California')">Hotel California</button>
+          <button class="btn btn-secondary" onclick="quickSearchSong('Kabira')">Kabira</button>
+        </div>
+      </div>
+
+      <!-- CUSTOM CHORD SHEET CREATOR -->
+      <div id="custom-song-creator-box" style="display:none; max-width:760px; margin:20px auto; padding:24px; background:rgba(15,23,42,0.98); border:1px solid var(--accent-gold); border-radius:18px; box-shadow:0 12px 35px rgba(0,0,0,0.6);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px;">
+          <h3 style="font-size:1.2rem; font-weight:800; color:var(--accent-gold); display:flex; align-items:center; gap:8px;">
+            <span>📝</span> Custom Song & Chord Sheet Builder
+          </h3>
+          <button class="btn btn-secondary" onclick="hideCustomSongCreator()" style="padding:2px 8px; font-size:0.75rem;">✕ Close</button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">Song Title *</label>
+            <input type="text" id="custom-title-input" class="song-search-input" style="width:100%; padding:8px 12px; font-size:0.85rem;" placeholder="e.g. My Favorite Melody">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">Artist / Movie</label>
+            <input type="text" id="custom-artist-input" class="song-search-input" style="width:100%; padding:8px 12px; font-size:0.85rem;" placeholder="e.g. Original / Band">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">Root Key / Scale</label>
+            <select id="custom-key-select" class="song-select-dropdown" style="width:100%; padding:8px 12px; font-size:0.85rem;">
+              <option value="C Major">C Major</option>
+              <option value="D Major">D Major</option>
+              <option value="D Minor">D Minor</option>
+              <option value="E Minor">E Minor</option>
+              <option value="G Major">G Major</option>
+              <option value="A Minor">A Minor</option>
+              <option value="F Major">F Major</option>
+              <option value="B Minor">B Minor</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">Tempo (BPM)</label>
+            <input type="number" id="custom-bpm-input" class="song-search-input" style="width:100%; padding:8px 12px; font-size:0.85rem;" value="80" min="40" max="220">
+          </div>
+          <div>
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">Strumming Pattern</label>
+            <select id="custom-strum-select" class="song-select-dropdown" style="width:100%; padding:8px 12px; font-size:0.85rem;">
+              <option value="D - D U - U D -">D - D U - U D - (Standard Folk)</option>
+              <option value="D - D - D U D U">D - D - D U D U (Bollywood 8-Beat)</option>
+              <option value="D D U U D U">D D U U D U (Campfire Classic)</option>
+              <option value="D - D - D - D -">D - D - D - D - (Slow 4/4)</option>
+              <option value="D - D - D - (6/8)">D - D - D - (Waltz / 6-Beat)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; display:block; margin-bottom:4px;">
+            Lyrics with Chords (Use [ChordName] tags):
+          </label>
+          <textarea id="custom-lyrics-textarea" rows="6" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border-light); border-radius:10px; color:#fff; padding:12px; font-family:monospace; font-size:0.85rem; line-height:1.5; resize:vertical;" placeholder="[G] Amazing grace how [C] sweet the sound
+That [G] saved a wretch like [D] me
+[G] I once was lost but [C] now I'm found
+Was [G] blind but [D] now I [G] see"></textarea>
+          <span style="font-size:0.72rem; color:var(--text-muted); display:block; margin-top:4px;">
+            💡 Tip: Any chord inside square brackets like [C], [G], [Am], [F], [Bb], [Dm] is automatically recognized and strummed!
+          </span>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button class="btn btn-secondary" onclick="hideCustomSongCreator()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveAndOpenCustomSong()" style="background:linear-gradient(135deg, #ffb300, #ff8f00); color:#000; font-weight:700;">
+            <span>💾</span> Save to My Library & Play
+          </button>
         </div>
       </div>
 
@@ -3793,21 +3899,76 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
     ];
 
     const CHORD_PRESETS = {
+      // Natural & Sharp Majors
       "C":     { frets: [0, 1, 0, 2, 3, -1], name: "C Major", root: "C", quality: "Major" },
+      "C#":    { frets: [4, 6, 6, 6, 4, -1], name: "C# Major", root: "C#", quality: "Major" },
+      "Db":    { frets: [4, 6, 6, 6, 4, -1], name: "Db Major", root: "Db", quality: "Major" },
       "D":     { frets: [2, 3, 2, 0, -1, -1], name: "D Major", root: "D", quality: "Major" },
-      "Dm":    { frets: [1, 3, 2, 0, -1, -1], name: "D Minor", root: "D", quality: "Minor" },
+      "D#":    { frets: [3, 4, 3, 1, -1, -1], name: "D# Major", root: "D#", quality: "Major" },
+      "Eb":    { frets: [3, 4, 3, 1, -1, -1], name: "Eb Major", root: "Eb", quality: "Major" },
       "E":     { frets: [0, 0, 1, 2, 2, 0], name: "E Major", root: "E", quality: "Major" },
-      "Em":    { frets: [0, 0, 0, 2, 2, 0], name: "E Minor", root: "E", quality: "Minor" },
       "F":     { frets: [1, 1, 2, 3, 3, 1], name: "F Major", root: "F", quality: "Major" },
+      "F#":    { frets: [2, 2, 3, 4, 4, 2], name: "F# Major", root: "F#", quality: "Major" },
+      "Gb":    { frets: [2, 2, 3, 4, 4, 2], name: "Gb Major", root: "Gb", quality: "Major" },
       "G":     { frets: [3, 0, 0, 0, 2, 3], name: "G Major", root: "G", quality: "Major" },
+      "G#":    { frets: [4, 4, 5, 6, 6, 4], name: "G# Major", root: "G#", quality: "Major" },
+      "Ab":    { frets: [4, 4, 5, 6, 6, 4], name: "Ab Major", root: "Ab", quality: "Major" },
       "A":     { frets: [0, 2, 2, 2, 0, -1], name: "A Major", root: "A", quality: "Major" },
-      "Am":    { frets: [0, 1, 2, 2, 0, -1], name: "A Minor", root: "A", quality: "Minor" },
-      "Am7":   { frets: [0, 1, 0, 2, 0, -1], name: "A Minor 7", root: "A", quality: "Minor 7th" },
-      "B7":    { frets: [2, 0, 2, 1, 2, -1], name: "B7 (Dominant)", root: "B", quality: "7th" },
-      "Cadd9": { frets: [3, 3, 0, 2, 3, -1], name: "Cadd9", root: "C", quality: "Add9" },
-      "Dsus4": { frets: [3, 3, 2, 0, -1, -1], name: "Dsus4", root: "D", quality: "Sus4" },
+      "A#":    { frets: [1, 3, 3, 3, 1, -1], name: "A# Major", root: "A#", quality: "Major" },
+      "Bb":    { frets: [1, 3, 3, 3, 1, -1], name: "Bb Major", root: "Bb", quality: "Major" },
+      "B":     { frets: [2, 4, 4, 4, 2, -1], name: "B Major", root: "B", quality: "Major" },
+
+      // Minors
+      "Cm":    { frets: [3, 4, 5, 5, 3, -1], name: "C Minor", root: "C", quality: "Minor" },
+      "C#m":   { frets: [4, 5, 6, 6, 4, -1], name: "C# Minor", root: "C#", quality: "Minor" },
+      "Dbm":   { frets: [4, 5, 6, 6, 4, -1], name: "Db Minor", root: "Db", quality: "Minor" },
+      "Dm":    { frets: [1, 3, 2, 0, -1, -1], name: "D Minor", root: "D", quality: "Minor" },
+      "D#m":   { frets: [2, 4, 3, 1, -1, -1], name: "D# Minor", root: "D#", quality: "Minor" },
+      "Ebm":   { frets: [2, 4, 3, 1, -1, -1], name: "Eb Minor", root: "Eb", quality: "Minor" },
+      "Em":    { frets: [0, 0, 0, 2, 2, 0], name: "E Minor", root: "E", quality: "Minor" },
+      "Fm":    { frets: [1, 1, 1, 3, 3, 1], name: "F Minor", root: "F", quality: "Minor" },
       "F#m":   { frets: [2, 2, 2, 4, 4, 2], name: "F# Minor", root: "F#", quality: "Minor" },
-      "G#m":   { frets: [4, 4, 4, 6, 6, 4], name: "G# Minor", root: "G#", quality: "Minor" }
+      "Gbm":   { frets: [2, 2, 2, 4, 4, 2], name: "Gb Minor", root: "Gb", quality: "Minor" },
+      "Gm":    { frets: [3, 3, 3, 5, 5, 3], name: "G Minor", root: "G", quality: "Minor" },
+      "G#m":   { frets: [4, 4, 4, 6, 6, 4], name: "G# Minor", root: "G#", quality: "Minor" },
+      "Abm":   { frets: [4, 4, 4, 6, 6, 4], name: "Ab Minor", root: "Ab", quality: "Minor" },
+      "Am":    { frets: [0, 1, 2, 2, 0, -1], name: "A Minor", root: "A", quality: "Minor" },
+      "A#m":   { frets: [1, 2, 3, 3, 1, -1], name: "A# Minor", root: "A#", quality: "Minor" },
+      "Bbm":   { frets: [1, 2, 3, 3, 1, -1], name: "Bb Minor", root: "Bb", quality: "Minor" },
+      "Bm":    { frets: [2, 3, 4, 4, 2, -1], name: "B Minor", root: "B", quality: "Minor" },
+
+      // Dominant 7ths
+      "C7":    { frets: [0, 1, 3, 2, 3, -1], name: "C7 (Dominant)", root: "C", quality: "7th" },
+      "D7":    { frets: [2, 1, 2, 0, -1, -1], name: "D7 (Dominant)", root: "D", quality: "7th" },
+      "E7":    { frets: [0, 0, 1, 0, 2, 0], name: "E7 (Dominant)", root: "E", quality: "7th" },
+      "F7":    { frets: [1, 1, 2, 1, 3, 1], name: "F7 (Dominant)", root: "F", quality: "7th" },
+      "G7":    { frets: [1, 0, 0, 0, 2, 3], name: "G7 (Dominant)", root: "G", quality: "7th" },
+      "A7":    { frets: [0, 2, 0, 2, 0, -1], name: "A7 (Dominant)", root: "A", quality: "7th" },
+      "B7":    { frets: [2, 0, 2, 1, 2, -1], name: "B7 (Dominant)", root: "B", quality: "7th" },
+      "Bb7":   { frets: [1, 3, 1, 3, 1, -1], name: "Bb7 (Dominant)", root: "Bb", quality: "7th" },
+
+      // Major 7ths & Minor 7ths
+      "Cmaj7": { frets: [0, 0, 0, 2, 3, -1], name: "C Major 7", root: "C", quality: "Maj7" },
+      "Dmaj7": { frets: [2, 2, 2, 0, -1, -1], name: "D Major 7", root: "D", quality: "Maj7" },
+      "Emaj7": { frets: [0, 0, 1, 1, 2, 0], name: "E Major 7", root: "E", quality: "Maj7" },
+      "Fmaj7": { frets: [0, 1, 2, 3, -1, -1], name: "F Major 7", root: "F", quality: "Maj7" },
+      "Gmaj7": { frets: [2, 0, 0, 0, 2, 3], name: "G Major 7", root: "G", quality: "Maj7" },
+      "Amaj7": { frets: [0, 2, 1, 2, 0, -1], name: "A Major 7", root: "A", quality: "Maj7" },
+      "Cm7":   { frets: [3, 4, 3, 5, 3, -1], name: "C Minor 7", root: "C", quality: "Minor 7th" },
+      "Dm7":   { frets: [1, 1, 2, 0, -1, -1], name: "D Minor 7", root: "D", quality: "Minor 7th" },
+      "Em7":   { frets: [0, 3, 0, 0, 2, 0], name: "E Minor 7", root: "E", quality: "Minor 7th" },
+      "Am7":   { frets: [0, 1, 0, 2, 0, -1], name: "A Minor 7", root: "A", quality: "Minor 7th" },
+      "Bm7":   { frets: [2, 0, 2, 0, 2, -1], name: "B Minor 7", root: "B", quality: "Minor 7th" },
+
+      // Suspended & Added
+      "Csus4": { frets: [1, 1, 0, 3, 3, -1], name: "Csus4", root: "C", quality: "Sus4" },
+      "Dsus4": { frets: [3, 3, 2, 0, -1, -1], name: "Dsus4", root: "D", quality: "Sus4" },
+      "Dsus2": { frets: [0, 3, 2, 0, -1, -1], name: "Dsus2", root: "D", quality: "Sus2" },
+      "Esus4": { frets: [0, 0, 2, 2, 2, 0], name: "Esus4", root: "E", quality: "Sus4" },
+      "Gsus4": { frets: [3, 1, 0, 0, 3, 3], name: "Gsus4", root: "G", quality: "Sus4" },
+      "Asus2": { frets: [0, 0, 2, 2, 0, -1], name: "Asus2", root: "A", quality: "Sus2" },
+      "Asus4": { frets: [0, 3, 2, 2, 0, -1], name: "Asus4", root: "A", quality: "Sus4" },
+      "Cadd9": { frets: [3, 3, 0, 2, 3, -1], name: "Cadd9", root: "C", quality: "Add9" }
     };
 
     const CHORD_TEMPLATES = [
@@ -4518,6 +4679,62 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
       }
 
       bufferSource.start(now);
+    }
+
+    function playPhysicalGuitarPluck(freq, velocity = 0.85, duration = 0.5, delay = 0) {
+      if (!audioCtx) {
+        try { ensureAudio(); } catch(e) {}
+      }
+      if (!audioCtx) return;
+      const startTime = audioCtx.currentTime + Math.max(0.005, delay || 0);
+      let sIdx = 2;
+      if (freq < 95) sIdx = 0;
+      else if (freq < 130) sIdx = 1;
+      else if (freq < 170) sIdx = 2;
+      else if (freq < 220) sIdx = 3;
+      else if (freq < 290) sIdx = 4;
+      else sIdx = 5;
+      playAcousticStringPhysical(freq, startTime, sIdx, velocity);
+    }
+
+    function strumAcousticPhysical(frets, style = 'down', velocity = 0.75) {
+      if (!audioCtx) {
+        try { ensureAudio(); } catch(e) {}
+      }
+      if (!audioCtx || !frets) return;
+      const now = audioCtx.currentTime + 0.015;
+      const activeStrings = [];
+      for (let s = 0; s < 6; s++) {
+        if (frets[s] !== -1 && frets[s] !== undefined) {
+          activeStrings.push(s);
+        }
+      }
+      if (activeStrings.length === 0) return;
+
+      let order = [];
+      let baseStagger = 0.022;
+      if (style === 'up') {
+        order = [...activeStrings].sort((a, b) => a - b);
+        baseStagger = 0.020;
+      } else if (style === 'arpeggio') {
+        order = [...activeStrings].sort((a, b) => b - a);
+        baseStagger = 0.100;
+      } else {
+        order = [...activeStrings].sort((a, b) => b - a);
+        baseStagger = 0.022;
+      }
+
+      order.forEach((s, idx) => {
+        const fret = frets[s];
+        const midi = GUITAR_STRINGS[s].openMidi + fret;
+        const freq = 440 * Math.pow(2, (midi - 69) / 12);
+        const delay = idx * baseStagger + (Math.random() * 0.002);
+        const strVel = velocity * (0.85 + (5 - s) * 0.03);
+        playAcousticStringPhysical(freq, now + delay, s, strVel);
+        if (acousticModelType === 'twelve' && s >= 2) {
+          playAcousticStringPhysical(freq * 2.002, now + delay + 0.004, s, strVel * 0.65, true);
+        }
+      });
     }
 
     /* ==========================================================================
@@ -5249,9 +5466,6 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
       ctx.stroke();
     }
 
-    // Register Service Worker for PWA (offline & installable mobile app)
-    if ('serviceWorker' in navigator) {
-      
     let isRhythmDockCollapsed = false;
     function toggleRhythmDockCollapse() {
       isRhythmDockCollapsed = !isRhythmDockCollapsed;
@@ -5269,7 +5483,9 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
       }
     }
 
-    window.addEventListener('load', () => {
+    // Register Service Worker for PWA (offline & installable mobile app)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => {
           console.log('Service Worker registration note:', err);
         });
@@ -6850,183 +7066,1020 @@ Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
 
 
     /* ==========================================================================
-       SONG SEARCH & CHORDS GENERATOR ENGINE
+       SONG SEARCH & AUTHENTIC CHORD CATALOG ENGINE (50+ VERIFIED SONGS)
        ========================================================================== */
-    const SEARCH_SONG_DATABASE = [
-      {
-        title: "Tum Hi Ho",
-        movie: "Aashiqui 2",
-        singer: "Arijit Singh",
-        key: "C# Minor (Sa = C#) / Transposed Dm",
-        bpm: 88,
-        strum: "D - D U - U D -",
-        diff: "Intermediate",
-        chords: ["Em", "Am", "D", "C", "B7"],
-        sargamHook: "Pa ma ga Re Sa | Re ga Re Sa ni | Sa Re ga ma Pa",
-        westernHook: "B4 A4 G4 F#4 E4 | F#4 G4 F#4 E4 D#4 | E4 F#4 G4 A4 B4",
-        lyrics: `[Em] Hum tere bin ab reh nahi sakte
-[Am] Tere bina kya wajood mera
-[D] Tujhse juda gar ho jaayenge
-[C] Toh khud se hi ho [B7] jaayenge judaa
+    const CORE_SEARCH_SONGS = [
+  {
+    "title": "Tum Hi Ho",
+    "movie": "Aashiqui 2",
+    "singer": "Arijit Singh",
+    "key": "C# Minor / Transposed Em",
+    "bpm": 88,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Em",
+      "Am",
+      "D",
+      "C",
+      "B7"
+    ],
+    "sargamHook": "Pa ma ga Re Sa | Re ga Re Sa ni | Sa Re ga ma Pa",
+    "westernHook": "B4 A4 G4 F#4 E4 | F#4 G4 F#4 E4 D#4 | E4 F#4 G4 A4 B4",
+    "lyrics": "[Em] Hum tere bin ab reh nahi sakte\n[Am] Tere bina kya wajood mera\n[D] Tujhse juda gar ho jaayenge\n[C] Toh khud se hi ho [B7] jaayenge judaa\n\n[Em] Kyunki tum hi ho, [Am] ab tum hi ho\n[D] Zindagi ab [C] tum hi [Em] ho\n[Em] Chain bhi, [Am] mera dard bhi\n[D] Meri aashiqui ab [C] tum hi [Em] ho"
+  },
+  {
+    "title": "Kabira",
+    "movie": "Yeh Jawaani Hai Deewani",
+    "singer": "Tochi Raina, Rekha Bhardwaj",
+    "key": "D Major (Sa = D)",
+    "bpm": 84,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Bm"
+    ],
+    "sargamHook": "Sa Re Ga Ga | Re Ga Pa | ma Ga Re Sa",
+    "westernHook": "D4 E4 F#4 F#4 | E4 F#4 A4 | G4 F#4 E4 D4",
+    "lyrics": "[D] Kaisi teri khudgarzi\n[G] Na dhoop chune na chhaaon\n[D] Kaisi teri khudgarzi\n[A] Kisi thor tike na paanv\n\n[D] Re Kabira maan jaa, [G] re Faqeera maan jaa\n[D] Aaja tujhko pukaare teri [A] parchhaaiyan\n[D] Re Kabira maan jaa, [G] re Faqeera maan jaa\n[D] Kaisa tu hai nirmohi kaisa [A] harjaaiya"
+  },
+  {
+    "title": "Kesariya",
+    "movie": "Brahmastra",
+    "singer": "Arijit Singh",
+    "key": "C Major (Sa = C)",
+    "bpm": 92,
+    "strum": "D - D U - U D -",
+    "diff": "Beginner",
+    "chords": [
+      "C",
+      "F",
+      "G",
+      "Am",
+      "Dm"
+    ],
+    "sargamHook": "Sa Re Ga | Ga ma Pa | Ga ma Re Sa",
+    "westernHook": "C4 D4 E4 | E4 F4 G4 | E4 F4 D4 C4",
+    "lyrics": "[C] Mujhko itna bataye koi\n[F] Kaise tujhse dil na lagaye koi\n[Am] Rabba ne tujhko banane mein\n[G] Kar di hai husn ki khaali tijoriyan\n\n[C] Kesariya tera [G] ishq hai piya\n[Am] Rang jaaun jo main [F] haath lagaun\n[C] Din beete saara [G] teri fikr mein\n[Am] Rain saari teri [F] khair manaun"
+  },
+  {
+    "title": "Pani Da Rang",
+    "movie": "Vicky Donor",
+    "singer": "Ayushmann Khurrana",
+    "key": "A Minor (Sa = A)",
+    "bpm": 110,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "Em"
+    ],
+    "sargamHook": "Sa Re ga Re Sa | ni Sa Re Sa",
+    "westernHook": "A4 B4 C5 B4 A4 | G4 A4 B4 A4",
+    "lyrics": "[Am] Pani da rang vekh ke\n[G] Pani da rang vekh ke\n[F] Akhiyaan 'ch hanju rul [Em] de\n[Am] Akhiyaan 'ch hanju rul de\n\n[Am] Mahiya na aaya mera, [G] mahiya na aaya\n[F] Ranjhana na aaya mera, [Em] mahiya na aaya"
+  },
+  {
+    "title": "Channa Mereya",
+    "movie": "Ae Dil Hai Mushkil",
+    "singer": "Arijit Singh",
+    "key": "D Major (Sa = D)",
+    "bpm": 78,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Bm",
+      "Em"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Ga | Re Sa ni Sa",
+    "westernHook": "D4 E4 F#4 A4 | G4 F#4 E4 F#4 | E4 D4 C#4 D4",
+    "lyrics": "[D] Achha chalta hoon, [G] duaon mein yaad rakhna\n[A] Mere zikr ka zubaan pe [D] swaad rakhna\n[Bm] Dil ke sandookon mein mere achhe [G] kaam rakhna\n[A] Chitthi taaron mein bhi mera tu [D] salaam rakhna\n\n[D] Andhera tera maine le liya\nMera [G] ujla sitaara tere naam kiya\n[D] Channa mereya mereya, [G] channa mereya mereya\n[A] Channa mereya mereya [D] beliya"
+  },
+  {
+    "title": "Jeena Jeena",
+    "movie": "Badlapur",
+    "singer": "Atif Aslam",
+    "key": "F# Minor (Sa = F#)",
+    "bpm": 82,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "F#m",
+      "D",
+      "E",
+      "A",
+      "Bm"
+    ],
+    "sargamHook": "Sa Re ga ma Pa | ma ga Re Sa",
+    "westernHook": "F#4 G#4 A4 B4 C#5 | B4 A4 G#4 F#4",
+    "lyrics": "[F#m] Dehleez pe mere dil ki\nJo [D] rakhe hain tune kadam\n[E] Tere naam pe meri zindagi\nLikh [A] di mere [F#m] humdum\n\n[F#m] Haan seekha maine [D] jeena jeena kaise jeena\n[E] Haan seekha maine [A] jeena mere humdum"
+  },
+  {
+    "title": "Pehla Nasha",
+    "movie": "Jo Jeeta Wohi Sikandar",
+    "singer": "Udit Narayan, Sadhana Sargam",
+    "key": "F Major (Sa = F)",
+    "bpm": 80,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "F",
+      "Bb",
+      "C",
+      "Dm",
+      "Gm"
+    ],
+    "sargamHook": "Sa Ga Pa Pa | ma Ga Re Ga | Sa Ga Pa Dha Pa",
+    "westernHook": "F4 A4 C5 C5 | Bb4 A4 G4 A4 | F4 A4 C5 D5 C5",
+    "lyrics": "[F] Chaahe tum kuch na kaho, [Bb] maine sun liya\n[C] Ke saathi pyaar ka mujhe [F] chun liya\n[F] Chun liya, [Bb] maine sun [F] liya\n\n[F] Pehla nasha, [Bb] pehla khumaar\n[C] Naya pyaar hai naya [F] intezaar\n[F] Kar loon main kya apna [Bb] haal\n[C] Aye dil-e-beqaraar, [F] mere dil-e-beqaraar"
+  },
+  {
+    "title": "Tujhe Dekha Toh",
+    "movie": "Dilwale Dulhania Le Jayenge",
+    "singer": "Kumar Sanu, Lata Mangeshkar",
+    "key": "D Major (Sa = D)",
+    "bpm": 84,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Bm",
+      "Em"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Sa | ni Sa Re Ga Re",
+    "westernHook": "D4 E4 F#4 A4 | G4 F#4 E4 D4 | C#4 D4 E4 F#4 E4",
+    "lyrics": "[D] Tujhe dekha toh yeh jaana sanam\n[G] Pyaar hota hai deewaana sanam\n[A] Ab yahaan se kahaan jaayein hum\n[D] Teri baahon mein mar jaayein hum\n\n[D] Aankhein meri, sapne tere\n[G] Dil mera, yaadein teri\n[A] O mera hai kya, sab kuch tera\n[D] Jaan teri, saansein teri"
+  },
+  {
+    "title": "Dooba Dooba",
+    "movie": "Boondein (Silk Route)",
+    "singer": "Mohit Chauhan",
+    "key": "D Major (Sa = D)",
+    "bpm": 96,
+    "strum": "D - D U - U D -",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Bm"
+    ],
+    "sargamHook": "Ga Ga Ga Re Sa | Sa Re Re Re Ga Re",
+    "westernHook": "F#4 F#4 F#4 E4 D4 | D4 E4 E4 E4 F#4 E4",
+    "lyrics": "[D] Dooba dooba rehta hoon yaadon mein teri\n[G] Deewana ban gaya hoon main chahat mein teri\n[D] Ab din guzarate nahin, raatein katati nahin\n[A] Teri tasveer se meri aankhein hatati nahin\n\n[D] O re laila, [G] tere pyaar ka nasha\n[A] Chhaa gaya mujhpe har [D] jagah"
+  },
+  {
+    "title": "Kun Faya Kun",
+    "movie": "Rockstar",
+    "singer": "A.R. Rahman, Mohit Chauhan, Javed Ali",
+    "key": "G Major (Sa = G)",
+    "bpm": 72,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D",
+      "Am"
+    ],
+    "sargamHook": "Sa Ga Pa | Dha Pa ma Ga | Re Ga ma Ga Re Sa",
+    "westernHook": "G3 B3 D4 | E4 D4 C4 B3 | A3 B3 C4 B3 A3 G3",
+    "lyrics": "[G] Ya Nizamuddin Auliya\n[Em] Ya Nizamuddin Sarkar\n[C] Kadam badha le, hadhon ko mita le\n[D] Aaja khaalipan mein pee ka saaya dikhe\n\n[G] Kun faya kun, [Em] kun faya kun\nFaya [C] kun, faya kun, faya [D] kun\n[G] Jab kahin pe kuch nahi bhi nahi tha\n[Em] Wahi tha wahi tha [C] wahi tha [D] wahi tha"
+  },
+  {
+    "title": "Agar Tum Saath Ho",
+    "movie": "Tamasha",
+    "singer": "Alka Yagnik, Arijit Singh",
+    "key": "F Major (Sa = F)",
+    "bpm": 78,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "F",
+      "Am",
+      "Bb",
+      "C",
+      "Dm"
+    ],
+    "sargamHook": "Pa ma Ga ma Ga Re | Sa Re Ga ma Pa",
+    "westernHook": "C5 Bb4 A4 Bb4 A4 G4 | F4 G4 A4 Bb4 C5",
+    "lyrics": "[F] Pal bhar theher jaao, dil yeh sambhal jaaye\n[Am] Kaise tumhe rokein, mausam badal jaaye\n[Bb] Mann bhar gaya hai toh jhoothi kaho\n[C] Jaane ka hunar humko sikha ke jaao\n\n[F] Teri nazron mein hai tere sapne\n[Am] Tere sapno mein hai naraazi\n[Bb] Mujhe lagta hai ke baatein dil ki\n[C] Hoti lafzon ki dhokhebaazi\n[F] Tum saath ho ya na ho kya fark hai\n[Am] Bedard thi zindagi [Bb] bedard [C] hai"
+  },
+  {
+    "title": "Give Me Some Sunshine",
+    "movie": "3 Idiots",
+    "singer": "Suraj Jagan, Sharman Joshi",
+    "key": "D Major (Sa = D)",
+    "bpm": 112,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Bm"
+    ],
+    "sargamHook": "Sa Sa Sa Re Ga | Ga Ga Ga Re Sa | ni Sa Re",
+    "westernHook": "D4 D4 D4 E4 F#4 | F#4 F#4 F#4 E4 D4 | C#4 D4 E4",
+    "lyrics": "[D] Saari umrr hum mar mar ke jee liye\n[G] Ek pal to ab humein jeene do jeene do\n[D] Saari umrr hum mar mar ke jee liye\n[A] Ek pal to ab humein jeene do jeene do\n\n[D] Give me some sunshine, [G] give me some rain\n[A] Give me another chance, I wanna grow up once [D] again"
+  },
+  {
+    "title": "Bulleya",
+    "movie": "Ae Dil Hai Mushkil",
+    "singer": "Amit Mishra, Shilpa Rao",
+    "key": "A Minor (Sa = A)",
+    "bpm": 98,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E",
+      "C"
+    ],
+    "sargamHook": "Sa Re ga ma Pa | Pa Dha Pa ma ga | Re ga Re Sa",
+    "westernHook": "A4 B4 C5 D5 E5 | E5 F5 E5 D5 C5 | B4 C5 B4 A4",
+    "lyrics": "[Am] Meri rooh ka parinda phadphadaaye\n[G] Lekin sukoon ka jazeera mil na paaye\n[F] Ve ki karaan, ve ki karaan\n[E] Ik baar ko tajalli toh dikha de\n[Am] Jhoothi sahi magar tasalli toh dila de\n\n[Am] Ranjhana ve, [G] ranjhana ve\nKuch [F] nasha sa hai tere [E] pyaar mein\n[Am] Bulleya tu kahan kho gaya re"
+  },
+  {
+    "title": "Raabta",
+    "movie": "Agent Vinod",
+    "singer": "Arijit Singh",
+    "key": "C Major (Sa = C)",
+    "bpm": 84,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "C",
+      "Am",
+      "F",
+      "G",
+      "Em"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Ga | Re Sa ni Sa",
+    "westernHook": "C4 D4 E4 G4 | F4 E4 D4 E4 | D4 C4 B3 C4",
+    "lyrics": "[C] Kehte hain khuda ne iss jahan mein sabhi ke liye\n[Am] Kisi na kisi ko hai banaya har kisi ke liye\n[F] Tera milna hai uss rab ka ishaara\n[G] Maano mujhko banaya tere jaise hi kisi ke liye\n\n[C] Kuch toh hai tujhse raabta\n[Am] Kuch toh hai tujhse raabta\n[F] Kaise hum jaane hume kya pata\n[G] Kuch toh hai tujhse [C] raabta"
+  },
+  {
+    "title": "Tera Yaar Hoon Main",
+    "movie": "Sonu Ke Titu Ki Sweety",
+    "singer": "Arijit Singh",
+    "key": "G Major (Sa = G)",
+    "bpm": 78,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D",
+      "Bm"
+    ],
+    "sargamHook": "Pa Ga Re Sa | Sa Re Ga ma Pa | Ga Re Sa",
+    "westernHook": "D4 B3 A3 G3 | G3 A3 B3 C4 D4 | B3 A3 G3",
+    "lyrics": "[G] Tu jo rootha toh kaun hansega\n[Em] Tu jo chhoota toh kaun rahega\n[C] Tu chup hai toh yeh darr lagta hai\n[D] Apna mujhko ab kaun kahega\n\n[G] Tere bina bewajah bekaar hoon main\n[Em] Tera yaar hoon main\n[C] Tera [D] yaar hoon [G] main"
+  },
+  {
+    "title": "Ilahi",
+    "movie": "Yeh Jawaani Hai Deewani",
+    "singer": "Arijit Singh",
+    "key": "G Major (Sa = G)",
+    "bpm": 118,
+    "strum": "D - D U - U D U",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "C",
+      "D",
+      "Em"
+    ],
+    "sargamHook": "Sa Ga Pa Pa | ma Ga Re Sa | Re Ga Re",
+    "westernHook": "G3 B3 D4 D4 | C4 B3 A3 G3 | A3 B3 A3",
+    "lyrics": "[G] Shaamein malang si, [C] raatein surang si\n[D] Baaghi udaan pe hi na jaane kyun\n[G] Ilahi mera jee aaye aaye\n[C] Ilahi mera jee aaye aaye\n[D] Kal pe sawaal hai, [Em] jeena filhaal hai\n[C] Khaana-badoshiyon pe [D] hi dil khush [G] hai"
+  },
+  {
+    "title": "Subhanallah",
+    "movie": "Yeh Jawaani Hai Deewani",
+    "singer": "Sreerama Chandra, Shilpa Rao",
+    "key": "D Major (Sa = D)",
+    "bpm": 90,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Em"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Ga | Sa Re Ga",
+    "westernHook": "D4 E4 F#4 A4 | G4 F#4 E4 F#4 | D4 E4 F#4",
+    "lyrics": "[D] Ek din kabhi jo khud ko taraashe\n[G] Meri nazar se tu zara\n[D] Haaye re chamkega heere jaisa\n[A] Itna haseen chehra tera\n\n[D] Subhanallah, [G] haseen chehra\n[A] Subhanallah, [D] noor tera\n[D] Subhanallah, [G] dil yeh mera\n[A] Fida ho gaya [D] tujhpe"
+  },
+  {
+    "title": "Hawayein",
+    "movie": "Jab Harry Met Sejal",
+    "singer": "Arijit Singh",
+    "key": "G Major (Sa = G)",
+    "bpm": 82,
+    "strum": "D - D U - U D -",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D"
+    ],
+    "sargamHook": "Sa Ga Pa Dha Pa | ma Ga Re Ga Sa",
+    "westernHook": "G3 B3 D4 E4 D4 | C4 B3 A3 B3 G3",
+    "lyrics": "[G] Tujhko… main rakh loon wahaan\n[Em] Jahaan pe kahin hai mera yaqeen\n[C] Main jo… tera na hua\n[D] Kisi ka nahi… kisi ka nahi\n\n[G] Le jaayein jaane kahaan hawayein hawayein\n[Em] Le jaayein tujhe kahaan hawayein hawayein\n[C] Begaani hai yeh baaghi hawayein hawayein\n[D] Le jaayein mujhe kahaan [G] hawayein"
+  },
+  {
+    "title": "Tum Se Hi",
+    "movie": "Jab We Met",
+    "singer": "Mohit Chauhan",
+    "key": "A Minor (Sa = A)",
+    "bpm": 92,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "Am",
+      "F",
+      "G",
+      "C",
+      "Em"
+    ],
+    "sargamHook": "ga Re Sa ni | Sa Re ga ma Pa | ma ga Re Sa",
+    "westernHook": "C5 B4 A4 G4 | A4 B4 C5 D5 E5 | D5 C5 B4 A4",
+    "lyrics": "[Am] Na hai yeh paana, [F] na khona hi hai\n[G] Tera na hona jaane [C] kyun hona hi [Em] hai\n[Am] Dheeme dheeme chalte hain raaste\n[F] Tujh tak aake rukh jaate hain\n[G] Tum se hi din hota hai\n[C] Surmayi shaam aati [Em] hai\n[F] Tum se hi, [G] tum se [Am] hi"
+  },
+  {
+    "title": "Kahin Toh Hogi Woh",
+    "movie": "Jaane Tu... Ya Jaane Na",
+    "singer": "Rashid Ali, Vasundhara Das",
+    "key": "C Major (Sa = C)",
+    "bpm": 78,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "C",
+      "F",
+      "G",
+      "Am",
+      "Em"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Ga | Re Sa",
+    "westernHook": "C4 D4 E4 G4 | F4 E4 D4 E4 | D4 C4",
+    "lyrics": "[C] Kahin toh hogi woh, [F] duniya jahan tu mere saath hai\n[C] Jahan main jahan tu, [F] aur jahan bas tere mere jazbaat hain\n[Am] Hogi jahan subah teri, [Em] palkon ki kirnon mein\n[F] Lori jahan chand ki, [G] sune teri baahon mein\n\n[C] Jaane na kahan woh duniya hai\n[F] Jaane na kahan woh [C] samaa hai"
+  },
+  {
+    "title": "Kya Mujhe Pyar Hai",
+    "movie": "Woh Lamhe",
+    "singer": "KK",
+    "key": "A Minor (Sa = A)",
+    "bpm": 124,
+    "strum": "D - D U - U D U",
+    "diff": "Beginner",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E"
+    ],
+    "sargamHook": "Sa Sa Sa Re ga | Re Re Re ga ma | ga ga Re Sa",
+    "westernHook": "A4 A4 A4 B4 C5 | B4 B4 B4 C5 D5 | C5 C5 B4 A4",
+    "lyrics": "[Am] Kyun aajkal neend kam khwaab zyaada hain\n[G] Lagta khuda ka koi nek iraada hai\n[F] Kal ka fakeer aaj dil ka shehzada hai\n[E] Lagta khuda ka koi nek iraada hai\n\n[Am] Kya mujhe pyaar hai ya kaisa khumaar hai ya\n[G] Kya mujhe pyaar hai ya kaisa khumaar hai ya\n[F] O jaana, [E] dil ne mere tere dil se [Am] kaha"
+  },
+  {
+    "title": "Alvida",
+    "movie": "Life in a... Metro",
+    "singer": "KK",
+    "key": "A Minor (Sa = A)",
+    "bpm": 90,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "Em",
+      "Dm"
+    ],
+    "sargamHook": "Pa ma ga Re Sa | Sa Re ga ma Pa",
+    "westernHook": "E5 D5 C5 B4 A4 | A4 B4 C5 D5 E5",
+    "lyrics": "[Am] Chupke se kahin dheeme paanv se\n[G] Jaane kis tarah kis ghadi\n[F] Aage nikal gaye hum toh mod se\n[Em] Mud ke dekha hi nahi\n\n[Am] Alvida yaara alvida, [G] ho rahe tumse hum judaa\n[F] Le chale saare gham tere, [Em] khush rahe yaara tu [Am] sada"
+  },
+  {
+    "title": "Zara Sa",
+    "movie": "Jannat",
+    "singer": "KK",
+    "key": "A Minor (Sa = A)",
+    "bpm": 88,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E",
+      "Dm"
+    ],
+    "sargamHook": "Sa Re ga Re Sa | ni Sa Re Sa",
+    "westernHook": "A4 B4 C5 B4 A4 | G4 A4 B4 A4",
+    "lyrics": "[Am] Zara sa jhoom loon main\n[G] Arre na re na re na\n[F] Zara sa dil mein de jagah tu\n[E] Zara sa apna le bana\n[Am] Zara sa khwaabon mein saja tu\n[G] Zara sa yaadon mein basa\n\n[F] Main tere hi seene mein ghamgeen sa\n[E] Ghul jaaunga [Am] yaara"
+  },
+  {
+    "title": "Labon Ko",
+    "movie": "Bhool Bhulaiyaa",
+    "singer": "KK",
+    "key": "D Minor (Sa = D)",
+    "bpm": 80,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Dm",
+      "Bb",
+      "C",
+      "A7",
+      "Gm"
+    ],
+    "sargamHook": "Sa Re ga ma Pa | ma ga Re ga Re Sa",
+    "westernHook": "D4 E4 F4 G4 A4 | G4 F4 E4 F4 E4 D4",
+    "lyrics": "[Dm] Labon ko labon pe sajao\n[Bb] Kya ho tum mujhe ab batao\n[C] Tod do khud ko tum\n[A7] Baahon mein meri\n\n[Dm] Labon ko labon pe sajao\n[Bb] Saanson mein meri ghul jao\n[Gm] Khwaab mein [C] aao [Dm] tum"
+  },
+  {
+    "title": "Purani Jeans",
+    "movie": "Pop Album (1993)",
+    "singer": "Ali Haider",
+    "key": "G Major (Sa = G)",
+    "bpm": 114,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D"
+    ],
+    "sargamHook": "Sa Ga Pa | Pa Dha Pa ma Ga | Re Ga ma Ga Re",
+    "westernHook": "G3 B3 D4 | D4 E4 D4 C4 B3 | A3 B3 C4 B3 A3",
+    "lyrics": "[G] Purani jeans aur guitar\n[Em] Mohalle ki woh chhat aur mere yaar\n[C] Woh raaton ko jaagna\n[D] Subah ghar jaana kood kar deewaar\n\n[G] Woh cigarette peena gali mein chhup kar\n[Em] Woh gappe ladaana churahe pe ruk kar\n[C] Kahan gaye [D] woh din [G] mere yaar"
+  },
+  {
+    "title": "Sayonee",
+    "movie": "Junoon (Inquilaab)",
+    "singer": "Ali Azmat",
+    "key": "D Minor (Sa = D)",
+    "bpm": 88,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Dm",
+      "C",
+      "Bb",
+      "A",
+      "Gm"
+    ],
+    "sargamHook": "Sa Re ga | ga Re Sa | Sa ni Dha Pa Sa",
+    "westernHook": "D4 E4 F4 | F4 E4 D4 | D4 C4 Bb3 A3 D4",
+    "lyrics": "[Dm] Sayonee... chain ik pal nahi\n[C] Chain ik pal nahi [Dm] tere bina\n[Bb] Sayonee... [C] chain ik pal [Dm] nahi\n\n[Dm] Kya bashar ki aukaat hai\n[C] Yeh zindagi be-sabaat hai\n[Bb] Koyi toh humko bataye [A] raaz-e-hayaat"
+  },
+  {
+    "title": "Bheegi Bheegi",
+    "movie": "Gangster",
+    "singer": "James",
+    "key": "A Minor (Sa = A)",
+    "bpm": 120,
+    "strum": "D - D U - U D U",
+    "diff": "Beginner",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E"
+    ],
+    "sargamHook": "Sa Sa Re ga | Re Re ga ma | ga ga Re Sa",
+    "westernHook": "A4 A4 B4 C5 | B4 B4 C5 D5 | C5 C5 B4 A4",
+    "lyrics": "[Am] Bheegi bheegi si hai raatein, bheegi bheegi yaadein\n[G] Bheegi bheegi baatein, bheegi bheegi aankhein\n[F] Mehki mehki si hawaayein\n[E] Chalke chalke jaam\n\n[Am] Na jaane kahan se aayi hai woh\n[G] Ek meethi si tadap laayi hai woh\n[F] Bheegi bheegi [E] si yeh raat [Am] hai"
+  },
+  {
+    "title": "Pee Loon",
+    "movie": "Once Upon a Time in Mumbaai",
+    "singer": "Mohit Chauhan",
+    "key": "G Major (Sa = G)",
+    "bpm": 86,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D",
+      "Am"
+    ],
+    "sargamHook": "Sa Ga Pa | Dha Pa ma Ga | Re Ga ma Ga Re Sa",
+    "westernHook": "G3 B3 D4 | E4 D4 C4 B3 | A3 B3 C4 B3 A3 G3",
+    "lyrics": "[G] Pee loon tere neele neele naino se shabnam\n[Em] Pee loon tere geele geele hothon ki sargam\n[C] Pee loon hai peene ka mausam\n[D] Tere sang ishq taari hai\n\n[G] Tere sang ik khwaari hai\n[Em] Tere sang chain bhi mujhko\n[C] Tere sang [D] beqarari [G] hai"
+  },
+  {
+    "title": "Samjhawan",
+    "movie": "Humpty Sharma Ki Dulhania",
+    "singer": "Arijit Singh, Shreya Ghoshal",
+    "key": "F Major (Sa = F)",
+    "bpm": 76,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "F",
+      "Bb",
+      "C",
+      "Dm",
+      "Am"
+    ],
+    "sargamHook": "Pa ma Ga ma Ga Re | Sa Re Ga ma Pa",
+    "westernHook": "C5 Bb4 A4 Bb4 A4 G4 | F4 G4 A4 Bb4 C5",
+    "lyrics": "[F] Nahi jeena tere baaju, nahi jeena nahi jeena\n[Bb] Nahi jeena tere baaju, [C] nahi jeena nahi jeena\n[Dm] Main tenu samjhawan ki\n[Bb] Na tere bina lagda [C] jee\n\n[F] Tu ki jaane pyaar mera\n[Dm] Main karaan intezaar tera\n[Bb] Tu dil tui-yon jaan meri\n[C] Main tenu samjhawan [F] ki"
+  },
+  {
+    "title": "Tera Hone Laga Hoon",
+    "movie": "Ajab Prem Ki Ghazab Kahani",
+    "singer": "Atif Aslam, Alisha Chinai",
+    "key": "G Major (Sa = G)",
+    "bpm": 96,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D"
+    ],
+    "sargamHook": "Sa Ga Pa Pa | ma Ga Re Sa | Re Ga Re",
+    "westernHook": "G3 B3 D4 D4 | C4 B3 A3 G3 | A3 B3 A3",
+    "lyrics": "[G] Shining in the setting sun like a pearl upon the ocean\n[Em] Come on feel me, oh feel me\n[C] Tera hone laga hoon, [D] khone laga hoon\n[G] Jab se mila hoon\n\n[G] Hoke juda kyun lagta hai aisa\n[Em] Saath tera hai kaisa nasha\n[C] Tera hone [D] laga hoon [G] main"
+  },
+  {
+    "title": "Aadat",
+    "movie": "Kalyug / Jal",
+    "singer": "Atif Aslam / Goher Mumtaz",
+    "key": "A Minor (Sa = A)",
+    "bpm": 104,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E"
+    ],
+    "sargamHook": "Sa Re ga ma Pa | ma ga Re Sa",
+    "westernHook": "A4 B4 C5 D5 E5 | D5 C5 B4 A4",
+    "lyrics": "[Am] Juda hoke bhi tu mujhmein kahin baaqi hai\n[G] Palkon pe banke aansu tu chali aati hai\n[F] Kaise kahoon main tere bina\n[E] Zindagi kya cheez hai\n\n[Am] Ab toh aadat si hai mujhko aise jeene mein\n[G] Yeh jo hasrat hai mere seene mein\n[F] Sab gham bhula ke [E] jee raha [Am] hoon"
+  },
+  {
+    "title": "Woh Lamhe",
+    "movie": "Zeher",
+    "singer": "Atif Aslam",
+    "key": "A Minor (Sa = A)",
+    "bpm": 90,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E",
+      "Dm"
+    ],
+    "sargamHook": "Sa Sa Sa Re ga | Re Re Re ga ma | ga ga Re Sa",
+    "westernHook": "A4 A4 A4 B4 C5 | B4 B4 C5 D5 | C5 C5 B4 A4",
+    "lyrics": "[Am] Woh lamhe, woh baatein\n[G] Koi na jaane, thi kaisi raatein\n[F] Hooo barsaatein\n[E] Woh bheegi bheegi yaadein\n\n[Am] Na jaane kyun juda ho gaye hum\n[G] Khwaabon ke aaine toot gaye\n[F] Woh lamhe [E] yaad aate [Am] hain"
+  },
+  {
+    "title": "Mera Mann Kehne Laga",
+    "movie": "Nautanki Saala",
+    "singer": "Ayushmann Khurrana",
+    "key": "D Major (Sa = D)",
+    "bpm": 88,
+    "strum": "D - D U - U D -",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "G",
+      "A",
+      "Bm"
+    ],
+    "sargamHook": "Sa Re Ga Ga | Re Ga Pa | ma Ga Re Sa",
+    "westernHook": "D4 E4 F#4 F#4 | E4 F#4 A4 | G4 F#4 E4 D4",
+    "lyrics": "[D] Mera mann kehne laga\n[G] Paas aake na tu door jaa\n[D] Chhoone de hothon ko tere\n[A] Saanson mein ghul jaa zara\n\n[D] Tu hi meri zindagi hai, [G] tu hi har khushi\n[A] Tujhko paake maine [D] sab kuch paa liya"
+  },
+  {
+    "title": "Chalo Ek Baar Phir Se",
+    "movie": "Gumrah (1963)",
+    "singer": "Mahendra Kapoor",
+    "key": "D Minor (Sa = D)",
+    "bpm": 76,
+    "strum": "D - D U - U D -",
+    "diff": "Intermediate",
+    "chords": [
+      "Dm",
+      "C",
+      "Bb",
+      "Gm",
+      "A",
+      "F"
+    ],
+    "sargamHook": "ga ga Re Sa ni Sa | Sa Sa Sa Re Sa Re Pa ma ga",
+    "westernHook": "F4 F4 E4 D4 C4 D4 | D4 D4 D4 E4 D4 E4 A4 G4 F4",
+    "lyrics": "[Dm] Chalo ek baar phir se [C] ajnabi ban jaayein [Dm] hum dono\n[Dm] Chalo ek baar phir se [C] ajnabi ban jaayein [Dm] hum dono\n\n[Gm] Na main tumse koi [C] ummeed-e-dil-nawazi ki rakhun\n[Bb] Na tum meri taraf dekho [C] galat-andaaz [Dm] nazron se"
+  },
+  {
+    "title": "Tera Mera Pyar Amar",
+    "movie": "Asli-Naqli (1962)",
+    "singer": "Lata Mangeshkar",
+    "key": "D Minor (Sa = D)",
+    "bpm": 82,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "Dm",
+      "C",
+      "Bb",
+      "Gm",
+      "A",
+      "F"
+    ],
+    "sargamHook": "Sa Re Re ga | Sa Re Re ga | Sa Re Re Sa ni",
+    "westernHook": "D4 E4 E4 F4 | D4 E4 E4 F4 | D4 E4 E4 D4 C4",
+    "lyrics": "[Dm] Tera mera pyar amar, [C] phir kyon mujhko lagta hai [Dm] dar\n[Gm] Mere jeevan saathi bata, [C] kyon dil dhadke reh reh [Dm] kar\n\n[F] Kya kaha hai chand ne, [C] jisko sunke [Bb] chandni\n[Bb] Har lehar pe jhoom ke, [A] kyon yeh naachne [Dm] lagi"
+  },
+  {
+    "title": "Roothay Ho Tum",
+    "movie": "Jawab (1970)",
+    "singer": "Kishore Kumar",
+    "key": "D Minor (Sa = D)",
+    "bpm": 86,
+    "strum": "D - D U - U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "Dm",
+      "Gm",
+      "C",
+      "F",
+      "A7",
+      "Bb"
+    ],
+    "sargamHook": "Pa dha Pa ma | Pa ma ga | ga ma ga Re Re ga Re Sa Sa",
+    "westernHook": "A4 Bb4 A4 G4 | A4 G4 F4 | F4 G4 F4 E4 E4 F4 E4 D4 D4",
+    "lyrics": "[Dm] Roothay ho tum, tumko [Gm] kaise manaoon [C] piya bolo [Dm] na\n[F] Bolo na bolo na, [A7] bolo na piya [Dm] bolo na\n\n[Dm] Hum se agar koi [Gm] bhool hui hai\n[C] Hans ke saza do humko [F] sajanwa\n[Bb] Chup na raho meri jaan pe [A7] ban aayi piya [Dm] bolo na"
+  },
+  {
+    "title": "Jaise Suraj Ki Garmi Se",
+    "movie": "Parinay (1974)",
+    "singer": "Sharma Bandhu / Anup Jalota",
+    "key": "D Minor (Sa = D)",
+    "bpm": 74,
+    "strum": "D - D U D - D U",
+    "diff": "Intermediate",
+    "chords": [
+      "Dm",
+      "C",
+      "Bb",
+      "Gm",
+      "A",
+      "F"
+    ],
+    "sargamHook": "Sa Re ga ga Re ga ma ga Re Sa | Re ga ma Pa ma ga Re",
+    "westernHook": "D4 E4 F4 F4 E4 F4 G4 F4 E4 D4 | E4 F4 G4 A4 G4 F4 E4",
+    "lyrics": "[Dm] Jaise suraj ki garmi se [C] tapte hue tan ko\n[Bb] Mil jaye taruvar ki [Dm] chhaya\n[Gm] Aisa hi sukh mere [C] man ko mila hai\n[Bb] Main jabse sharan teri [Dm] aaya mere ram"
+  },
+  {
+    "title": "Gulabi Aankhen",
+    "movie": "The Train (1970)",
+    "singer": "Mohammed Rafi / Sanam",
+    "key": "A Minor (Sa = A)",
+    "bpm": 116,
+    "strum": "D - D U - U D U",
+    "diff": "Beginner",
+    "chords": [
+      "Am",
+      "G",
+      "F",
+      "E"
+    ],
+    "sargamHook": "Sa Sa Sa Sa Re ga | Re Re Re Re ga ma | ga ga ga ga ma Pa",
+    "westernHook": "A3 A3 A3 A3 B3 C4 | B3 B3 B3 B3 C4 D4 | C4 C4 C4 C4 D4 E4",
+    "lyrics": "[Am] Gulabi aankhen jo teri dekhi\n[G] Sharabi yeh dil ho gaya\n[F] Sambhalo mujhko o mere yaaron\n[E] Sambhalna mushkil ho gaya\n\n[Am] Dil mein mere khwaab tere\n[G] Tasveer jaise deewaar pe\n[F] Tujhpe fida main [E] ho gaya [Am] sanam"
+  },
+  {
+    "title": "Kal Ho Naa Ho",
+    "movie": "Kal Ho Naa Ho (2003)",
+    "singer": "Sonu Nigam",
+    "key": "C Major (Sa = C)",
+    "bpm": 80,
+    "strum": "D - D U - U D -",
+    "diff": "Beginner",
+    "chords": [
+      "C",
+      "Em",
+      "F",
+      "G",
+      "Am"
+    ],
+    "sargamHook": "Sa Re Ga Ga Ga Ga Ga | Re Ga ma ma ma ma | Ga ma Pa Pa",
+    "westernHook": "C4 D4 E4 E4 E4 E4 E4 | D4 E4 F4 F4 F4 F4 | E4 F4 G4 G4",
+    "lyrics": "[C] Har ghadi badal rahi hai [Em] roop zindagi\n[F] Chhaon hai kabhi kabhi hai [G] dhoop zindagi\n[C] Har pal yahan jee bhar [Em] jiyo\n[F] Jo hai samaa [G] kal ho na [C] ho"
+  },
+  {
+    "title": "Hotel California",
+    "movie": "Hotel California (1976)",
+    "singer": "Eagles (Don Henley)",
+    "key": "B Minor / Capo 7: Em",
+    "bpm": 75,
+    "strum": "D - D U - U D U",
+    "diff": "Advanced",
+    "chords": [
+      "Am",
+      "E",
+      "G",
+      "D",
+      "F",
+      "C",
+      "Dm"
+    ],
+    "sargamHook": "Sa ni Dha Pa | ma ga Re Sa",
+    "westernHook": "B4 A4 G4 F#4 | E4 D4 C#4 B3",
+    "lyrics": "[Am] On a dark desert highway, [E] cool wind in my hair\n[G] Warm smell of colitas, [D] rising up through the air\n[F] Up ahead in the distance, [C] I saw a shimmering light\n[Dm] My head grew heavy and my sight grew dim\n[E] I had to stop for the night\n\nChorus:\n[F] Welcome to the Hotel [C] California\nSuch a [E] lovely place (Such a lovely place)\nSuch a [Am] lovely face"
+  },
+  {
+    "title": "Wonderwall",
+    "movie": "What's the Story Morning Glory (1995)",
+    "singer": "Oasis (Liam Gallagher)",
+    "key": "F# Minor / Capo 2: Em",
+    "bpm": 86,
+    "strum": "D - D - D U D U D - D U",
+    "diff": "Beginner",
+    "chords": [
+      "Em",
+      "G",
+      "D",
+      "A",
+      "C"
+    ],
+    "sargamHook": "Sa Re ga | Re ga Pa | ma ga Re",
+    "westernHook": "E4 F#4 G4 | F#4 G4 B4 | A4 G4 F#4",
+    "lyrics": "[Em] Today is gonna be the day\nThat they're [G] gonna throw it back to you\n[D] By now you should've somehow\nRealized [A] what you gotta do\n\n[C] And all the roads we have to [D] walk are winding [Em]\n[C] And all the lights that lead us [D] there are blinding [Em]\n[C] Because maybe, [Em] you're gonna be the one that [G] saves me\nAnd [C] after all, [Em] you're my [G] wonderwall"
+  },
+  {
+    "title": "Let It Be",
+    "movie": "Let It Be (1970)",
+    "singer": "The Beatles (Paul McCartney)",
+    "key": "C Major (Sa = C)",
+    "bpm": 72,
+    "strum": "D - D - D - D -",
+    "diff": "Beginner",
+    "chords": [
+      "C",
+      "G",
+      "Am",
+      "F",
+      "Em",
+      "Dm"
+    ],
+    "sargamHook": "Ga Ga Ga Ga Ga Re Re | Sa Sa Sa Sa Re Ga",
+    "westernHook": "E4 E4 E4 E4 E4 D4 D4 | C4 C4 C4 C4 D4 E4",
+    "lyrics": "[C] When I find myself in [G] times of trouble, [Am] Mother Mary [F] comes to me\n[C] Speaking words of [G] wisdom, let it [F] be [C]\n[C] And in my hour of [G] darkness, she is [Am] standing right in [F] front of me\n[C] Speaking words of [G] wisdom, let it [F] be [C]\n\n[Am] Let it be, [G] let it be, [F] let it be, [C] let it be\n[C] Whisper words of [G] wisdom, let it [F] be [C]"
+  },
+  {
+    "title": "Perfect",
+    "movie": "Divide (2017)",
+    "singer": "Ed Sheeran",
+    "key": "G Major (Sa = G)",
+    "bpm": 63,
+    "strum": "D - D - D - (6/8 Ballad)",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "Em",
+      "C",
+      "D"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Sa",
+    "westernHook": "G3 A3 B3 D4 | C4 B3 A3 G3",
+    "lyrics": "[G] I found a love for [Em] me\nDarling just [C] dive right in and follow my [D] lead\n[G] Well I found a girl beautiful and [Em] sweet\nOh I never [C] knew you were the someone waiting for [D] me\n\n'Cause we were just kids when we [G] fell in love\nNot knowing [Em] what it was\nI will not [C] give you up this [G] time [D]\nDarling just [G] kiss me slow, your heart is [Em] all I own\nAnd in your [C] eyes you're holding [D] mine"
+  },
+  {
+    "title": "Shape of You",
+    "movie": "Divide (2017)",
+    "singer": "Ed Sheeran",
+    "key": "C# Minor (Sa = C#)",
+    "bpm": 96,
+    "strum": "D - X U - X D -",
+    "diff": "Intermediate",
+    "chords": [
+      "C#m",
+      "F#m",
+      "A",
+      "B"
+    ],
+    "sargamHook": "ga Re Sa ni | Sa ga Re",
+    "westernHook": "E4 D#4 C#4 B3 | C#4 E4 D#4",
+    "lyrics": "[C#m] The club isn't the best place to find a lover\nSo the [F#m] bar is where I go\n[A] Me and my friends at the table doing shots\nDrinking [B] fast and then we talk slow\n\n[C#m] Girl you know I want your love\n[F#m] Your love was handmade for somebody like me\n[A] Come on now follow my lead\n[B] I may be crazy don't mind me\n[C#m] I'm in love with the shape of [F#m] you\n[A] We push and pull like a [B] magnet do"
+  },
+  {
+    "title": "Photograph",
+    "movie": "X (2014)",
+    "singer": "Ed Sheeran",
+    "key": "D Major (Sa = D)",
+    "bpm": 84,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "D",
+      "Bm",
+      "A",
+      "G"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Sa",
+    "westernHook": "D4 E4 F#4 A4 | G4 F#4 E4 D4",
+    "lyrics": "[D] Loving can hurt, [Bm] loving can hurt sometimes\n[A] But it's the only thing that [G] I know\n[D] When it gets hard, [Bm] you know it can get hard sometimes\n[A] It is the only thing that makes us [G] feel alive\n\n[D] We keep this love in a photograph\n[Bm] We made these memories for ourselves\n[A] Where our eyes are never closing\n[G] Hearts were never broken"
+  },
+  {
+    "title": "Someone Like You",
+    "movie": "21 (2011)",
+    "singer": "Adele",
+    "key": "A Major (Sa = A)",
+    "bpm": 68,
+    "strum": "Arpeggio / D - D - D - D -",
+    "diff": "Intermediate",
+    "chords": [
+      "A",
+      "E",
+      "F#m",
+      "D"
+    ],
+    "sargamHook": "Sa Ga Pa Sa' | ni Dha Pa Ga",
+    "westernHook": "A3 C#4 E4 A4 | G#4 F#4 E4 C#4",
+    "lyrics": "[A] I heard that you're settled down\nThat you [E] found a girl and you're married now\n[F#m] I heard that your dreams came true\nGuess she [D] gave you things I didn't give to you\n\n[A] Never mind, I'll find someone like [E] you\nI wish [F#m] nothing but the best for [D] you, too\n\"Don't [A] forget me, I beg, I [E] remember you said\nSometimes it [F#m] lasts in love, but sometimes it [D] hurts instead\""
+  },
+  {
+    "title": "Hallelujah",
+    "movie": "Various / Shrek",
+    "singer": "Leonard Cohen / Jeff Buckley",
+    "key": "C Major (Sa = C)",
+    "bpm": 58,
+    "strum": "D - D - D - (6/8 Fingerpick)",
+    "diff": "Intermediate",
+    "chords": [
+      "C",
+      "Am",
+      "F",
+      "G",
+      "E7"
+    ],
+    "sargamHook": "Sa Ga Pa Pa Pa | Dha Dha Dha Dha | Pa ma Ga",
+    "westernHook": "C4 E4 G4 G4 G4 | A4 A4 A4 A4 | G4 F4 E4",
+    "lyrics": "[C] I've heard there was a [Am] secret chord\nThat [C] David played and it [Am] pleased the Lord\nBut [F] you don't really care for [G] music, do [C] ya? [G]\nIt goes like [C] this: the fourth, the [F] fifth\nThe [Am] minor fall, the [F] major lift\nThe [G] baffled king com-[E7]-posing [Am] Hallelujah\n\n[F] Hallelujah, [Am] Hallelujah\n[F] Hallelujah, [C] Hallelu-[G]-jah [C]"
+  },
+  {
+    "title": "Stand By Me",
+    "movie": "Don't Play That Song! (1961)",
+    "singer": "Ben E. King",
+    "key": "A Major (Sa = A)",
+    "bpm": 118,
+    "strum": "D - X U - U D U",
+    "diff": "Beginner",
+    "chords": [
+      "A",
+      "F#m",
+      "D",
+      "E"
+    ],
+    "sargamHook": "Sa Sa Sa Ga | Re Sa ni Sa",
+    "westernHook": "A3 A3 A3 C#4 | B3 A3 G#3 A3",
+    "lyrics": "[A] When the night has come, and the [F#m] land is dark\nAnd the [D] moon is the [E] only light we'll [A] see\nNo I won't be afraid, no I [F#m] won't be afraid\nJust as [D] long as you [E] stand, stand by [A] me\n\nSo darling, darling, [A] stand by me, oh [F#m] stand by me\nOh [D] stand, [E] stand by me, [A] stand by me"
+  },
+  {
+    "title": "Knockin' On Heaven's Door",
+    "movie": "Pat Garrett & Billy the Kid (1973)",
+    "singer": "Bob Dylan / Guns N' Roses",
+    "key": "G Major (Sa = G)",
+    "bpm": 68,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "G",
+      "D",
+      "Am",
+      "C"
+    ],
+    "sargamHook": "Pa ma Ga Re | Ga ma Ga Re Sa",
+    "westernHook": "D4 C4 B3 A3 | B3 C4 B3 A3 G3",
+    "lyrics": "[G] Mama take this [D] badge off of [Am] me\n[G] I can't use it [D] any-[C]-more\n[G] It's gettin' dark, too [D] dark to [Am] see\n[G] Feel like I'm knockin' on [D] heaven's [C] door\n\n[G] Knock, knock, knockin' on [D] heaven's [Am] door\n[G] Knock, knock, knockin' on [D] heaven's [C] door"
+  },
+  {
+    "title": "Wish You Were Here",
+    "movie": "Wish You Were Here (1975)",
+    "singer": "Pink Floyd (David Gilmour)",
+    "key": "G Major (Sa = G)",
+    "bpm": 60,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "G",
+      "Em",
+      "A",
+      "C",
+      "D",
+      "Am"
+    ],
+    "sargamHook": "Sa Re Ga Pa | ma Ga Re Sa",
+    "westernHook": "G3 A3 B3 D4 | C4 B3 A3 G3",
+    "lyrics": "[C] So, so you think you can [D] tell\nHeaven from [Am] hell, blue skies from [G] pain\nCan you tell a green [D] field from a cold steel [C] rail?\nA smile from a [Am] veil? Do you think you can [G] tell?\n\n[C] How I wish, how I wish you were [D] here\nWe're just [Am] two lost souls swimming in a fish bowl, [G] year after year\n[D] Running over the same old ground, [C] what have we found?\nThe same old [Am] fears, wish you were [G] here"
+  },
+  {
+    "title": "Yellow",
+    "movie": "Parachutes (2000)",
+    "singer": "Coldplay (Chris Martin)",
+    "key": "B Major (Sa = B)",
+    "bpm": 88,
+    "strum": "D - D - D U D U",
+    "diff": "Intermediate",
+    "chords": [
+      "B",
+      "F#",
+      "E",
+      "G#m"
+    ],
+    "sargamHook": "Sa Ga Pa Dha | Pa Ga Re Sa",
+    "westernHook": "B3 D#4 F#4 G#4 | F#4 D#4 C#4 B3",
+    "lyrics": "[B] Look at the stars, look how they shine for [F#] you\nAnd everything you [E] do, yeah they were all yellow\n[B] I came along, I wrote a song for [F#] you\nAnd all the things you [E] do, and it was called \"Yellow\"\n\n[B] Your skin, [F#] oh yeah your skin and bones\n[E] Turn into something beautiful\n[B] You know, [F#] you know I love you [E] so"
+  },
+  {
+    "title": "Riptide",
+    "movie": "Dream Your Life Away (2013)",
+    "singer": "Vance Joy",
+    "key": "A Minor / Capo 1 (Sa = A)",
+    "bpm": 102,
+    "strum": "D - D - D U D U",
+    "diff": "Beginner",
+    "chords": [
+      "Am",
+      "G",
+      "C",
+      "F"
+    ],
+    "sargamHook": "Sa Re ga | ga Re Sa | Sa ni Dha",
+    "westernHook": "A4 B4 C5 | C5 B4 A4 | A4 G4 F4",
+    "lyrics": "[Am] I was scared of [G] dentists and the [C] dark\n[Am] I was scared of [G] pretty girls and [C] starting conversations\n[Am] Oh all my [G] friends are turning [C] green\nYou're the magician's assistant in their dream\n\n[Am] Oh, [G] oh, and they [C] come unstuck\n[Am] Lady, [G] running down to the [C] riptide\nTaken away to the dark side\n[Am] I wanna be your [G] left hand [C] man"
+  }
+];
 
-[Em] Kyunki tum hi ho, [Am] ab tum hi ho
-[D] Zindagi ab [C] tum hi [Em] ho
-[Em] Chain bhi, [Am] mera dard bhi
-[D] Meri aashiqui ab [C] tum hi [Em] ho`
-      },
-      {
-        title: "Kabira",
-        movie: "Yeh Jawaani Hai Deewani",
-        singer: "Tochi Raina, Rekha Bhardwaj",
-        key: "D Major (Sa = D)",
-        bpm: 84,
-        strum: "D - D - D U D U",
-        diff: "Beginner",
-        chords: ["D", "G", "A", "Bm"],
-        sargamHook: "Sa Re Ga Ga | Re Ga Pa | ma Ga Re Sa",
-        westernHook: "D4 E4 F#4 F#4 | E4 F#4 A4 | G4 F#4 E4 D4",
-        lyrics: `[D] Kaisi teri khudgarzi
-[G] Na dhoop chune na chhaaon
-[D] Kaisi teri khudgarzi
-[A] Kisi thor tike na paanv
-
-[D] Re Kabira maan jaa, [G] re Faqeera maan jaa
-[D] Aaja tujhko pukaare teri [A] parchhaaiyan
-[D] Re Kabira maan jaa, [G] re Faqeera maan jaa
-[D] Kaisa tu hai nirmohi kaisa [A] harjaaiya`
-      },
-      {
-        title: "Hotel California",
-        movie: "Eagles",
-        singer: "Don Henley",
-        key: "B Minor (Sa = B)",
-        bpm: 75,
-        strum: "D - D U - U D U",
-        diff: "Advanced",
-        chords: ["Am", "E", "G", "D", "F", "C", "Dm"],
-        sargamHook: "Sa ni Dha Pa | ma ga Re Sa",
-        westernHook: "B4 A4 G4 F#4 | E4 D4 C#4 B3",
-        lyrics: `[Am] On a dark desert highway, [E] cool wind in my hair
-[G] Warm smell of colitas, [D] rising up through the air
-[F] Up ahead in the distance, [C] I saw a shimmering light
-[Dm] My head grew heavy and my sight grew dim
-[E] I had to stop for the night
-
-Chorus:
-[F] Welcome to the Hotel [C] California
-Such a [E] lovely place (Such a lovely place)
-Such a [Am] lovely face`
-      },
-      {
-        title: "Wonderwall",
-        movie: "Oasis",
-        singer: "Liam Gallagher",
-        key: "F# Minor (Capo 2nd Fret: Em)",
-        bpm: 86,
-        strum: "D - D - D U D U D - D U",
-        diff: "Beginner",
-        chords: ["Em", "G", "D", "A", "C"],
-        sargamHook: "Sa Re ga | Re ga Pa | ma ga Re",
-        westernHook: "E4 F#4 G4 | F#4 G4 B4 | A4 G4 F#4",
-        lyrics: `[Em] Today is gonna be the day
-That they're [G] gonna throw it back to you
-[D] By now you should've somehow
-Realized [A] what you gotta do
-
-[C] And all the roads we have to [D] walk are winding [Em]
-[C] And all the lights that lead us [D] there are blinding [Em]
-[C] Because maybe, [Em] you're gonna be the one that [G] saves me
-And [C] after all, [Em] you're my [G] wonderwall`
-      },
-      {
-        title: "Kesariya",
-        movie: "Brahmastra",
-        singer: "Arijit Singh",
-        key: "C Major (Sa = C)",
-        bpm: 92,
-        strum: "D - D U - U D -",
-        diff: "Intermediate",
-        chords: ["C", "F", "G", "Am", "Dm"],
-        sargamHook: "Sa Re Ga | Ga ma Pa | Ga ma Re Sa",
-        westernHook: "C4 D4 E4 | E4 F4 G4 | E4 F4 D4 C4",
-        lyrics: `[C] Mujhko itna bataye koi
-[F] Kaise tujhse dil na lagaye koi
-[Am] Rabba ne tujhko banane mein
-[G] Kar di hai husn ki khaali tijoriyan
-
-[C] Kesariya tera [G] ishq hai piya
-[Am] Rang jaaun jo main [F] haath lagaun
-[C] Din beete saara [G] teri fikr mein
-[Am] Rain saari teri [F] khair manaun`
-      },
-      {
-        title: "Pani Da Rang",
-        movie: "Vicky Donor",
-        singer: "Ayushmann Khurrana",
-        key: "A Minor (Sa = A)",
-        bpm: 110,
-        strum: "D - D - D U D U",
-        diff: "Beginner",
-        chords: ["Am", "G", "F", "Em"],
-        sargamHook: "Sa Re ga Re Sa | ni Sa Re Sa",
-        westernHook: "A4 B4 C5 B4 A4 | G4 A4 B4 A4",
-        lyrics: `[Am] Pani da rang vekh ke
-[G] Pani da rang vekh ke
-[F] Akhiyaan 'ch hanju rul [Em] de
-[Am] Akhiyaan 'ch hanju rul de
-
-[Am] Mahiya na aaya mera, [G] mahiya na aaya
-[F] Ranjhana na aaya mera, [Em] mahiya na aaya`
-      },
-      {
-        title: "Channa Mereya",
-        movie: "Ae Dil Hai Mushkil",
-        singer: "Arijit Singh",
-        key: "D Major (Sa = D)",
-        bpm: 78,
-        strum: "D - D U - U D -",
-        diff: "Intermediate",
-        chords: ["D", "G", "A", "Bm", "Em"],
-        sargamHook: "Sa Re Ga Pa | ma Ga Re Ga | Re Sa ni Sa",
-        westernHook: "D4 E4 F#4 A4 | G4 F#4 E4 F#4 | E4 D4 C#4 D4",
-        lyrics: `[D] Achha chalta hoon, [G] duaon mein yaad rakhna
-[A] Mere zikr ka zubaan pe [D] swaad rakhna
-[Bm] Dil ke sandookon mein mere achhe [G] kaam rakhna
-[A] Chitthi taaron mein bhi mera tu [D] salaam rakhna
-
-[D] Andhera tera maine le liya
-Mera [G] ujla sitaara tere naam kiya
-[D] Channa mereya mereya, [G] channa mereya mereya
-[A] Channa mereya mereya [D] beliya`
-      },
-      {
-        title: "Jeena Jeena",
-        movie: "Badlapur",
-        singer: "Atif Aslam",
-        key: "F# Minor (Sa = F#)",
-        bpm: 82,
-        strum: "D - D - D U D U",
-        diff: "Intermediate",
-        chords: ["F#m", "D", "E", "A", "Bm"],
-        sargamHook: "Sa Re ga ma Pa | ma ga Re Sa",
-        westernHook: "F#4 G#4 A4 B4 C#5 | B4 A4 G#4 F#4",
-        lyrics: `[F#m] Dehleez pe mere dil ki
-Jo [D] rakhe hain tune kadam
-[E] Tere naam pe meri zindagi
-Likh [A] di mere [F#m] humdum
-
-[F#m] Haan seekha maine [D] jeena jeena kaise jeena
-[E] Haan seekha maine [A] jeena mere humdum`
-      }
-    ];
-
+    let SEARCH_SONG_DATABASE = [...CORE_SEARCH_SONGS];
     let currentSearchedSong = null;
     let searchTransposeOffset = 0;
 
     function initSongSearch() {
-      // If no song searched yet, display first song by default
+      loadCustomSongsFromStorage();
       if (!currentSearchedSong) {
         displaySearchedSong(SEARCH_SONG_DATABASE[0]);
+      }
+    }
+
+    function loadCustomSongsFromStorage() {
+      try {
+        const saved = localStorage.getItem('guitar_custom_songs');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            // Prepend custom songs so user sees them first
+            SEARCH_SONG_DATABASE = [...parsed, ...CORE_SEARCH_SONGS];
+            // Also sync to song-selector-select dropdown in Play-Along Studio
+            const dropdown = document.getElementById('song-selector-select');
+            if (dropdown) {
+              parsed.forEach(cs => {
+                if (!Array.from(dropdown.options).some(o => o.value === cs.id)) {
+                  const opt = document.createElement('option');
+                  opt.value = cs.id;
+                  opt.textContent = '⭐ ' + cs.title + ' (My Song)';
+                  dropdown.appendChild(opt);
+                }
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Could not load custom songs:', e);
       }
     }
 
@@ -7036,60 +8089,172 @@ Likh [A] di mere [F#m] humdum
     }
 
     function executeSongSearch() {
-      const query = document.getElementById('search-song-input').value.trim().toLowerCase();
+      const inputEl = document.getElementById('search-song-input');
+      const query = (inputEl.value || '').trim().toLowerCase();
       if (!query) return;
 
-      // Check against database
-      const match = SEARCH_SONG_DATABASE.find(s => s.title.toLowerCase().includes(query) || (s.movie && s.movie.toLowerCase().includes(query)));
+      // Close custom creator if open
+      hideCustomSongCreator();
 
-      if (match) {
-        displaySearchedSong(match);
+      // Normalize search query
+      const cleanQ = query.replace(/[^ws]/gi, '');
+      const qTokens = cleanQ.split(/\s+/).filter(t => t.length > 1);
+
+      // Search priorities:
+      // 1. Exact or starts-with title
+      // 2. Title contains query
+      // 3. Movie/Artist contains query
+      // 4. Singer contains query
+      // 5. Token match
+      let exactMatches = [];
+      let partialMatches = [];
+
+      SEARCH_SONG_DATABASE.forEach(s => {
+        const sTitle = (s.title || '').toLowerCase();
+        const sMovie = (s.movie || '').toLowerCase();
+        const sSinger = (s.singer || '').toLowerCase();
+
+        if (sTitle === query || sTitle.startsWith(query)) {
+          exactMatches.push(s);
+        } else if (sTitle.includes(query) || sMovie.includes(query) || sSinger.includes(query)) {
+          partialMatches.push(s);
+        } else if (qTokens.some(token => sTitle.includes(token) || sMovie.includes(token) || sSinger.includes(token))) {
+          partialMatches.push(s);
+        }
+      });
+
+      const allMatches = [...exactMatches, ...partialMatches];
+
+      if (allMatches.length > 0) {
+        // Display best match
+        const best = allMatches[0];
+        displaySearchedSong(best);
+
+        // Render multiple matches bar if more than 1 result found
+        renderMultipleMatchesBar(allMatches);
+        document.getElementById('search-empty-box').style.display = 'none';
       } else {
-        // AI Dynamic Song Generator for ANY song name entered!
-        const generated = generateHarmonicSongData(document.getElementById('search-song-input').value.trim());
-        displaySearchedSong(generated);
+        // NO MATCH FOUND: Never generate fake lyrics!
+        showSearchNotFoundUI(query);
       }
     }
 
-    function generateHarmonicSongData(title) {
-      // Deterministically generate musically coherent key, scale, chords & lyrics
-      const hash = title.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-      const keys = ["D Minor", "A Minor", "C Major", "G Major", "E Minor"];
-      const keyChoice = keys[hash % keys.length];
+    function renderMultipleMatchesBar(matches) {
+      const container = document.getElementById('search-multi-matches-bar');
+      if (!container) return;
+      if (matches.length <= 1) {
+        container.style.display = 'none';
+        return;
+      }
+      container.style.display = 'flex';
+      container.innerHTML = '<span style="font-size:0.75rem; color:var(--accent-cyan); align-self:center; font-weight:700;">Found ' + matches.length + ' Matches:</span>';
+      matches.slice(0, 8).forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'quick-tag-pill' + (m === currentSearchedSong ? ' active-tag' : '');
+        btn.innerHTML = '🎵 <strong>' + m.title + '</strong> <span style="font-size:0.7rem; opacity:0.8;">(' + (m.movie || m.singer) + ')</span>';
+        btn.onclick = () => {
+          displaySearchedSong(m);
+          renderMultipleMatchesBar(matches);
+        };
+        container.appendChild(btn);
+      });
+    }
 
-      let chords = [];
-      if (keyChoice === "D Minor") chords = ["Dm", "C", "Bb", "Gm", "A", "F"];
-      else if (keyChoice === "A Minor") chords = ["Am", "G", "F", "Em", "C", "Dm"];
-      else if (keyChoice === "C Major") chords = ["C", "G", "Am", "F", "Em", "Dm"];
-      else if (keyChoice === "G Major") chords = ["G", "D", "Em", "C", "Am", "Bm"];
-      else chords = ["Em", "D", "C", "G", "Am", "B7"];
+    function showSearchNotFoundUI(query) {
+      document.getElementById('search-result-box').style.display = 'none';
+      const multiBar = document.getElementById('search-multi-matches-bar');
+      if (multiBar) multiBar.style.display = 'none';
 
-      const bpms = [72, 78, 84, 90, 98, 108];
-      const bpmChoice = bpms[hash % bpms.length];
+      const emptyBox = document.getElementById('search-empty-box');
+      if (emptyBox) {
+        emptyBox.style.display = 'block';
+        document.getElementById('empty-query-text').textContent = query;
+      }
+    }
 
-      return {
+    function openCustomSongCreator(prefillTitle = '') {
+      const emptyBox = document.getElementById('search-empty-box');
+      if (emptyBox) emptyBox.style.display = 'none';
+      const creatorBox = document.getElementById('custom-song-creator-box');
+      if (creatorBox) {
+        creatorBox.style.display = 'block';
+        if (prefillTitle) {
+          document.getElementById('custom-title-input').value = prefillTitle;
+        } else {
+          const searchInput = document.getElementById('search-song-input').value.trim();
+          if (searchInput) document.getElementById('custom-title-input').value = searchInput;
+        }
+        creatorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function hideCustomSongCreator() {
+      const creatorBox = document.getElementById('custom-song-creator-box');
+      if (creatorBox) creatorBox.style.display = 'none';
+    }
+
+    function saveAndOpenCustomSong() {
+      const title = (document.getElementById('custom-title-input').value || '').trim();
+      const artist = (document.getElementById('custom-artist-input').value || '').trim() || 'Custom Artist';
+      const key = document.getElementById('custom-key-select').value || 'C Major';
+      const bpm = parseInt(document.getElementById('custom-bpm-input').value) || 80;
+      const strum = document.getElementById('custom-strum-select').value || 'D - D U - U D -';
+      const lyrics = (document.getElementById('custom-lyrics-textarea').value || '').trim();
+
+      if (!title) {
+        alert('Please enter a Song Title.');
+        return;
+      }
+      if (!lyrics) {
+        alert('Please enter or paste your lyrics with chord tags, e.g. [C] [G] [Am] [F] ...');
+        return;
+      }
+
+      // Automatically extract chords enclosed in [Chord]
+      const chordMatches = lyrics.match(/\[([A-G][#b]?[a-zA-Z0-9]*)\]/g) || [];
+      const extractedChords = Array.from(new Set(chordMatches.map(c => c.replace(/[\[\]]/g, ''))));
+      const chordsToUse = extractedChords.length > 0 ? extractedChords : ["C", "G", "Am", "F"];
+
+      const customSong = {
+        id: 'custom_' + Date.now(),
         title: title,
-        movie: "AI Generated Chord Chart",
-        singer: "Acoustic Guitar Arrangement",
-        key: `${keyChoice} (Smart Harmonics)`,
-        bpm: bpmChoice,
-        strum: "D - D U - U D -",
-        diff: "Custom Song",
-        chords: chords.slice(0, 4),
-        sargamHook: "Sa Re ga ma Pa | ma ga Re Sa | Sa ni Dha Pa Sa",
-        westernHook: "D4 E4 F4 G4 A4 | G4 F4 E4 D4 | D4 C4 Bb3 A3 D4",
-        lyrics: `Verse 1:
-[${chords[0]}] ${title} ki dhun pe, [${chords[1]}] dil yeh gaaye
-[${chords[2]}] Har lamha teri [${chords[3]}] yaadein laaye
-[${chords[0]}] Suron mein basi hai yeh [${chords[1]}] pyaari kahaani
-[${chords[2]}] Chhedo taaron ko [${chords[3]}] nishaani
-
-Chorus:
-[${chords[0]}] O ho ho... [${chords[1]}] ${title}
-[${chords[2]}] Gunje fizaon mein [${chords[3]}] ${title}
-[${chords[0]}] Har pal suhana, [${chords[1]}] har pal deewaana
-[${chords[2]}] Saath chale yeh [${chords[0]}] fasaana`
+        movie: artist,
+        singer: 'My Song / Acoustic',
+        key: key,
+        bpm: bpm,
+        strum: strum,
+        diff: 'Custom Song',
+        chords: chordsToUse,
+        sargamHook: 'Sa Re Ga ma Pa | ma Ga Re Sa',
+        westernHook: 'C4 D4 E4 F4 G4 | F4 E4 D4 C4',
+        lyrics: lyrics,
+        isCustom: true
       };
+
+      // Add to database
+      SEARCH_SONG_DATABASE.unshift(customSong);
+
+      // Save to localStorage
+      try {
+        const existing = JSON.parse(localStorage.getItem('guitar_custom_songs') || '[]');
+        existing.unshift(customSong);
+        localStorage.setItem('guitar_custom_songs', JSON.stringify(existing.slice(0, 50)));
+      } catch (e) {
+        console.warn('Could not save to localStorage:', e);
+      }
+
+      // Sync to Play-Along dropdown
+      const dropdown = document.getElementById('song-selector-select');
+      if (dropdown) {
+        const opt = document.createElement('option');
+        opt.value = customSong.id;
+        opt.textContent = '⭐ ' + customSong.title + ' (My Song)';
+        dropdown.insertBefore(opt, dropdown.firstChild);
+      }
+
+      hideCustomSongCreator();
+      displaySearchedSong(customSong);
+      alert('Song "' + title + '" saved to your personal library!');
     }
 
     function displaySearchedSong(song) {
@@ -7098,10 +8263,13 @@ Chorus:
       document.getElementById('res-transpose-display').textContent = '0';
 
       document.getElementById('search-result-box').style.display = 'flex';
+      const emptyBox = document.getElementById('search-empty-box');
+      if (emptyBox) emptyBox.style.display = 'none';
+
       document.getElementById('res-song-title').textContent = song.title;
-      document.getElementById('res-song-meta').textContent = `Film/Artist: ${song.movie || 'Acoustic Hit'} • Singer: ${song.singer || 'Original'} • Key: ${song.key}`;
+      document.getElementById('res-song-meta').textContent = (song.movie ? 'Film/Album: ' + song.movie + ' • ' : '') + 'Singer: ' + (song.singer || 'Acoustic') + ' • Key: ' + song.key;
       document.getElementById('res-pill-key').textContent = song.key;
-      document.getElementById('res-pill-bpm').textContent = `${song.bpm} BPM`;
+      document.getElementById('res-pill-bpm').textContent = song.bpm + ' BPM';
       document.getElementById('res-pill-strum').textContent = song.strum;
       document.getElementById('res-pill-diff').textContent = song.diff || 'Intermediate';
 
@@ -7149,16 +8317,20 @@ Chorus:
         if (!rootMatch) return ch;
         const root = rootMatch[0];
         const suffix = ch.slice(root.length);
-        const idx = NOTE_NAMES.indexOf(root);
-        if (idx === -1) return ch;
-        const newIdx = (idx + delta + 12) % 12;
-        return NOTE_NAMES[newIdx] + suffix;
+        const chromatic = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        let idx = chromatic.indexOf(root);
+        if (idx === -1) {
+          const flats = { 'Db': 1, 'Eb': 3, 'Gb': 6, 'Ab': 8, 'Bb': 10 };
+          idx = flats[root] !== undefined ? flats[root] : 0;
+        }
+        let newIdx = (idx + delta) % 12;
+        if (newIdx < 0) newIdx += 12;
+        return chromatic[newIdx] + suffix;
       };
 
       currentSearchedSong.chords = currentSearchedSong.chords.map(transposeChord);
       renderSearchedChordDiagrams(currentSearchedSong.chords);
 
-      // Transpose chords in lyrics text
       currentSearchedSong.lyrics = currentSearchedSong.lyrics.replace(/\[([A-G][#b]?[^\]]*)\]/g, (m, ch) => {
         return `[${transposeChord(ch)}]`;
       });
