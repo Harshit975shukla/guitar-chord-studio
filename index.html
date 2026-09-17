@@ -2403,6 +2403,162 @@
       flex-wrap: wrap;
     }
 
+  
+    /* ==========================================================================
+       USER PROFILES & MULTI-USER LOGIN MODAL STYLES
+       ========================================================================== */
+    .user-profile-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255, 179, 0, 0.14), rgba(255, 143, 0, 0.08));
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .user-profile-btn:hover {
+      background: linear-gradient(135deg, rgba(255, 179, 0, 0.28), rgba(255, 143, 0, 0.18));
+      border-color: var(--accent-gold);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(255, 179, 0, 0.25);
+    }
+    .user-avatar-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      box-shadow: 0 0 10px rgba(255, 179, 0, 0.35);
+      border: 1px solid rgba(255, 179, 0, 0.4);
+    }
+    .user-info-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      line-height: 1.15;
+    }
+    .user-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .user-level-badge {
+      font-size: 0.65rem;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* Modal Backdrop & Container */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 6, 15, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal-card {
+      background: linear-gradient(160deg, #0e1424, #080b14);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(255, 179, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      animation: modalPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalPopIn {
+      from { opacity: 0; transform: scale(0.94); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 24px;
+    }
+    .modal-tab-row {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 20px;
+    }
+    .modal-tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-tab-btn.active {
+      color: var(--accent-gold);
+      border-bottom-color: var(--accent-gold);
+    }
+    .stats-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .stat-card-mini {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .stat-num-mini {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+    }
+    .stat-label-mini {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .profile-list-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    .profile-list-item.active-profile {
+      border-color: var(--accent-gold);
+      background: rgba(255, 179, 0, 0.08);
+    }
+
   </style>
 </head>
 <body>
@@ -2418,9 +2574,14 @@
     </div>
 
     <div class="top-actions">
-        <button class="midi-badge-btn" id="btn-open-midi-modal" onclick="openMidiModal()">
-          <span>🎹</span> Web MIDI: <span id="top-midi-status">Ready</span>
-        </button>
+        <button class="user-profile-btn" id="btn-user-profile" onclick="openUserProfileModal()" title="Guitarist Profile & Accounts">
+        <span class="user-avatar-badge" id="top-user-avatar">🎸</span>
+        <div class="user-info-text">
+          <span class="user-name" id="top-user-name">Guest Guitarist</span>
+          <span class="user-level-badge" id="top-user-level">Beginner</span>
+        </div>
+        <span style="font-size:0.65rem; opacity:0.6; margin-left:2px;">▼</span>
+      </button>
       <div class="badge" id="noise-reduction-badge">
         <span>🔇</span> Noise Subtraction: <strong id="noise-status-text" style="color:#ffd54f;">Off (Click Calibrate)</strong>
       </div>
@@ -2453,6 +2614,9 @@
       </button>
       <button class="studio-tab-btn" id="tab-btn-trainer" onclick="switchStudioTab('trainer')">
         <span>🏆</span> Chord Trainer Quiz <span class="tab-badge">Ear Test</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-recorder" onclick="switchStudioTab('recorder')">
+        <span>🎙️</span> Audio Recorder & Looper <span class="tab-badge" style="background:#ef4444; color:#fff;">Live Takes</span>
       </button>
     </nav>
   </div>
@@ -3538,6 +3702,275 @@ Was [G] blind but [D] now I [G] see"></textarea>
   </div>
 
   <!-- TAB 6: RIFF & PROGRESSION AUDIO RECORDER -->
+  
+  <!-- TAB 8: RIFF & PERFORMANCE AUDIO RECORDER & JAM LOOPER -->
+  <div class="studio-tab-pane" id="pane-recorder" style="display:none;">
+    <div class="recorder-container">
+      <div class="recorder-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <div>
+            <h2 style="font-size:1.5rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+              <span>🎙️</span> Guitar Audio Performance Recorder & Jam Looper
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+              Capture high-fidelity acoustic guitar audio, check your strumming rhythm, loop chord tracks, and practice lead solos!
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="badge" id="rec-status-badge" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-light); font-size:0.8rem;">
+              <span id="rec-status-dot">⚪</span> <span id="rec-status-text">Ready to Record</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Live Waveform / Audio VU Visualizer Canvas -->
+        <div style="position:relative; width:100%; height:84px; background:rgba(0,0,0,0.45); border:1px solid var(--border-light); border-radius:14px; margin-bottom:20px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+          <canvas id="rec-visualizer-canvas" width="760" height="84" style="width:100%; height:100%; display:block;"></canvas>
+          <div id="rec-canvas-placeholder" style="position:absolute; font-size:0.8rem; color:var(--text-muted); pointer-events:none;">
+            Waveform & Audio Level Meter (Active during recording & playback)
+          </div>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="rec-time-display" id="rec-timer-readout">00:00.0</div>
+
+        <!-- Main Action Buttons -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+          <!-- Count-in Toggle -->
+          <button class="btn btn-secondary" id="rec-btn-countin" onclick="toggleRecordCountIn()" style="font-size:0.8rem; padding:8px 14px; border-radius:20px;">
+            <span id="rec-countin-icon">⏱️</span> Count-In: <strong id="rec-countin-status" style="color:var(--text-muted);">Off</strong>
+          </button>
+
+          <!-- Big Record Button -->
+          <button class="rec-button-big" id="rec-btn-main" onclick="toggleMainAudioRecording()" title="Start / Stop Recording">
+            <span id="rec-btn-icon">🎙️</span>
+          </button>
+
+          <!-- Loop Mode Toggle -->
+          <button class="btn btn-secondary" id="rec-btn-loop" onclick="toggleAudioLoopMode()" style="font-size:0.8rem; padding:8px 14px; border-radius:20px;">
+            <span>🔁</span> Jam Looper: <strong id="rec-loop-status" style="color:var(--text-muted);">Off</strong>
+          </button>
+        </div>
+
+        <!-- Count-In Visual Countdown Display -->
+        <div id="rec-countin-overlay" style="display:none; font-size:2.2rem; font-weight:800; color:var(--accent-gold); margin-bottom:15px;">
+          Get Ready... <span id="rec-countin-num" style="color:#ef4444; font-size:2.6rem;">4</span>
+        </div>
+
+        <!-- Current Take Preview & Audio Player Box -->
+        <div id="rec-active-player-box" style="display:none; background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-radius:14px; padding:16px 20px; margin-top:10px; text-align:left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <div>
+              <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700;">Latest Recorded Take</span>
+              <div id="rec-take-meta" style="font-size:0.85rem; color:var(--text-main); font-weight:600; margin-top:2px;">Take 1 • 00:15</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-primary" onclick="saveCurrentTakePrompt()" style="font-size:0.8rem; padding:6px 12px;">
+                <span>💾</span> Save to Takes Library
+              </button>
+              <button class="btn btn-secondary" onclick="downloadCurrentTakeAudio()" style="font-size:0.8rem; padding:6px 12px; border-color:var(--accent-cyan); color:var(--accent-cyan);">
+                <span>⬇️</span> Download Audio (.webm)
+              </button>
+            </div>
+          </div>
+          <audio id="rec-audio-element" controls style="width:100%; height:42px; outline:none; border-radius:8px;"></audio>
+        </div>
+      </div>
+
+      <!-- Recorded Takes Manager / Library -->
+      <div class="recorder-card" style="padding:24px 32px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h3 style="font-size:1.15rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+              <span>📂</span> My Recorded Takes (<span id="rec-takes-count">0</span>)
+            </h3>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Saved practice recordings for <strong id="rec-user-name-display" style="color:var(--accent-gold);">Guest Guitarist</strong></span>
+          </div>
+          <button class="btn btn-secondary" onclick="clearAllRecordedTakes()" style="font-size:0.75rem; padding:5px 10px; color:#ef4444; border-color:rgba(239,68,68,0.3);">
+            <span>🗑️</span> Clear All Takes
+          </button>
+        </div>
+
+        <div class="rec-list" id="rec-takes-list">
+          <div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.85rem;">
+            No recorded takes yet. Press the big red microphone button above to record your first guitar riff or rhythm progression!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTI-USER PROFILE & LOGIN MODAL -->
+  <div class="modal-backdrop" id="user-profile-modal" onclick="if(event.target===this) closeUserProfileModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.3rem;">🎸</span>
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">Guitarist Profiles & Multi-User Studio</h3>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Switch accounts, track practice stats, and save individual songbooks</span>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="closeUserProfileModal()" style="padding:4px 10px; font-size:1rem; border-radius:50%;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Modal Tabs -->
+        <div class="modal-tab-row">
+          <button class="modal-tab-btn active" id="modal-tab-btn-active" onclick="switchUserProfileTab('active')">
+            <span>👤</span> Active Profile & Stats
+          </button>
+          <button class="modal-tab-btn" id="modal-tab-btn-switch" onclick="switchUserProfileTab('switch')">
+            <span>👥</span> Switch / Add Account
+          </button>
+          <button class="modal-tab-btn" id="modal-tab-btn-backup" onclick="switchUserProfileTab('backup')">
+            <span>💾</span> Cloud & Backup
+          </button>
+        </div>
+
+        <!-- TAB 1: ACTIVE PROFILE VIEW -->
+        <div id="modal-pane-active">
+          <div style="display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-radius:18px; padding:16px 20px;">
+            <div id="modal-active-avatar" style="font-size:2.4rem; width:56px; height:56px; border-radius:50%; background:rgba(255,179,0,0.15); border:2px solid var(--accent-gold); display:flex; align-items:center; justify-content:center;">
+              🎸
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h4 id="modal-active-name" style="font-size:1.2rem; font-weight:800; color:#fff;">Guest Guitarist</h4>
+                <span class="user-level-badge" id="modal-active-level" style="background:rgba(255,179,0,0.15); border:1px solid var(--accent-gold); padding:2px 8px; border-radius:10px;">Beginner</span>
+              </div>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
+                Member since <span id="modal-active-date">Today</span> • Status: <strong style="color:var(--accent-emerald);">Active Session</strong>
+              </p>
+            </div>
+            <button class="btn btn-secondary" onclick="logoutToGuest()" style="font-size:0.75rem; padding:6px 12px; color:var(--accent-gold); border-color:var(--border-subtle);">
+              <span>🚪</span> Log Out
+            </button>
+          </div>
+
+          <!-- Practice Stats Grid -->
+          <div class="stats-grid-4">
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="stat-practice-time">0m</div>
+              <div class="stat-label-mini">Practice Time</div>
+            </div>
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="stat-notes-detected">0</div>
+              <div class="stat-label-mini">Notes & Chords Plucked</div>
+            </div>
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="stat-quiz-score">0</div>
+              <div class="stat-label-mini">Quiz High Score</div>
+            </div>
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="stat-takes-count">0</div>
+              <div class="stat-label-mini">Recorded Takes</div>
+            </div>
+          </div>
+
+          <!-- Quick Edit Profile Row -->
+          <div style="margin-top:16px; background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:14px; padding:14px 18px;">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent-gold); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Edit Current Profile</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <input type="text" id="edit-profile-name" class="song-search-input" style="flex:1; min-width:140px; padding:6px 12px; font-size:0.85rem;" placeholder="Display Name">
+              <select id="edit-profile-level" class="song-select-dropdown" style="padding:6px 12px; font-size:0.85rem;">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Pro Guitarist">Pro Guitarist</option>
+              </select>
+              <select id="edit-profile-avatar" class="song-select-dropdown" style="padding:6px 12px; font-size:0.85rem;">
+                <option value="🎸">🎸 Classic Acoustic</option>
+                <option value="⚡">⚡ Electric Rocker</option>
+                <option value="🤠">🤠 Folk / Country</option>
+                <option value="🎼">🎼 Fingerstyle Composer</option>
+                <option value="🦊">🦊 Jamming Fox</option>
+                <option value="🚀">🚀 Space Shredder</option>
+              </select>
+              <button class="btn btn-primary" onclick="saveActiveProfileEdits()" style="font-size:0.8rem; padding:6px 14px;">
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SWITCH / ADD PROFILES -->
+        <div id="modal-pane-switch" style="display:none;">
+          <div style="margin-bottom:16px;">
+            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700;">Guitarists On This Device</span>
+            <div id="profiles-list-container" style="margin-top:8px;">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Create New Profile Form -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-radius:16px; padding:18px;">
+            <h4 style="font-size:0.95rem; font-weight:800; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+              <span>➕</span> Create New Guitarist Profile
+            </h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Guitarist Name</label>
+                <input type="text" id="new-profile-name" class="song-search-input" placeholder="e.g. Alex, Maya, John..." style="width:100%; padding:8px 12px; font-size:0.85rem;">
+              </div>
+              <div>
+                <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Skill Level</label>
+                <select id="new-profile-level" class="song-select-dropdown" style="width:100%; padding:8px 12px; font-size:0.85rem;">
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Pro Guitarist">Pro Guitarist</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+              <div>
+                <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Avatar Icon</label>
+                <select id="new-profile-avatar" class="song-select-dropdown" style="width:100%; padding:8px 12px; font-size:0.85rem;">
+                  <option value="🎸">🎸 Classic Acoustic</option>
+                  <option value="⚡">⚡ Electric Rocker</option>
+                  <option value="🤠">🤠 Folk / Country</option>
+                  <option value="🎼">🎼 Fingerstyle Composer</option>
+                  <option value="🦊">🦊 Jamming Fox</option>
+                  <option value="🚀">🚀 Space Shredder</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Optional 4-Digit PIN (for privacy)</label>
+                <input type="password" maxlength="4" id="new-profile-pin" class="song-search-input" placeholder="Leave empty for none" style="width:100%; padding:8px 12px; font-size:0.85rem;">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="createNewUserProfile()" style="width:100%; padding:10px; font-size:0.9rem; font-weight:700;">
+              <span>✓</span> Create Profile & Log In
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 3: BACKUP & CLOUD TRANSFER -->
+        <div id="modal-pane-backup" style="display:none;">
+          <div style="background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.25); border-radius:14px; padding:16px; margin-bottom:16px;">
+            <h4 style="font-size:0.9rem; font-weight:700; color:var(--accent-cyan); display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+              <span>💡</span> How Multi-User Works in Guitar Studio
+            </h4>
+            <ul style="font-size:0.8rem; color:var(--text-muted); line-height:1.6; margin-left:20px;">
+              <li><strong>Different Devices (Phones / Laptops):</strong> Every user who visits your GitHub Pages URL automatically has their own private session and data.</li>
+              <li><strong>Same Computer / Shared Tablet:</strong> Use the <em>Switch / Add Account</em> tab so family, bandmates, or students have isolated practice logs, custom songs, and takes.</li>
+              <li><strong>Transfer Across Devices:</strong> Export your profile JSON below, then import it on another phone or computer!</li>
+            </ul>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn btn-secondary" onclick="exportActiveUserProfileData()" style="flex:1; padding:12px; font-size:0.85rem; border-color:var(--accent-gold); color:var(--accent-gold);">
+              <span>💾</span> Export My Profile & Songs (JSON)
+            </button>
+            <label class="btn btn-secondary" style="flex:1; padding:12px; font-size:0.85rem; border-color:var(--accent-cyan); color:var(--accent-cyan); cursor:pointer; text-align:center;">
+              <span>📂</span> Import Profile (JSON)
+              <input type="file" accept=".json" onchange="importUserProfileData(event)" style="display:none;">
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ==========================================================================
        AI GUITAR CHORD DETECTIVE - HIGH-PRECISION AUDIO & ACOUSTIC SYNTHESIZER
@@ -3682,6 +4115,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
        SETUP ON PAGE LOAD & BROWSER AUDIO UNLOCK
        ========================================================================== */
     window.addEventListener('DOMContentLoaded', () => {
+      initUserProfileSystem();
       initChromaBarsUI();
       buildFretboardUI();
       buildSongFretboardUI();
@@ -5157,7 +5591,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
       }
 
       // Update tab buttons
-      const buttons = ['detector', 'songs', 'search', 'tuner', 'trainer', 'metronome', 'chords'];
+      const buttons = ['detector', 'songs', 'search', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
       buttons.forEach(id => {
         const btn = document.getElementById('tab-btn-' + id);
         const pane = document.getElementById('pane-' + id);
@@ -5181,6 +5615,8 @@ Was [G] blind but [D] now I [G] see"></textarea>
         renderMetroBeats();
       } else if (tabId === 'chords') {
         initChordLibrary();
+      } else if (tabId === 'recorder') {
+        initRecorderStudio();
       } else if (tabId === 'rhythm') {
         initRhythmStudio();
       } else if (tabId === 'tuner') {
@@ -8713,6 +9149,834 @@ Was [G] blind but [D] now I [G] see"></textarea>
       switchStudioTab('songs');
       loadSongById(id);
     }
+    
+
+    /* ==========================================================================
+       MULTI-USER PROFILES & LOGIN SYSTEM ENGINE
+       ========================================================================== */
+    const DEFAULT_GUEST_PROFILE = {
+      id: 'guest',
+      name: 'Guest Guitarist',
+      avatar: '🎸',
+      level: 'Beginner',
+      pin: '',
+      createdAt: Date.now(),
+      stats: {
+        practiceSeconds: 0,
+        notesDetected: 0,
+        chordsDetected: 0,
+        quizHighScore: 0,
+        streakDays: 1,
+        lastPracticeDate: new Date().toISOString().slice(0, 10)
+      }
+    };
+
+    let userProfilesList = [];
+    let activeProfileId = 'guest';
+    let practiceSessionTimer = null;
+
+    function initUserProfileSystem() {
+      try {
+        const saved = localStorage.getItem('guitar_studio_profiles');
+        if (saved) {
+          userProfilesList = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.warn('Could not read user profiles:', e);
+      }
+
+      if (!Array.isArray(userProfilesList) || userProfilesList.length === 0) {
+        userProfilesList = [{ ...DEFAULT_GUEST_PROFILE }];
+        saveUserProfilesToStorage();
+      }
+
+      try {
+        const savedActiveId = localStorage.getItem('guitar_studio_active_id');
+        if (savedActiveId && userProfilesList.some(p => p.id === savedActiveId)) {
+          activeProfileId = savedActiveId;
+        } else {
+          activeProfileId = userProfilesList[0].id;
+        }
+      } catch (e) {
+        activeProfileId = userProfilesList[0].id;
+      }
+
+      updateTopHeaderProfileUI();
+      startPracticeSessionTracking();
+    }
+
+    function saveUserProfilesToStorage() {
+      try {
+        localStorage.setItem('guitar_studio_profiles', JSON.stringify(userProfilesList));
+        localStorage.setItem('guitar_studio_active_id', activeProfileId);
+      } catch (e) {
+        console.warn('Could not save user profiles:', e);
+      }
+    }
+
+    function getActiveUserProfile() {
+      const p = userProfilesList.find(x => x.id === activeProfileId);
+      return p || userProfilesList[0] || DEFAULT_GUEST_PROFILE;
+    }
+
+    function updateTopHeaderProfileUI() {
+      const profile = getActiveUserProfile();
+      const avatarEl = document.getElementById('top-user-avatar');
+      const nameEl = document.getElementById('top-user-name');
+      const levelEl = document.getElementById('top-user-level');
+      const recUserEl = document.getElementById('rec-user-name-display');
+
+      if (avatarEl) avatarEl.textContent = profile.avatar || '🎸';
+      if (nameEl) nameEl.textContent = profile.name || 'Guitarist';
+      if (levelEl) levelEl.textContent = profile.level || 'Beginner';
+      if (recUserEl) recUserEl.textContent = profile.name || 'Guitarist';
+    }
+
+    function openUserProfileModal() {
+      const modal = document.getElementById('user-profile-modal');
+      if (!modal) return;
+      modal.classList.add('active');
+      renderActiveProfileView();
+    }
+
+    function closeUserProfileModal() {
+      const modal = document.getElementById('user-profile-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function switchUserProfileTab(tabKey) {
+      ['active', 'switch', 'backup'].forEach(k => {
+        const btn = document.getElementById('modal-tab-btn-' + k);
+        const pane = document.getElementById('modal-pane-' + k);
+        if (btn) btn.classList.toggle('active', k === tabKey);
+        if (pane) pane.style.display = (k === tabKey) ? 'block' : 'none';
+      });
+
+      if (tabKey === 'active') renderActiveProfileView();
+      if (tabKey === 'switch') renderProfilesList();
+    }
+
+    function renderActiveProfileView() {
+      const p = getActiveUserProfile();
+      const avatarEl = document.getElementById('modal-active-avatar');
+      const nameEl = document.getElementById('modal-active-name');
+      const levelEl = document.getElementById('modal-active-level');
+      const dateEl = document.getElementById('modal-active-date');
+
+      if (avatarEl) avatarEl.textContent = p.avatar;
+      if (nameEl) nameEl.textContent = p.name;
+      if (levelEl) levelEl.textContent = p.level;
+      if (dateEl) {
+        const d = new Date(p.createdAt || Date.now());
+        dateEl.textContent = d.toLocaleDateString();
+      }
+
+      // Populate Edit inputs
+      const editName = document.getElementById('edit-profile-name');
+      const editLevel = document.getElementById('edit-profile-level');
+      const editAvatar = document.getElementById('edit-profile-avatar');
+      if (editName) editName.value = p.name;
+      if (editLevel) editLevel.value = p.level;
+      if (editAvatar) editAvatar.value = p.avatar;
+
+      // Stats
+      const stats = p.stats || {};
+      const mins = Math.floor((stats.practiceSeconds || 0) / 60);
+      const timeStr = mins >= 60 ? (Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm') : (mins + 'm');
+      
+      const timeEl = document.getElementById('stat-practice-time');
+      const notesEl = document.getElementById('stat-notes-detected');
+      const quizEl = document.getElementById('stat-quiz-score');
+      const takesEl = document.getElementById('stat-takes-count');
+
+      if (timeEl) timeEl.textContent = timeStr;
+      if (notesEl) notesEl.textContent = (stats.notesDetected || 0) + (stats.chordsDetected || 0);
+      if (quizEl) quizEl.textContent = stats.quizHighScore || 0;
+      
+      const userTakes = getSavedTakesForActiveUser();
+      if (takesEl) takesEl.textContent = userTakes.length;
+    }
+
+    function saveActiveProfileEdits() {
+      const p = getActiveUserProfile();
+      const newName = (document.getElementById('edit-profile-name').value || '').trim();
+      const newLevel = document.getElementById('edit-profile-level').value;
+      const newAvatar = document.getElementById('edit-profile-avatar').value;
+
+      if (!newName) {
+        alert('Please enter a display name.');
+        return;
+      }
+
+      p.name = newName;
+      p.level = newLevel;
+      p.avatar = newAvatar;
+
+      saveUserProfilesToStorage();
+      updateTopHeaderProfileUI();
+      renderActiveProfileView();
+      alert('Profile updated successfully!');
+    }
+
+    function renderProfilesList() {
+      const container = document.getElementById('profiles-list-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      userProfilesList.forEach(p => {
+        const item = document.createElement('div');
+        const isActive = (p.id === activeProfileId);
+        item.className = 'profile-list-item' + (isActive ? ' active-profile' : '');
+
+        const mins = Math.floor(((p.stats || {}).practiceSeconds || 0) / 60);
+        const hasPin = !!p.pin;
+
+        item.innerHTML = `
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.8rem;">${p.avatar || '🎸'}</span>
+            <div>
+              <div style="font-size:0.95rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px;">
+                ${p.name}
+                ${isActive ? '<span style="font-size:0.65rem; background:var(--accent-gold); color:#000; padding:1px 6px; border-radius:8px; font-weight:800;">ACTIVE</span>' : ''}
+                ${hasPin ? '<span title="PIN Protected" style="font-size:0.75rem;">🔒</span>' : ''}
+              </div>
+              <span style="font-size:0.75rem; color:var(--text-muted);">${p.level} • ${mins} mins practiced</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            ${!isActive ? `<button class="btn btn-primary" onclick="switchActiveProfile('${p.id}')" style="font-size:0.78rem; padding:5px 12px;">Log In</button>` : ''}
+            ${p.id !== 'guest' && userProfilesList.length > 1 ? `<button class="btn btn-secondary" onclick="deleteUserProfile('${p.id}')" style="font-size:0.75rem; padding:5px 8px; color:#ef4444; border-color:rgba(239,68,68,0.3);" title="Delete Profile">🗑️</button>` : ''}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function createNewUserProfile() {
+      const name = (document.getElementById('new-profile-name').value || '').trim();
+      const level = document.getElementById('new-profile-level').value;
+      const avatar = document.getElementById('new-profile-avatar').value;
+      const pin = (document.getElementById('new-profile-pin').value || '').trim();
+
+      if (!name) {
+        alert('Please enter a guitarist name.');
+        return;
+      }
+
+      const newId = 'profile_' + Date.now();
+      const newProfile = {
+        id: newId,
+        name: name,
+        avatar: avatar,
+        level: level,
+        pin: pin,
+        createdAt: Date.now(),
+        stats: {
+          practiceSeconds: 0,
+          notesDetected: 0,
+          chordsDetected: 0,
+          quizHighScore: 0,
+          streakDays: 1,
+          lastPracticeDate: new Date().toISOString().slice(0, 10)
+        }
+      };
+
+      userProfilesList.push(newProfile);
+      activeProfileId = newId;
+      saveUserProfilesToStorage();
+
+      // Clear input
+      document.getElementById('new-profile-name').value = '';
+      document.getElementById('new-profile-pin').value = '';
+
+      updateTopHeaderProfileUI();
+      switchUserProfileTab('active');
+      renderRecordedTakesList();
+      alert('Welcome to Guitar Studio, ' + name + '! Your profile has been created.');
+    }
+
+    function switchActiveProfile(targetId) {
+      const target = userProfilesList.find(p => p.id === targetId);
+      if (!target) return;
+
+      if (target.pin) {
+        const attempt = prompt('Enter 4-digit PIN for ' + target.name + ':');
+        if (attempt !== target.pin) {
+          alert('Incorrect PIN.');
+          return;
+        }
+      }
+
+      activeProfileId = target.id;
+      saveUserProfilesToStorage();
+      updateTopHeaderProfileUI();
+      renderActiveProfileView();
+      renderProfilesList();
+      renderRecordedTakesList();
+    }
+
+    function logoutToGuest() {
+      let guest = userProfilesList.find(p => p.id === 'guest');
+      if (!guest) {
+        guest = { ...DEFAULT_GUEST_PROFILE };
+        userProfilesList.unshift(guest);
+      }
+      activeProfileId = 'guest';
+      saveUserProfilesToStorage();
+      updateTopHeaderProfileUI();
+      renderActiveProfileView();
+      renderRecordedTakesList();
+    }
+
+    function deleteUserProfile(profileId) {
+      if (profileId === 'guest') return;
+      const p = userProfilesList.find(x => x.id === profileId);
+      if (!p) return;
+      if (!confirm('Are you sure you want to delete profile "' + p.name + '"?')) return;
+
+      userProfilesList = userProfilesList.filter(x => x.id !== profileId);
+      if (activeProfileId === profileId) {
+        activeProfileId = userProfilesList[0].id;
+      }
+      saveUserProfilesToStorage();
+      updateTopHeaderProfileUI();
+      renderProfilesList();
+      renderRecordedTakesList();
+    }
+
+    function exportActiveUserProfileData() {
+      const p = getActiveUserProfile();
+      const data = {
+        app: 'AIGuitarChordDetectiveStudio',
+        version: '2.0',
+        exportedAt: new Date().toISOString(),
+        profile: p,
+        takes: getSavedTakesForActiveUser()
+      };
+
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'guitar_studio_' + (p.name.replace(/[^a-zA-Z0-9]/g, '_')) + '_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function importUserProfileData(event) {
+      const file = event.target.files ? event.target.files[0] : null;
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.profile && parsed.profile.name) {
+            const imported = parsed.profile;
+            imported.id = 'imported_' + Date.now();
+            userProfilesList.push(imported);
+            activeProfileId = imported.id;
+            saveUserProfilesToStorage();
+
+            if (Array.isArray(parsed.takes) && parsed.takes.length > 0) {
+              saveTakesForActiveUser(parsed.takes);
+            }
+
+            updateTopHeaderProfileUI();
+            switchUserProfileTab('active');
+            renderRecordedTakesList();
+            alert('Successfully imported profile for ' + imported.name + '!');
+          } else {
+            alert('Invalid profile backup file format.');
+          }
+        } catch (err) {
+          alert('Could not parse profile file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function startPracticeSessionTracking() {
+      if (practiceSessionTimer) clearInterval(practiceSessionTimer);
+      practiceSessionTimer = setInterval(() => {
+        // Increment practice time if microphone is listening or audio is playing
+        if (isListening || isSongPlaying || isAudioRecording) {
+          const p = getActiveUserProfile();
+          if (!p.stats) p.stats = {};
+          p.stats.practiceSeconds = (p.stats.practiceSeconds || 0) + 1;
+          saveUserProfilesToStorage();
+        }
+      }, 1000);
+    }
+
+    function recordUserPluckEvent(type = 'note') {
+      const p = getActiveUserProfile();
+      if (!p.stats) p.stats = {};
+      if (type === 'chord') {
+        p.stats.chordsDetected = (p.stats.chordsDetected || 0) + 1;
+      } else {
+        p.stats.notesDetected = (p.stats.notesDetected || 0) + 1;
+      }
+      saveUserProfilesToStorage();
+    }
+
+
+    /* ==========================================================================
+       ACOUSTIC GUITAR AUDIO RECORDER & JAM LOOPER ENGINE
+       ========================================================================== */
+    let recMediaRecorder = null;
+    let recAudioChunks = [];
+    let recCurrentBlob = null;
+    let recCurrentUrl = null;
+    let isAudioRecording = false;
+    let recStartTime = 0;
+    let recTimerInterval = null;
+    let recAudioStream = null;
+    let recAnalyser = null;
+    let recVisualizerAnim = null;
+    let isJamLoopActive = false;
+    let isCountInActive = false;
+    let recCountInTimer = null;
+
+    function initRecorderStudio() {
+      drawIdleWaveform();
+      renderRecordedTakesList();
+      updateTopHeaderProfileUI();
+    }
+
+    function toggleRecordCountIn() {
+      isCountInActive = !isCountInActive;
+      const statusEl = document.getElementById('rec-countin-status');
+      const iconEl = document.getElementById('rec-countin-icon');
+      if (statusEl) {
+        statusEl.textContent = isCountInActive ? '4-Beats' : 'Off';
+        statusEl.style.color = isCountInActive ? 'var(--accent-gold)' : 'var(--text-muted)';
+      }
+      if (iconEl) iconEl.textContent = isCountInActive ? '🔔' : '⏱️';
+    }
+
+    function toggleAudioLoopMode() {
+      isJamLoopActive = !isJamLoopActive;
+      const statusEl = document.getElementById('rec-loop-status');
+      const audioEl = document.getElementById('rec-audio-element');
+
+      if (statusEl) {
+        statusEl.textContent = isJamLoopActive ? 'ON' : 'Off';
+        statusEl.style.color = isJamLoopActive ? 'var(--accent-cyan)' : 'var(--text-muted)';
+      }
+      if (audioEl) {
+        audioEl.loop = isJamLoopActive;
+      }
+    }
+
+    function toggleMainAudioRecording() {
+      if (isAudioRecording) {
+        stopAudioRecording();
+      } else {
+        if (isCountInActive) {
+          runCountInThenRecord();
+        } else {
+          startAudioRecording();
+        }
+      }
+    }
+
+    function playWoodClick(freq = 1200, dur = 0.04) {
+      try {
+        const actx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, actx.currentTime);
+        gain.gain.setValueAtTime(0.7, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + dur);
+      } catch (e) {}
+    }
+
+    function runCountInThenRecord() {
+      const overlay = document.getElementById('rec-countin-overlay');
+      const numEl = document.getElementById('rec-countin-num');
+      if (overlay) overlay.style.display = 'block';
+
+      let count = 4;
+      if (numEl) numEl.textContent = count;
+      playWoodClick(800);
+
+      recCountInTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          if (numEl) numEl.textContent = count;
+          playWoodClick(800);
+        } else if (count === 0) {
+          if (numEl) numEl.textContent = 'GO!';
+          playWoodClick(1400, 0.08);
+        } else {
+          clearInterval(recCountInTimer);
+          if (overlay) overlay.style.display = 'none';
+          startAudioRecording();
+        }
+      }, 550);
+    }
+
+    async function startAudioRecording() {
+      try {
+        recAudioStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false
+          }
+        });
+      } catch (err) {
+        try {
+          // Fallback to basic audio
+          recAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err2) {
+          alert('Could not access microphone: ' + err2.message);
+          return;
+        }
+      }
+
+      recAudioChunks = [];
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+      
+      try {
+        recMediaRecorder = new MediaRecorder(recAudioStream, { mimeType });
+      } catch (e) {
+        recMediaRecorder = new MediaRecorder(recAudioStream);
+      }
+
+      recMediaRecorder.ondataavailable = (evt) => {
+        if (evt.data && evt.data.size > 0) {
+          recAudioChunks.push(evt.data);
+        }
+      };
+
+      recMediaRecorder.onstop = () => {
+        handleRecordingStop();
+      };
+
+      // Connect to analyser for live waveform
+      try {
+        const actx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        if (actx.state === 'suspended') actx.resume();
+        const source = actx.createMediaStreamSource(recAudioStream);
+        recAnalyser = actx.createAnalyser();
+        recAnalyser.fftSize = 256;
+        source.connect(recAnalyser);
+        startVisualizerLoop();
+      } catch (e) {
+        console.warn('Analyser setup error:', e);
+      }
+
+      recMediaRecorder.start(100);
+      isAudioRecording = true;
+      recStartTime = Date.now();
+
+      // Update UI
+      const btn = document.getElementById('rec-btn-main');
+      const icon = document.getElementById('rec-btn-icon');
+      const badgeDot = document.getElementById('rec-status-dot');
+      const badgeText = document.getElementById('rec-status-text');
+      const placeholder = document.getElementById('rec-canvas-placeholder');
+
+      if (btn) btn.classList.add('recording-now');
+      if (icon) icon.textContent = '⏹️';
+      if (badgeDot) badgeDot.textContent = '🔴';
+      if (badgeText) badgeText.textContent = 'Recording Take...';
+      if (placeholder) placeholder.style.display = 'none';
+
+      // Start timer
+      const readout = document.getElementById('rec-timer-readout');
+      recTimerInterval = setInterval(() => {
+        const elapsedMs = Date.now() - recStartTime;
+        const totalSec = Math.floor(elapsedMs / 1000);
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
+        const tenths = Math.floor((elapsedMs % 1000) / 100);
+        if (readout) {
+          readout.textContent = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs + '.' + tenths;
+        }
+      }, 50);
+    }
+
+    function stopAudioRecording() {
+      if (!isAudioRecording || !recMediaRecorder) return;
+      isAudioRecording = false;
+
+      clearInterval(recTimerInterval);
+      if (recVisualizerAnim) cancelAnimationFrame(recVisualizerAnim);
+
+      // Stop recorder
+      if (recMediaRecorder.state !== 'inactive') {
+        recMediaRecorder.stop();
+      }
+
+      // Stop audio tracks
+      if (recAudioStream) {
+        recAudioStream.getTracks().forEach(t => t.stop());
+        recAudioStream = null;
+      }
+
+      // Reset UI button
+      const btn = document.getElementById('rec-btn-main');
+      const icon = document.getElementById('rec-btn-icon');
+      const badgeDot = document.getElementById('rec-status-dot');
+      const badgeText = document.getElementById('rec-status-text');
+
+      if (btn) btn.classList.remove('recording-now');
+      if (icon) icon.textContent = '🎙️';
+      if (badgeDot) badgeDot.textContent = '🟢';
+      if (badgeText) badgeText.textContent = 'Take Finished';
+
+      drawIdleWaveform();
+    }
+
+    function handleRecordingStop() {
+      recCurrentBlob = new Blob(recAudioChunks, { type: 'audio/webm' });
+      if (recCurrentUrl) URL.revokeObjectURL(recCurrentUrl);
+      recCurrentUrl = URL.createObjectURL(recCurrentBlob);
+
+      const audioEl = document.getElementById('rec-audio-element');
+      const playerBox = document.getElementById('rec-active-player-box');
+      const metaEl = document.getElementById('rec-take-meta');
+
+      if (audioEl) {
+        audioEl.src = recCurrentUrl;
+        audioEl.loop = isJamLoopActive;
+      }
+      if (playerBox) playerBox.style.display = 'block';
+
+      const totalSec = Math.round((Date.now() - recStartTime) / 1000);
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      const durStr = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+
+      if (metaEl) {
+        metaEl.textContent = 'Latest Take • Duration ' + durStr;
+      }
+
+      // Automatically auto-save to takes library
+      autoSaveCurrentTake(durStr);
+    }
+
+    function autoSaveCurrentTake(durationStr) {
+      if (!recCurrentBlob) return;
+      const currentTakes = getSavedTakesForActiveUser();
+      const takeNumber = currentTakes.length + 1;
+      const takeTitle = 'Acoustic Guitar Take #' + takeNumber;
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        const newTake = {
+          id: 'take_' + Date.now(),
+          title: takeTitle,
+          duration: durationStr,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          date: new Date().toLocaleDateString(),
+          dataUrl: base64data
+        };
+
+        currentTakes.unshift(newTake);
+        saveTakesForActiveUser(currentTakes);
+        renderRecordedTakesList();
+      };
+      reader.readAsDataURL(recCurrentBlob);
+    }
+
+    function getSavedTakesForActiveUser() {
+      try {
+        const key = 'guitar_takes_' + activeProfileId;
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function saveTakesForActiveUser(takesList) {
+      try {
+        const key = 'guitar_takes_' + activeProfileId;
+        localStorage.setItem(key, JSON.stringify(takesList));
+      } catch (e) {
+        console.warn('Could not save takes (storage full or disabled):', e);
+      }
+    }
+
+    function renderRecordedTakesList() {
+      const listEl = document.getElementById('rec-takes-list');
+      const countEl = document.getElementById('rec-takes-count');
+      if (!listEl) return;
+
+      const takes = getSavedTakesForActiveUser();
+      if (countEl) countEl.textContent = takes.length;
+
+      if (takes.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.85rem;">
+            No recorded takes yet for ${getActiveUserProfile().name}. Press the red microphone button above to record your guitar!
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      takes.forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'rec-item';
+        item.innerHTML = `
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:36px; height:36px; border-radius:50%; background:rgba(239,68,68,0.15); border:1px solid #ef4444; display:flex; align-items:center; justify-content:center; font-size:1rem;">
+              🎵
+            </div>
+            <div>
+              <div style="font-size:0.92rem; font-weight:700; color:#fff;">${t.title}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${t.date} at ${t.timestamp} • ${t.duration}</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn btn-secondary" onclick="playSavedTake('${t.id}')" style="font-size:0.78rem; padding:6px 12px; border-color:var(--accent-gold); color:var(--accent-gold);">
+              ▶️ Play Take
+            </button>
+            <button class="btn btn-secondary" onclick="downloadSavedTake('${t.id}')" style="font-size:0.78rem; padding:6px 10px; border-color:var(--accent-cyan); color:var(--accent-cyan);" title="Download Audio File">
+              ⬇️ Download
+            </button>
+            <button class="btn btn-secondary" onclick="deleteSavedTake('${t.id}')" style="font-size:0.78rem; padding:6px 10px; color:#ef4444; border-color:rgba(239,68,68,0.3);" title="Delete Take">
+              🗑️
+            </button>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+    }
+
+    function playSavedTake(takeId) {
+      const takes = getSavedTakesForActiveUser();
+      const take = takes.find(x => x.id === takeId);
+      if (!take || !take.dataUrl) return;
+
+      const audioEl = document.getElementById('rec-audio-element');
+      const playerBox = document.getElementById('rec-active-player-box');
+      const metaEl = document.getElementById('rec-take-meta');
+
+      if (audioEl) {
+        audioEl.src = take.dataUrl;
+        audioEl.loop = isJamLoopActive;
+        audioEl.play();
+      }
+      if (playerBox) playerBox.style.display = 'block';
+      if (metaEl) metaEl.textContent = take.title + ' • Duration ' + take.duration;
+    }
+
+    function downloadSavedTake(takeId) {
+      const takes = getSavedTakesForActiveUser();
+      const take = takes.find(x => x.id === takeId);
+      if (!take || !take.dataUrl) return;
+
+      const a = document.createElement('a');
+      a.href = take.dataUrl;
+      a.download = (take.title.replace(/[^a-zA-Z0-9]/g, '_')) + '.webm';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function downloadCurrentTakeAudio() {
+      if (!recCurrentUrl && !recCurrentBlob) return;
+      const a = document.createElement('a');
+      a.href = recCurrentUrl;
+      a.download = 'Guitar_Studio_Take_' + Date.now() + '.webm';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function saveCurrentTakePrompt() {
+      const defaultName = 'Acoustic Take #' + (getSavedTakesForActiveUser().length + 1);
+      const name = prompt('Enter a name for this take:', defaultName);
+      if (!name) return;
+
+      const takes = getSavedTakesForActiveUser();
+      if (takes.length > 0) {
+        takes[0].title = name;
+        saveTakesForActiveUser(takes);
+        renderRecordedTakesList();
+        alert('Take saved as "' + name + '"!');
+      }
+    }
+
+    function deleteSavedTake(takeId) {
+      let takes = getSavedTakesForActiveUser();
+      takes = takes.filter(x => x.id !== takeId);
+      saveTakesForActiveUser(takes);
+      renderRecordedTakesList();
+    }
+
+    function clearAllRecordedTakes() {
+      if (!confirm('Are you sure you want to delete all recorded takes for ' + getActiveUserProfile().name + '?')) return;
+      saveTakesForActiveUser([]);
+      renderRecordedTakesList();
+    }
+
+    function drawIdleWaveform() {
+      const canvas = document.getElementById('rec-visualizer-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      ctx.lineTo(w, h / 2);
+      ctx.stroke();
+    }
+
+    function startVisualizerLoop() {
+      const canvas = document.getElementById('rec-visualizer-canvas');
+      if (!canvas || !recAnalyser) return;
+      const ctx = canvas.getContext('2d');
+      const bufferLength = recAnalyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+      function renderFrame() {
+        if (!isAudioRecording) return;
+        recVisualizerAnim = requestAnimationFrame(renderFrame);
+
+        recAnalyser.getByteFrequencyData(dataArray);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 2.2;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = (dataArray[i] / 255) * canvas.height * 0.9;
+          const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+          gradient.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
+          gradient.addColorStop(0.6, 'rgba(255, 179, 0, 0.85)');
+          gradient.addColorStop(1, '#ef4444');
+
+          ctx.fillStyle = gradient;
+          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+          x += barWidth + 2;
+          if (x > canvas.width) break;
+        }
+      }
+      renderFrame();
+    }
+
     </script>
 </body>
 </html>
