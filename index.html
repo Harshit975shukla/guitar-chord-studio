@@ -2559,6 +2559,277 @@
       background: rgba(255, 179, 0, 0.08);
     }
 
+    /* ==========================================================================
+       WESTERN SCALES EXPLORER & 3D FRETBOARD STUDIO STYLES
+       ========================================================================== */
+    .scales-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 40px;
+    }
+    .scales-header-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .scale-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .scale-control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .scale-control-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .scale-root-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .scale-root-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .scale-root-btn:hover {
+      background: rgba(255, 179, 0, 0.15);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+    .scale-root-btn.active {
+      background: var(--accent-gold);
+      color: #000;
+      border-color: #fff;
+      box-shadow: 0 0 12px rgba(255, 179, 0, 0.7);
+    }
+    .scale-preset-dropdown {
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-light);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .scale-preset-dropdown:focus {
+      border-color: var(--accent-cyan);
+    }
+    .scale-toggle-btn-group {
+      display: inline-flex;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .scale-toggle-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .scale-toggle-btn.active {
+      background: var(--accent-cyan);
+      color: #000;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+    }
+
+    /* Scale Fretboard Dots */
+    .fret-cell .scale-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      z-index: 5;
+    }
+    .fret-cell .scale-dot:hover {
+      transform: scale(1.25);
+      z-index: 10;
+    }
+    .fret-cell .scale-dot.root {
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      color: #000;
+      border: 2px solid #fff;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.95);
+      animation: scaleRootGlow 1.8s infinite alternate ease-in-out;
+    }
+    .fret-cell .scale-dot.tone {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+    }
+    .fret-cell .scale-dot.blue {
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      color: #fff;
+      border: 1.5px solid #fbcfe8;
+      box-shadow: 0 0 12px rgba(236, 72, 153, 0.9);
+      animation: blueNotePulse 1.4s infinite alternate ease-in-out;
+    }
+    .fret-cell .scale-dot.active-pluck {
+      transform: scale(1.38) !important;
+      box-shadow: 0 0 24px #fff, 0 0 35px var(--accent-gold) !important;
+      border-color: #fff !important;
+    }
+    @keyframes scaleRootGlow {
+      0% { box-shadow: 0 0 8px rgba(251, 191, 36, 0.6); }
+      100% { box-shadow: 0 0 18px rgba(251, 191, 36, 1), 0 0 4px #fff; }
+    }
+    @keyframes blueNotePulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.15); box-shadow: 0 0 18px rgba(236, 72, 153, 1); }
+    }
+
+    /* ==========================================================================
+       CHORD SPEED DRILL STYLES
+       ========================================================================== */
+    .drill-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 40px;
+    }
+    .drill-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .drill-hero-box {
+      min-height: 180px;
+      background: radial-gradient(circle at center, rgba(255, 179, 0, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      margin: 20px 0;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .drill-hero-box.hit-match {
+      border-color: var(--accent-emerald) !important;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.4);
+    }
+    .drill-chord-big {
+      font-size: 5rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+      line-height: 1;
+      text-shadow: 0 0 30px rgba(255, 179, 0, 0.5);
+      transition: transform 0.15s ease;
+    }
+    .drill-beat-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 14px;
+    }
+    .drill-beat-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      transition: all 0.08s ease;
+    }
+    .drill-beat-dot.active {
+      background: var(--accent-gold);
+      border-color: #fff;
+      color: #000;
+      box-shadow: 0 0 16px rgba(255, 179, 0, 0.95);
+      transform: scale(1.22);
+    }
+    .drill-beat-dot.downbeat.active {
+      background: var(--accent-emerald);
+      border-color: #fff;
+      color: #000;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 1);
+      transform: scale(1.3);
+    }
+    .drill-progression-track {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .drill-chord-chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-light);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .drill-chord-chip.active {
+      background: rgba(255, 179, 0, 0.2);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 12px rgba(255, 179, 0, 0.4);
+      transform: scale(1.1);
+    }
+    .drill-chord-chip.completed {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
   </style>
 </head>
 <body>
@@ -2599,6 +2870,12 @@
       </button>
       <button class="studio-tab-btn" id="tab-btn-songs" onclick="switchStudioTab('songs')">
         <span>🎸</span> Songs & 3D Fretboard <span class="tab-badge" style="background:#f59e0b; color:#000;">Notes & Chords</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-scales" onclick="switchStudioTab('scales')">
+        <span>🎼</span> Scales & Fretboard <span class="tab-badge" style="background:#06b6d4; color:#000;">Western Modes</span>
+      </button>
+      <button class="studio-tab-btn" id="tab-btn-drill" onclick="switchStudioTab('drill')">
+        <span>⚡</span> Chord Speed Drill <span class="tab-badge" style="background:#10b981; color:#000;">Practice</span>
       </button>
       <button class="studio-tab-btn" id="tab-btn-search" onclick="switchStudioTab('search')">
         <span>🔍</span> Song Search & Chords <span class="tab-badge" style="background:#38bdf8; color:#000;">Acoustic Hits</span>
@@ -3386,7 +3663,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
 
         <!-- Song Metadata Badges -->
         <div style="display:flex; flex-wrap:wrap; gap:10px;">
-          <div class="song-meta-pill">Key: <strong id="res-pill-key">C# Minor (Sa = C#)</strong></div>
+          <div class="song-meta-pill">Key: <strong id="res-pill-key">C# Minor (Root: C#)</strong></div>
           <div class="song-meta-pill">Tempo: <strong id="res-pill-bpm">88 BPM</strong></div>
           <div class="song-meta-pill">Strumming: <strong id="res-pill-strum">D - D U - U D -</strong></div>
           <div class="song-meta-pill">Difficulty: <strong id="res-pill-diff" style="color:#6ee7b7;">Intermediate</strong></div>
@@ -3797,6 +4074,340 @@ Was [G] blind but [D] now I [G] see"></textarea>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- TAB 9: WESTERN SCALES & 3D FRETBOARD STUDIO -->
+  <div class="studio-tab-pane" id="pane-scales" style="display:none;">
+    <div class="scales-container">
+      
+      <!-- HEADER & CONTROLS CARD -->
+      <div class="scales-header-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:1.5rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+              <span>🎼</span> Western Guitar Scales & 3D Fretboard Mode
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+              Explore standard Western scales across frets 0–12 on the master rosewood neck. Pluck strings with physical audio resonance, play scale runs, or practice with live microphone note recognition.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="badge" style="background:rgba(6, 182, 212, 0.15); border:1px solid var(--accent-cyan); color:var(--accent-cyan); font-size:0.8rem;">
+              <span>🎸</span> 6-String E A D G B E
+            </span>
+            <span class="badge" id="scale-mic-badge" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-light); font-size:0.8rem;">
+              <span id="scale-mic-dot">⚪</span> <span id="scale-mic-status">Mic Idle</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Scale Selection Grid -->
+        <div class="scale-select-grid">
+          <!-- Root Note Selector -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>🎯</span> Key Root Note
+            </label>
+            <div class="scale-root-selector" id="scale-root-buttons">
+              <!-- Dynamically populated by JS -->
+            </div>
+          </div>
+
+          <!-- Scale Preset Selector -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>📐</span> Western Scale Type
+            </label>
+            <select class="scale-preset-dropdown" id="scale-preset-select" onchange="onScalePresetChange(this.value)">
+              <option value="pentatonic_minor" selected>Pentatonic Minor (Rock / Blues Lead)</option>
+              <option value="blues">Blues Scale (with ♭5 'Blue Note')</option>
+              <option value="pentatonic_major">Pentatonic Major (Country / Southern Rock)</option>
+              <option value="natural_minor">Natural Minor / Aeolian (Melodic Ballad & Metal)</option>
+              <option value="major">Major Scale / Ionian (Western Diatonic Root)</option>
+              <option value="dorian">Dorian Mode (Santana / Funk & Fusion)</option>
+              <option value="mixolydian">Mixolydian Mode (Classic Rock Dominant 7th)</option>
+              <option value="harmonic_minor">Harmonic Minor (Neo-Classical & Spanish)</option>
+            </select>
+          </div>
+
+          <!-- Display Mode (Note Names vs Scale Degrees) -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>🏷️</span> Display Label Mode
+            </label>
+            <div class="scale-toggle-btn-group">
+              <button class="scale-toggle-btn active" id="scale-mode-note" onclick="setScaleLabelMode('note')">Note Names (C, E, G)</button>
+              <button class="scale-toggle-btn" id="scale-mode-degree" onclick="setScaleLabelMode('degree')">Degrees (1, ♭3, 5)</button>
+            </div>
+          </div>
+
+          <!-- Position Register Filter -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>🔍</span> Fretboard Register
+            </label>
+            <select class="scale-preset-dropdown" id="scale-position-filter" onchange="onScalePositionFilterChange(this.value)">
+              <option value="all" selected>Full Fretboard (Frets 0–12)</option>
+              <option value="open">Open Position (Frets 0–4)</option>
+              <option value="middle">Mid Register (Frets 5–8)</option>
+              <option value="upper">Upper Octave (Frets 9–12)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Scale Info Ribbon -->
+        <div style="margin-top:20px; padding:12px 16px; background:rgba(0,0,0,0.3); border:1px solid var(--border-light); border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Formula & Notes:</span>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+              <span id="scale-ribbon-title" style="font-size:1.1rem; font-weight:800; color:var(--accent-gold);">A Pentatonic Minor</span>
+              <span id="scale-ribbon-formula" style="font-size:0.85rem; color:var(--accent-cyan); font-weight:600;">(1 - ♭3 - 4 - 5 - ♭7)</span>
+            </div>
+            <div id="scale-ribbon-notes" style="font-size:0.85rem; color:#fff; margin-top:3px; font-weight:700;">A • C • D • E • G</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-scale-run" onclick="toggleScaleAudioRun()">
+              <span id="btn-scale-run-icon">▶️</span> <span id="btn-scale-run-text">Play Scale Run</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-scale-mic" onclick="toggleScaleMicPractice()">
+              <span>🎙️</span> <span id="btn-scale-mic-text">Practice with Guitar (Live Mic)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D ROSEWOOD FRETBOARD CONTAINER -->
+      <div class="fretboard-container" style="padding:20px 14px;">
+        <div class="fretboard-board" id="scale-fretboard-board">
+          <div class="fret-numbers">
+            <div class="fret-num">0 (Open)</div>
+            <div class="fret-num">1</div>
+            <div class="fret-num">2</div>
+            <div class="fret-num marker">3 •</div>
+            <div class="fret-num">4</div>
+            <div class="fret-num marker">5 •</div>
+            <div class="fret-num">6</div>
+            <div class="fret-num marker">7 •</div>
+            <div class="fret-num">8</div>
+            <div class="fret-num marker">9 •</div>
+            <div class="fret-num">10</div>
+            <div class="fret-num">11</div>
+            <div class="fret-num marker">12 ••</div>
+          </div>
+
+          <div id="scale-fretboard-strings-rows">
+            <!-- Dynamically generated via renderScaleFretboard() -->
+          </div>
+        </div>
+      </div>
+
+      <!-- FRETBOARD LEGEND & INTERACTIVE STATUS -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-lg); padding:14px 20px;">
+        <!-- Legend -->
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:0.8rem; color:var(--text-muted);">
+          <span style="font-weight:700; color:#fff;">Legend:</span>
+          <span style="display:inline-flex; align-items:center; gap:6px;">
+            <span style="width:14px; height:14px; border-radius:50%; background:var(--accent-gold); border:1.5px solid #fff; display:inline-block;"></span>
+            Root Note (Key Center)
+          </span>
+          <span style="display:inline-flex; align-items:center; gap:6px;">
+            <span style="width:14px; height:14px; border-radius:50%; background:var(--accent-cyan); border:1.5px solid rgba(255,255,255,0.7); display:inline-block;"></span>
+            Scale Tone
+          </span>
+          <span style="display:inline-flex; align-items:center; gap:6px;" id="scale-blue-note-legend">
+            <span style="width:14px; height:14px; border-radius:50%; background:#ec4899; border:1.5px solid #fbcfe8; display:inline-block;"></span>
+            Blue Note (Diminished ♭5)
+          </span>
+          <span style="color:var(--text-muted); font-size:0.75rem;">(Click any note to pluck realistic acoustic sound)</span>
+        </div>
+
+        <!-- Live Pluck Feedback -->
+        <div id="scale-pluck-info" style="font-size:0.85rem; color:var(--text-main); font-weight:600;">
+          <span>💡 Pluck any note on the fretboard to hear acoustic string pitch!</span>
+        </div>
+      </div>
+
+      <!-- THEORY, INTERVALS & FAMOUS SOLOS CARD -->
+      <div class="scales-header-card" style="margin-top:0;">
+        <h3 style="font-size:1.1rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+          <span>🎸</span> Scale Breakdown & Famous Guitar Solos
+        </h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-top:14px;">
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:14px;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--accent-gold); text-transform:uppercase;">Musical Character & Vibe</div>
+            <p id="scale-theory-desc" style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; line-height:1.5;">
+              The Pentatonic Minor is the foundational guitar solo scale across rock, blues, funk, and metal. With 5 notes and zero clashing half-steps, every note sounds consonant over minor chords and dominant blues progressions.
+            </p>
+          </div>
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:14px;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--accent-cyan); text-transform:uppercase;">Famous Songs & Guitar Solos</div>
+            <p id="scale-theory-solos" style="font-size:0.85rem; color:var(--text-muted); margin-top:6px; line-height:1.5;">
+              Led Zeppelin (Stairway to Heaven), Eagles (Hotel California), Black Sabbath (Paranoid), Jimi Hendrix (Purple Haze).
+            </p>
+          </div>
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:14px;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--accent-emerald); text-transform:uppercase;">Scale Practice Stats</div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px;">
+              <span style="font-size:0.8rem; color:var(--text-muted);">Notes Hit:</span>
+              <strong id="scale-stats-hits" style="color:var(--accent-emerald);">0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:4px;">
+              <span style="font-size:0.8rem; color:var(--text-muted);">Current Streak:</span>
+              <strong id="scale-stats-streak" style="color:var(--accent-gold);">0 🔥</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:4px;">
+              <span style="font-size:0.8rem; color:var(--text-muted);">Last Plucked:</span>
+              <strong id="scale-stats-last" style="color:#fff;">-</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 10: CHORD CHANGE SPEED DRILL -->
+  <div class="studio-tab-pane" id="pane-drill" style="display:none;">
+    <div class="drill-container">
+      
+      <!-- HEADER & SETUP CARD -->
+      <div class="drill-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:1.5rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+              <span>⚡</span> Chord Change Speed Drill & Transition Trainer
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+              Build lightning-fast muscle memory, eliminate finger hesitations between open chords, and lock into steady metronome rhythm with live acoustic audio evaluation.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="badge" id="drill-status-badge" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-light); font-size:0.8rem;">
+              <span id="drill-status-dot">⚪</span> <span id="drill-status-text">Drill Ready</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Drill Settings Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:16px;">
+          <div>
+            <label class="scale-control-label"><span>🔄</span> Progression Type</label>
+            <select class="scale-preset-dropdown" id="drill-progression-select" style="width:100%; margin-top:6px;" onchange="onDrillProgressionChange(this.value)">
+              <option value="pop" selected>Pop 4-Chord (C - G - Am - F)</option>
+              <option value="folk">Classic Folk / Rock (G - D - Em - C)</option>
+              <option value="jazz">Jazz Turnaround (Dm - G - C - Am)</option>
+              <option value="blues">12-Bar Blues (A7 - D7 - E7)</option>
+              <option value="ballad">Minor Ballad (Am - F - C - G)</option>
+              <option value="random">Random Open Chords (C, G, D, Em, Am, E, A, F)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="scale-control-label">
+              <span>⏱️</span> Tempo: <strong id="drill-bpm-display" style="color:#fff;">80 BPM</strong>
+            </label>
+            <input type="range" id="drill-bpm-slider" min="50" max="140" value="80" style="width:100%; margin-top:10px;" oninput="onDrillBpmChange(this.value)">
+            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); margin-top:2px;">
+              <span>50 BPM (Slow)</span>
+              <span>90 BPM</span>
+              <span>140 BPM (Fast)</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="scale-control-label"><span>📏</span> Bars Per Chord</label>
+            <select class="scale-preset-dropdown" id="drill-bars-select" style="width:100%; margin-top:6px;">
+              <option value="1">1 Bar (4 Beats)</option>
+              <option value="2" selected>2 Bars (8 Beats)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="scale-control-label"><span>🎯</span> Drill Length</label>
+            <select class="scale-preset-dropdown" id="drill-length-select" style="width:100%; margin-top:6px;">
+              <option value="8">8 Chords</option>
+              <option value="12">12 Chords</option>
+              <option value="16" selected>16 Chords</option>
+              <option value="24">24 Chords</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Progression Breadcrumbs Ribbon -->
+        <div style="margin-top:14px; text-align:center;">
+          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Drill Chord Progression:</div>
+          <div class="drill-progression-track" id="drill-chords-ribbon">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN DRILL HERO STAGE -->
+      <div class="drill-card">
+        <div class="drill-hero-box" id="drill-hero-box">
+          <div style="position:absolute; top:14px; left:20px; font-size:0.8rem; color:var(--text-muted);">
+            Chord <span id="drill-chord-step">1</span> of <span id="drill-chord-total">16</span>
+          </div>
+          <div style="position:absolute; top:14px; right:20px; font-size:0.8rem; color:var(--accent-cyan); font-weight:700;" id="drill-next-preview">
+            Next Up: <strong id="drill-next-chord-name">G</strong>
+          </div>
+
+          <!-- Current Big Chord -->
+          <div class="drill-chord-big" id="drill-display-chord">C</div>
+          <div style="font-size:0.9rem; color:var(--text-muted); margin-top:4px;" id="drill-chord-full-name">C Major</div>
+
+          <!-- 4-Beat Metronome Dots -->
+          <div class="drill-beat-row">
+            <div class="drill-beat-dot downbeat" id="drill-dot-1">1</div>
+            <div class="drill-beat-dot" id="drill-dot-2">2</div>
+            <div class="drill-beat-dot" id="drill-dot-3">3</div>
+            <div class="drill-beat-dot" id="drill-dot-4">4</div>
+          </div>
+        </div>
+
+        <!-- Action Control Buttons -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-top:18px;">
+          <button class="btn btn-primary" id="btn-start-drill" onclick="startChordDrill()" style="padding:10px 24px; font-size:1rem;">
+            <span>▶️</span> Start Speed Drill
+          </button>
+          <button class="btn btn-secondary" id="btn-stop-drill" onclick="stopChordDrill()" disabled style="padding:10px 20px;">
+            <span>⏹️</span> Stop
+          </button>
+          <button class="btn btn-secondary" onclick="playDrillReferenceChord()" style="padding:10px 18px;">
+            <span>🔊</span> Strum Reference Chord
+          </button>
+          <button class="btn btn-secondary" id="btn-next-drill" onclick="advanceDrillChordManual()" disabled style="padding:10px 18px;">
+            <span>⏩</span> Next Chord
+          </button>
+        </div>
+
+        <!-- Live Score & Transition Stats HUD -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-top:24px; text-align:center;">
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:12px;">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Accuracy</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--accent-emerald); margin-top:4px;" id="drill-stat-accuracy">-%</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:12px;">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Avg Switch Latency</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--accent-cyan); margin-top:4px;" id="drill-stat-latency">- ms</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:12px;">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Current Streak</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--accent-gold); margin-top:4px;" id="drill-stat-streak">0 🔥</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-light); border-radius:12px; padding:12px;">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Best Streak</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#fff; margin-top:4px;" id="drill-stat-best">0</div>
+          </div>
+        </div>
+
+        <!-- Feedback message banner -->
+        <div id="drill-feedback-banner" style="margin-top:16px; padding:10px 16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--border-light); text-align:center; font-size:0.85rem; color:var(--text-muted);">
+          Ready • Strum with the metronome downbeat as each chord arrives!
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -5311,6 +5922,10 @@ Was [G] blind but [D] now I [G] see"></textarea>
         if (currentActiveTab === 'tuner') {
           updateTunerPitchRealtime(f0, noteFullName, cents);
         }
+        // Real-time Pitch Feed for Scales Studio
+        if (currentActiveTab === 'scales' && typeof isScaleMicActive !== 'undefined' && isScaleMicActive) {
+          evaluateScaleLivePitch(f0, noteFullName);
+        }
       } 
       // PATH B: POLYPHONIC CHORD DETECTED
       else {
@@ -5428,6 +6043,10 @@ Was [G] blind but [D] now I [G] see"></textarea>
           // Real-time Chord Evaluation for Chord Quiz Trainer
           if (currentActiveTab === 'trainer') {
             checkQuizChordMatch(best.short);
+          }
+          // Real-time Chord Evaluation for Chord Speed Drill
+          if (currentActiveTab === 'drill' && typeof isDrillActive !== 'undefined' && isDrillActive) {
+            evaluateDrillLiveChord(best.short);
           }
 
           // Hook to Web MIDI Output for Chords
@@ -5589,9 +6208,17 @@ Was [G] blind but [D] now I [G] see"></textarea>
       if (tabId !== 'songs' && isSongPlaying) {
         toggleSongPlayback();
       }
+      // Stop drill if leaving drill tab
+      if (tabId !== 'drill' && typeof isDrillActive !== 'undefined' && isDrillActive) {
+        stopChordDrill();
+      }
+      // Stop scale run if leaving scales tab
+      if (tabId !== 'scales' && typeof isScaleAudioRunning !== 'undefined' && isScaleAudioRunning) {
+        stopScaleAudioRun();
+      }
 
       // Update tab buttons
-      const buttons = ['detector', 'songs', 'search', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
+      const buttons = ['detector', 'songs', 'scales', 'drill', 'search', 'tuner', 'trainer', 'metronome', 'chords', 'recorder'];
       buttons.forEach(id => {
         const btn = document.getElementById('tab-btn-' + id);
         const pane = document.getElementById('pane-' + id);
@@ -5605,29 +6232,24 @@ Was [G] blind but [D] now I [G] see"></textarea>
       // Special tab initialization
       if (tabId === 'songs') {
         initSongsStudio();
+      } else if (tabId === 'scales') {
+        initScalesStudio();
+      } else if (tabId === 'drill') {
+        initDrillStudio();
       } else if (tabId === 'search') {
         initSongSearch();
       } else if (tabId === 'tuner') {
         selectTunerPeg(0);
+        updateTunerUI();
       } else if (tabId === 'trainer') {
         if (!quizTargetChord) nextQuizChord();
       } else if (tabId === 'metronome') {
         renderMetroBeats();
+        renderStrumArrows();
       } else if (tabId === 'chords') {
         initChordLibrary();
       } else if (tabId === 'recorder') {
         initRecorderStudio();
-      } else if (tabId === 'rhythm') {
-        initRhythmStudio();
-      } else if (tabId === 'tuner') {
-        updateTunerUI();
-      } else if (tabId === 'trainer') {
-        if (!quizTargetChord) nextQuizChord();
-      } else if (tabId === 'chords') {
-        initChordLibrary();
-      } else if (tabId === 'metronome') {
-        renderMetroBeats();
-        renderStrumArrows();
       }
     }
 
@@ -8977,7 +9599,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
         strum: strum,
         diff: 'Custom Song',
         chords: chordsToUse,
-        leadHook: 'Sa Re Ga ma Pa | ma Ga Re Sa',
+        leadHook: 'C4 D4 E4 F4 G4 | F4 E4 D4 C4',
         westernHook: 'C4 D4 E4 F4 G4 | F4 E4 D4 C4',
         lyrics: lyrics,
         isCustom: true
@@ -9975,6 +10597,838 @@ Was [G] blind but [D] now I [G] see"></textarea>
         }
       }
       renderFrame();
+    }
+
+    /* ==========================================================================
+       WESTERN SCALES EXPLORER & 3D FRETBOARD STUDIO JAVASCRIPT
+       ========================================================================== */
+    const WESTERN_SCALES = {
+      pentatonic_minor: {
+        name: "Pentatonic Minor",
+        intervals: [0, 3, 5, 7, 10],
+        degrees: ["1", "♭3", "4", "5", "♭7"],
+        formula: "1 - ♭3 - 4 - 5 - ♭7",
+        desc: "The universal foundation of rock, blues, and pop guitar solos. With 5 notes and zero half-step clashes, every note sounds consonant and punchy.",
+        solos: "Led Zeppelin (Stairway to Heaven), Eagles (Hotel California), Black Sabbath (Paranoid), Jimi Hendrix (Purple Haze)"
+      },
+      blues: {
+        name: "Blues Scale",
+        intervals: [0, 3, 5, 6, 7, 10],
+        degrees: ["1", "♭3", "4", "♭5", "5", "♭7"],
+        formula: "1 - ♭3 - 4 - ♭5 - 5 - ♭7",
+        desc: "The minor pentatonic reinforced with the iconic diminished 5th (♭5 'blue note') for instant grit, vocal tension, and authentic blues expression.",
+        solos: "B.B. King (The Thrill Is Gone), Stevie Ray Vaughan (Pride and Joy), Eric Clapton (Crossroads), Gary Moore"
+      },
+      pentatonic_major: {
+        name: "Pentatonic Major",
+        intervals: [0, 2, 4, 7, 9],
+        degrees: ["1", "2", "3", "5", "6"],
+        formula: "1 - 2 - 3 - 5 - 6",
+        desc: "Bright, sweet, and uplifting. Perfect for country licks, southern rock leads, soul ballads, and cheerful acoustic guitar lines.",
+        solos: "Allman Brothers (Ramblin' Man), Lynyrd Skynyrd (Sweet Home Alabama), The Temptations (My Girl), Grateful Dead"
+      },
+      natural_minor: {
+        name: "Natural Minor (Aeolian)",
+        intervals: [0, 2, 3, 5, 7, 8, 10],
+        degrees: ["1", "2", "♭3", "4", "5", "♭6", "♭7"],
+        formula: "1 - 2 - ♭3 - 4 - 5 - ♭6 - ♭7",
+        desc: "Deeply emotional, melancholy, and cinematic. The definitive mode of rock ballads, modern metal solos, and dark acoustic harmonies.",
+        solos: "Metallica (Fade to Black), Gary Moore (Still Got the Blues), Red Hot Chili Peppers (Californication), Dire Straits"
+      },
+      major: {
+        name: "Major Scale (Ionian)",
+        intervals: [0, 2, 4, 5, 7, 9, 11],
+        degrees: ["1", "2", "3", "4", "5", "6", "7"],
+        formula: "1 - 2 - 3 - 4 - 5 - 6 - 7",
+        desc: "The cornerstone of Western diatonic harmony. Every interval, diatonic triad, and chord formula is measured against the major scale.",
+        solos: "The Beatles (Let It Be), Eric Clapton (Wonderful Tonight), Guns N' Roses (Sweet Child O' Mine intro), Oasis"
+      },
+      dorian: {
+        name: "Dorian Mode",
+        intervals: [0, 2, 3, 5, 7, 9, 10],
+        degrees: ["1", "2", "♭3", "4", "5", "6", "♭7"],
+        formula: "1 - 2 - ♭3 - 4 - 5 - 6 - ♭7",
+        desc: "A minor mode elevated by a bright major 6th. Creates a groovy, jazzy, Santana-style exotic feel without sounding dark or heavy.",
+        solos: "Carlos Santana (Oye Como Va, Black Magic Woman), Pink Floyd (Breathe), Daft Punk (Get Lucky), Miles Davis (So What)"
+      },
+      mixolydian: {
+        name: "Mixolydian Mode",
+        intervals: [0, 2, 4, 5, 7, 9, 10],
+        degrees: ["1", "2", "3", "4", "5", "6", "♭7"],
+        formula: "1 - 2 - 3 - 4 - 5 - 6 - ♭7",
+        desc: "A major scale with a dominant flat 7th. The signature mode for southern rock jams, AC/DC riffs, and modal rock improvisations.",
+        solos: "Lynyrd Skynyrd (Sweet Home Alabama), The Beatles (Norwegian Wood), AC/DC (Highway to Hell), Grateful Dead"
+      },
+      harmonic_minor: {
+        name: "Harmonic Minor",
+        intervals: [0, 2, 3, 5, 7, 8, 11],
+        degrees: ["1", "2", "♭3", "4", "5", "♭6", "7"],
+        formula: "1 - 2 - ♭3 - 4 - 5 - ♭6 - 7",
+        desc: "Features a dramatic augmented 2nd jump into the natural 7th leading tone. Gives an unmistakable neo-classical, flamenco, and Spanish acoustic character.",
+        solos: "Yngwie Malmsteen (Far Beyond the Sun), Deep Purple (Highway Star), Ritchie Blackmore (Stargazer), Muse"
+      }
+    };
+
+    let activeScaleRoot = 'A';
+    let activeScaleKey = 'pentatonic_minor';
+    let activeScaleLabelMode = 'note';
+    let activeScaleRegister = 'all';
+    let isScaleAudioRunning = false;
+    let scaleRunTimer = null;
+    let isScaleMicActive = false;
+    let lastScalePitchTime = 0;
+    let scaleStats = {
+      hits: 0,
+      streak: 0,
+      lastNote: '-'
+    };
+
+    function initScalesStudio() {
+      // 1. Populate root buttons
+      const rootContainer = document.getElementById('scale-root-buttons');
+      if (rootContainer && rootContainer.children.length === 0) {
+        rootContainer.innerHTML = '';
+        NOTE_NAMES.forEach(note => {
+          const btn = document.createElement('button');
+          btn.className = 'scale-root-btn' + (note === activeScaleRoot ? ' active' : '');
+          btn.id = 'scale-root-btn-' + note.replace('#', 's');
+          btn.textContent = note;
+          btn.onclick = () => onScaleRootClick(note);
+          rootContainer.appendChild(btn);
+        });
+      }
+
+      // 2. Set dropdowns
+      const presetSelect = document.getElementById('scale-preset-select');
+      if (presetSelect) presetSelect.value = activeScaleKey;
+
+      const filterSelect = document.getElementById('scale-position-filter');
+      if (filterSelect) filterSelect.value = activeScaleRegister;
+
+      // 3. Update info & fretboard
+      updateScaleInfoRibbon();
+      renderScaleFretboard();
+      updateScaleStatsHUD();
+    }
+
+    function onScaleRootClick(root) {
+      activeScaleRoot = root;
+      document.querySelectorAll('.scale-root-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim() === root);
+      });
+      updateScaleInfoRibbon();
+      renderScaleFretboard();
+    }
+
+    function onScalePresetChange(key) {
+      if (WESTERN_SCALES[key]) {
+        activeScaleKey = key;
+        updateScaleInfoRibbon();
+        renderScaleFretboard();
+      }
+    }
+
+    function setScaleLabelMode(mode) {
+      activeScaleLabelMode = mode;
+      const noteBtn = document.getElementById('scale-mode-note');
+      const degBtn = document.getElementById('scale-mode-degree');
+      if (noteBtn) noteBtn.classList.toggle('active', mode === 'note');
+      if (degBtn) degBtn.classList.toggle('active', mode === 'degree');
+      renderScaleFretboard();
+    }
+
+    function onScalePositionFilterChange(pos) {
+      activeScaleRegister = pos;
+      renderScaleFretboard();
+    }
+
+    function updateScaleInfoRibbon() {
+      const scale = WESTERN_SCALES[activeScaleKey] || WESTERN_SCALES.pentatonic_minor;
+      const rootIdx = NOTE_NAMES.indexOf(activeScaleRoot);
+      const scaleNotes = scale.intervals.map(semi => NOTE_NAMES[(rootIdx + semi) % 12]);
+
+      const titleEl = document.getElementById('scale-ribbon-title');
+      const formEl = document.getElementById('scale-ribbon-formula');
+      const notesEl = document.getElementById('scale-ribbon-notes');
+      const descEl = document.getElementById('scale-theory-desc');
+      const solosEl = document.getElementById('scale-theory-solos');
+      const blueLegend = document.getElementById('scale-blue-note-legend');
+
+      if (titleEl) titleEl.textContent = `${activeScaleRoot} ${scale.name}`;
+      if (formEl) formEl.textContent = `(${scale.formula})`;
+      if (notesEl) notesEl.textContent = scaleNotes.join(' • ');
+      if (descEl) descEl.textContent = scale.desc;
+      if (solosEl) solosEl.textContent = scale.solos;
+      if (blueLegend) blueLegend.style.display = (activeScaleKey === 'blues') ? 'inline-flex' : 'none';
+    }
+
+    function renderScaleFretboard() {
+      const container = document.getElementById('scale-fretboard-strings-rows');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const scale = WESTERN_SCALES[activeScaleKey] || WESTERN_SCALES.pentatonic_minor;
+      const rootIdx = NOTE_NAMES.indexOf(activeScaleRoot);
+
+      for (let s = 0; s < 6; s++) {
+        const strInfo = GUITAR_STRINGS[s];
+        const row = document.createElement('div');
+        row.className = 'guitar-string-row';
+        row.id = 'scale-string-row-' + s;
+
+        const header = document.createElement('div');
+        header.className = 'string-header';
+        header.innerHTML = `<span style="font-weight:800; color:var(--accent-gold);">${s+1}</span><span>${strInfo.openNote}</span>`;
+        row.appendChild(header);
+
+        const cellsContainer = document.createElement('div');
+        cellsContainer.className = 'fret-cells-container';
+
+        const wire = document.createElement('div');
+        wire.className = 'string-wire ' + strInfo.gaugeClass;
+        wire.id = 'scale-string-wire-' + s;
+        cellsContainer.appendChild(wire);
+
+        for (let f = 0; f <= 12; f++) {
+          const cell = document.createElement('div');
+          cell.className = 'fret-cell';
+          cell.id = `scale-fret-cell-${s}-${f}`;
+
+          // Check position register filter
+          let inRegister = true;
+          if (activeScaleRegister === 'open' && f > 4) inRegister = false;
+          if (activeScaleRegister === 'middle' && (f < 5 || f > 8)) inRegister = false;
+          if (activeScaleRegister === 'upper' && f < 9) inRegister = false;
+
+          const midi = strInfo.openMidi + f;
+          const noteName = NOTE_NAMES[midi % 12];
+          const octave = Math.floor(midi / 12) - 1;
+          const semitones = (midi % 12 - rootIdx + 12) % 12;
+          const intervalIdx = scale.intervals.indexOf(semitones);
+
+          if (intervalIdx !== -1 && inRegister) {
+            const isRoot = (semitones === 0);
+            const isBlue = (activeScaleKey === 'blues' && semitones === 6);
+            const degree = scale.degrees[intervalIdx];
+
+            const dot = document.createElement('div');
+            dot.className = 'scale-dot' + (isRoot ? ' root' : (isBlue ? ' blue' : ' tone'));
+            dot.id = `scale-dot-${s}-${f}`;
+            dot.textContent = (activeScaleLabelMode === 'note') ? noteName : (isRoot ? '1' : degree);
+            dot.title = `${noteName}${octave} (${degree}) • String ${s+1}, Fret ${f}`;
+
+            dot.onclick = (e) => {
+              e.stopPropagation();
+              onScaleDotClick(s, f, noteName, octave, degree);
+            };
+
+            cell.appendChild(dot);
+          }
+
+          cell.onclick = () => {
+            onScaleDotClick(s, f, noteName, octave, intervalIdx !== -1 ? scale.degrees[intervalIdx] : 'Non-Scale');
+          };
+
+          cellsContainer.appendChild(cell);
+        }
+
+        row.appendChild(cellsContainer);
+        container.appendChild(row);
+      }
+    }
+
+    function onScaleDotClick(s, f, noteName, octave, degree) {
+      ensureAudio();
+      const midi = GUITAR_STRINGS[s].openMidi + f;
+      const freq = 440 * Math.pow(2, (midi - 69) / 12);
+      playPhysicalGuitarPluck(freq, 0.95, 0.6, 0);
+
+      // Vibrate wire animation
+      const wire = document.getElementById('scale-string-wire-' + s);
+      if (wire) {
+        wire.classList.add('vibrating');
+        setTimeout(() => wire.classList.remove('vibrating'), 400);
+      }
+
+      // Visual pulse on dot
+      const dot = document.getElementById(`scale-dot-${s}-${f}`);
+      if (dot) {
+        dot.classList.add('active-pluck');
+        setTimeout(() => dot.classList.remove('active-pluck'), 350);
+      }
+
+      // Update feedback banner
+      const infoEl = document.getElementById('scale-pluck-info');
+      if (infoEl) {
+        infoEl.innerHTML = `<span style="color:var(--accent-gold); font-size:1.1rem; font-weight:800;">${noteName}${octave}</span> &bull; String ${s+1} (${GUITAR_STRINGS[s].openNote}), Fret ${f} &bull; Interval: <strong style="color:var(--accent-cyan);">${degree}</strong> &bull; Pitch: <strong>${freq.toFixed(1)} Hz</strong>`;
+      }
+
+      scaleStats.lastNote = `${noteName}${octave} (${degree})`;
+      updateScaleStatsHUD();
+    }
+
+    function toggleScaleAudioRun() {
+      if (isScaleAudioRunning) {
+        stopScaleAudioRun();
+      } else {
+        startScaleAudioRun();
+      }
+    }
+
+    function startScaleAudioRun() {
+      ensureAudio();
+      isScaleAudioRunning = true;
+      const runBtn = document.getElementById('btn-scale-run');
+      const runIcon = document.getElementById('btn-scale-run-icon');
+      const runText = document.getElementById('btn-scale-run-text');
+      if (runBtn) runBtn.classList.add('active');
+      if (runIcon) runIcon.textContent = '⏹️';
+      if (runText) runText.textContent = 'Stop Scale Run';
+
+      // Gather scale notes across fretboard, sorted by MIDI pitch
+      const scale = WESTERN_SCALES[activeScaleKey] || WESTERN_SCALES.pentatonic_minor;
+      const rootIdx = NOTE_NAMES.indexOf(activeScaleRoot);
+      const notesToPlay = [];
+
+      for (let s = 5; s >= 0; s--) {
+        for (let f = 0; f <= 12; f++) {
+          let inRegister = true;
+          if (activeScaleRegister === 'open' && f > 4) inRegister = false;
+          if (activeScaleRegister === 'middle' && (f < 5 || f > 8)) inRegister = false;
+          if (activeScaleRegister === 'upper' && f < 9) inRegister = false;
+
+          const midi = GUITAR_STRINGS[s].openMidi + f;
+          const semi = (midi % 12 - rootIdx + 12) % 12;
+          const intervalIdx = scale.intervals.indexOf(semi);
+
+          if (intervalIdx !== -1 && inRegister) {
+            notesToPlay.push({
+              s, f,
+              midi,
+              freq: 440 * Math.pow(2, (midi - 69) / 12),
+              noteName: NOTE_NAMES[midi % 12],
+              octave: Math.floor(midi / 12) - 1,
+              degree: scale.degrees[intervalIdx]
+            });
+          }
+        }
+      }
+
+      // Sort by MIDI ascending, filter unique pitches for a clean melodic scale run
+      notesToPlay.sort((a, b) => a.midi - b.midi);
+      const uniqueRun = [];
+      const seenMidi = new Set();
+      notesToPlay.forEach(n => {
+        if (!seenMidi.has(n.midi)) {
+          seenMidi.add(n.midi);
+          uniqueRun.push(n);
+        }
+      });
+
+      // Append descending back to root
+      const descending = [...uniqueRun].slice(0, -1).reverse();
+      const fullRun = uniqueRun.concat(descending);
+
+      let stepIdx = 0;
+      const intervalMs = 280;
+
+      scaleRunTimer = setInterval(() => {
+        if (!isScaleAudioRunning || stepIdx >= fullRun.length) {
+          stopScaleAudioRun();
+          return;
+        }
+
+        const note = fullRun[stepIdx];
+        onScaleDotClick(note.s, note.f, note.noteName, note.octave, note.degree);
+        stepIdx++;
+      }, intervalMs);
+    }
+
+    function stopScaleAudioRun() {
+      isScaleAudioRunning = false;
+      if (scaleRunTimer) {
+        clearInterval(scaleRunTimer);
+        scaleRunTimer = null;
+      }
+      const runBtn = document.getElementById('btn-scale-run');
+      const runIcon = document.getElementById('btn-scale-run-icon');
+      const runText = document.getElementById('btn-scale-run-text');
+      if (runBtn) runBtn.classList.remove('active');
+      if (runIcon) runIcon.textContent = '▶️';
+      if (runText) runText.textContent = 'Play Scale Run';
+    }
+
+    function toggleScaleMicPractice() {
+      isScaleMicActive = !isScaleMicActive;
+      const btn = document.getElementById('btn-scale-mic');
+      const btnText = document.getElementById('btn-scale-mic-text');
+      const badge = document.getElementById('scale-mic-badge');
+      const badgeDot = document.getElementById('scale-mic-dot');
+      const badgeStatus = document.getElementById('scale-mic-status');
+
+      if (isScaleMicActive) {
+        ensureAudio();
+        if (!isListening) startListening();
+        if (btn) btn.classList.add('active');
+        if (btnText) btnText.textContent = 'Stop Mic Practice';
+        if (badgeDot) badgeDot.textContent = '🟢';
+        if (badgeStatus) badgeStatus.textContent = 'Listening for Notes...';
+        if (badge) {
+          badge.style.borderColor = 'var(--accent-emerald)';
+          badge.style.color = 'var(--accent-emerald)';
+        }
+      } else {
+        if (btn) btn.classList.remove('active');
+        if (btnText) btnText.textContent = 'Practice with Guitar (Live Mic)';
+        if (badgeDot) badgeDot.textContent = '⚪';
+        if (badgeStatus) badgeStatus.textContent = 'Mic Idle';
+        if (badge) {
+          badge.style.borderColor = 'var(--border-light)';
+          badge.style.color = 'var(--text-muted)';
+        }
+      }
+    }
+
+    function evaluateScaleLivePitch(f0, noteFullName) {
+      if (!isScaleMicActive || !noteFullName) return;
+      const now = Date.now();
+      if (now - lastScalePitchTime < 240) return;
+      lastScalePitchTime = now;
+
+      // Extract note name (e.g. 'A2' -> 'A', 'F#3' -> 'F#')
+      const pitchClass = noteFullName.replace(/[0-9]/g, '');
+      const scale = WESTERN_SCALES[activeScaleKey] || WESTERN_SCALES.pentatonic_minor;
+      const rootIdx = NOTE_NAMES.indexOf(activeScaleRoot);
+      const noteIdx = NOTE_NAMES.indexOf(pitchClass);
+      if (noteIdx === -1) return;
+
+      const semitones = (noteIdx - rootIdx + 12) % 12;
+      const intervalIdx = scale.intervals.indexOf(semitones);
+
+      const infoEl = document.getElementById('scale-pluck-info');
+
+      if (intervalIdx !== -1) {
+        // IN SCALE HIT!
+        scaleStats.hits++;
+        scaleStats.streak++;
+        scaleStats.lastNote = noteFullName;
+        const degree = scale.degrees[intervalIdx];
+
+        if (infoEl) {
+          infoEl.innerHTML = `<span style="color:var(--accent-emerald); font-weight:800; font-size:1.1rem;">✅ IN SCALE: ${noteFullName}</span> &bull; Degree: <strong>${degree}</strong> in ${activeScaleRoot} ${scale.name} (${f0.toFixed(1)} Hz)`;
+        }
+
+        // Highlight matching dots on fretboard
+        for (let s = 0; s < 6; s++) {
+          for (let f = 0; f <= 12; f++) {
+            const midi = GUITAR_STRINGS[s].openMidi + f;
+            if (NOTE_NAMES[midi % 12] === pitchClass) {
+              const dot = document.getElementById(`scale-dot-${s}-${f}`);
+              if (dot) {
+                dot.classList.add('active-pluck');
+                setTimeout(() => dot.classList.remove('active-pluck'), 350);
+              }
+            }
+          }
+        }
+      } else {
+        // OUT OF SCALE
+        scaleStats.streak = 0;
+        if (infoEl) {
+          infoEl.innerHTML = `<span style="color:#ef4444; font-weight:800;">⚠️ OUT OF SCALE: ${noteFullName}</span> &bull; Not in ${activeScaleRoot} ${scale.name} (${f0.toFixed(1)} Hz)`;
+        }
+      }
+
+      updateScaleStatsHUD();
+    }
+
+    function updateScaleStatsHUD() {
+      const hitsEl = document.getElementById('scale-stats-hits');
+      const streakEl = document.getElementById('scale-stats-streak');
+      const lastEl = document.getElementById('scale-stats-last');
+      if (hitsEl) hitsEl.textContent = scaleStats.hits;
+      if (streakEl) streakEl.textContent = `${scaleStats.streak} 🔥`;
+      if (lastEl) lastEl.textContent = scaleStats.lastNote;
+    }
+
+    /* ==========================================================================
+       CHORD CHANGE SPEED DRILL ENGINE JAVASCRIPT
+       ========================================================================== */
+    const DRILL_PROGRESSIONS = {
+      pop:    { name: "Pop 4-Chord", chords: ["C", "G", "Am", "F"] },
+      folk:   { name: "Classic Folk / Rock", chords: ["G", "D", "Em", "C"] },
+      jazz:   { name: "Jazz Turnaround", chords: ["Dm", "G", "C", "Am"] },
+      blues:  { name: "12-Bar Blues", chords: ["A7", "D7", "E7"] },
+      ballad: { name: "Minor Ballad", chords: ["Am", "F", "C", "G"] },
+      random: { name: "Random Open Chords", chords: ["C", "G", "D", "Em", "Am", "E", "A", "F"] }
+    };
+
+    let isDrillActive = false;
+    let drillTimer = null;
+    let drillBpm = 80;
+    let drillBarsPerChord = 2;
+    let drillTotalChords = 16;
+    let drillProgressionKey = 'pop';
+    let drillSequence = [];
+    let drillCurrentChordIdx = 0;
+    let drillBeatCount = 0;
+    let drillChordStartTime = 0;
+    let drillMatchedThisChord = false;
+    let drillStats = {
+      attempted: 0,
+      matched: 0,
+      streak: 0,
+      bestStreak: 0,
+      latencies: []
+    };
+
+    function initDrillStudio() {
+      buildDrillProgressionSequence();
+      renderDrillProgressionRibbon();
+      updateDrillCurrentChordDisplay();
+      updateDrillStatsHUD();
+    }
+
+    function onDrillProgressionChange(val) {
+      drillProgressionKey = val;
+      if (!isDrillActive) {
+        initDrillStudio();
+      }
+    }
+
+    function onDrillBpmChange(val) {
+      drillBpm = parseInt(val, 10) || 80;
+      const label = document.getElementById('drill-bpm-display');
+      if (label) label.textContent = drillBpm + ' BPM';
+
+      // If active, restart timer with new interval
+      if (isDrillActive) {
+        clearInterval(drillTimer);
+        const beatIntervalMs = (60 / drillBpm) * 1000;
+        drillTimer = setInterval(stepDrillBeat, beatIntervalMs);
+      }
+    }
+
+    function buildDrillProgressionSequence() {
+      const prog = DRILL_PROGRESSIONS[drillProgressionKey] || DRILL_PROGRESSIONS.pop;
+      const lenSelect = document.getElementById('drill-length-select');
+      drillTotalChords = lenSelect ? parseInt(lenSelect.value, 10) : 16;
+
+      const barsSelect = document.getElementById('drill-bars-select');
+      drillBarsPerChord = barsSelect ? parseInt(barsSelect.value, 10) : 2;
+
+      drillSequence = [];
+      for (let i = 0; i < drillTotalChords; i++) {
+        drillSequence.push(prog.chords[i % prog.chords.length]);
+      }
+      drillCurrentChordIdx = 0;
+    }
+
+    function renderDrillProgressionRibbon() {
+      const ribbon = document.getElementById('drill-chords-ribbon');
+      if (!ribbon) return;
+      ribbon.innerHTML = '';
+
+      drillSequence.forEach((ch, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'drill-chord-chip';
+        if (idx === drillCurrentChordIdx) chip.classList.add('active');
+        if (idx < drillCurrentChordIdx) chip.classList.add('completed');
+        chip.id = 'drill-chip-' + idx;
+        chip.textContent = `${idx + 1}. ${ch}`;
+        chip.onclick = () => {
+          if (!isDrillActive) {
+            drillCurrentChordIdx = idx;
+            renderDrillProgressionRibbon();
+            updateDrillCurrentChordDisplay();
+          }
+        };
+        ribbon.appendChild(chip);
+      });
+    }
+
+    function updateDrillCurrentChordDisplay() {
+      const currentChord = drillSequence[drillCurrentChordIdx] || 'C';
+      const nextChord = drillSequence[drillCurrentChordIdx + 1] || 'End';
+
+      const dispChord = document.getElementById('drill-display-chord');
+      const dispFull = document.getElementById('drill-chord-full-name');
+      const dispStep = document.getElementById('drill-chord-step');
+      const dispTotal = document.getElementById('drill-chord-total');
+      const nextName = document.getElementById('drill-next-chord-name');
+
+      if (dispChord) dispChord.textContent = currentChord;
+      if (dispFull) {
+        const preset = CHORD_PRESETS[currentChord];
+        dispFull.textContent = preset ? preset.name : currentChord;
+      }
+      if (dispStep) dispStep.textContent = drillCurrentChordIdx + 1;
+      if (dispTotal) dispTotal.textContent = drillSequence.length;
+      if (nextName) nextName.textContent = nextChord;
+
+      // Update active chip in ribbon
+      document.querySelectorAll('.drill-chord-chip').forEach((c, idx) => {
+        c.classList.toggle('active', idx === drillCurrentChordIdx);
+        c.classList.toggle('completed', idx < drillCurrentChordIdx);
+      });
+
+      // Load chord onto fretboard state for visual reference
+      if (CHORD_PRESETS[currentChord]) {
+        currentFretboardState = [...CHORD_PRESETS[currentChord].frets];
+        renderFretboardState();
+      }
+    }
+
+    function startChordDrill() {
+      ensureAudio();
+      if (!isListening) startListening();
+
+      buildDrillProgressionSequence();
+      isDrillActive = true;
+      drillCurrentChordIdx = 0;
+      drillBeatCount = 0;
+      drillMatchedThisChord = false;
+      drillChordStartTime = Date.now();
+
+      drillStats = {
+        attempted: 0,
+        matched: 0,
+        streak: 0,
+        bestStreak: 0,
+        latencies: []
+      };
+
+      const btnStart = document.getElementById('btn-start-drill');
+      const btnStop = document.getElementById('btn-stop-drill');
+      const btnNext = document.getElementById('btn-next-drill');
+      const badgeDot = document.getElementById('drill-status-dot');
+      const badgeText = document.getElementById('drill-status-text');
+
+      if (btnStart) btnStart.disabled = true;
+      if (btnStop) btnStop.disabled = false;
+      if (btnNext) btnNext.disabled = false;
+      if (badgeDot) badgeDot.textContent = '🟢';
+      if (badgeText) badgeText.textContent = 'Drill Running';
+
+      updateDrillCurrentChordDisplay();
+      updateDrillStatsHUD();
+
+      const banner = document.getElementById('drill-feedback-banner');
+      if (banner) {
+        banner.innerHTML = `<strong style="color:var(--accent-gold);">Drill Started!</strong> Strum along with the metronome clicks. Target: <strong>${drillSequence[0]}</strong>`;
+      }
+
+      const beatIntervalMs = (60 / drillBpm) * 1000;
+      drillTimer = setInterval(stepDrillBeat, beatIntervalMs);
+    }
+
+    function stopChordDrill() {
+      isDrillActive = false;
+      if (drillTimer) {
+        clearInterval(drillTimer);
+        drillTimer = null;
+      }
+
+      const btnStart = document.getElementById('btn-start-drill');
+      const btnStop = document.getElementById('btn-stop-drill');
+      const btnNext = document.getElementById('btn-next-drill');
+      const badgeDot = document.getElementById('drill-status-dot');
+      const badgeText = document.getElementById('drill-status-text');
+
+      if (btnStart) btnStart.disabled = false;
+      if (btnStop) btnStop.disabled = true;
+      if (btnNext) btnNext.disabled = true;
+      if (badgeDot) badgeDot.textContent = '⚪';
+      if (badgeText) badgeText.textContent = 'Drill Stopped';
+
+      // Clear beat dots
+      for (let b = 1; b <= 4; b++) {
+        const dot = document.getElementById('drill-dot-' + b);
+        if (dot) dot.classList.remove('active');
+      }
+
+      const heroBox = document.getElementById('drill-hero-box');
+      if (heroBox) heroBox.classList.remove('hit-match');
+    }
+
+    function stepDrillBeat() {
+      if (!isDrillActive) return;
+
+      const beatInBar = (drillBeatCount % 4) + 1;
+      const isDownbeat = (beatInBar === 1);
+
+      // Metronome audio click
+      playMetronomeTick(isDownbeat);
+
+      // Visual beat dots 1-4
+      for (let b = 1; b <= 4; b++) {
+        const dot = document.getElementById('drill-dot-' + b);
+        if (dot) dot.classList.toggle('active', b === beatInBar);
+      }
+
+      // Check chord transition downbeat
+      const totalBeatsPerChord = drillBarsPerChord * 4;
+
+      if (drillBeatCount > 0 && (drillBeatCount % totalBeatsPerChord === 0)) {
+        // Evaluate previous chord before moving on
+        drillStats.attempted++;
+        if (!drillMatchedThisChord) {
+          drillStats.streak = 0;
+          const banner = document.getElementById('drill-feedback-banner');
+          if (banner) {
+            banner.innerHTML = `<span style="color:#ef4444;">Missed transition for ${drillSequence[drillCurrentChordIdx]}. Keep your fingers moving!</span>`;
+          }
+        }
+
+        // Advance to next chord
+        drillCurrentChordIdx++;
+        if (drillCurrentChordIdx >= drillSequence.length) {
+          finishChordDrill();
+          return;
+        }
+
+        drillMatchedThisChord = false;
+        drillChordStartTime = Date.now();
+        updateDrillCurrentChordDisplay();
+
+        const heroBox = document.getElementById('drill-hero-box');
+        if (heroBox) {
+          heroBox.classList.remove('hit-match');
+          heroBox.style.transform = 'scale(1.02)';
+          setTimeout(() => heroBox.style.transform = 'scale(1)', 150);
+        }
+      }
+
+      drillBeatCount++;
+      updateDrillStatsHUD();
+    }
+
+    function advanceDrillChordManual() {
+      if (!isDrillActive) return;
+      drillStats.attempted++;
+      drillCurrentChordIdx++;
+      if (drillCurrentChordIdx >= drillSequence.length) {
+        finishChordDrill();
+        return;
+      }
+      drillBeatCount = 0;
+      drillMatchedThisChord = false;
+      drillChordStartTime = Date.now();
+      updateDrillCurrentChordDisplay();
+      updateDrillStatsHUD();
+    }
+
+    function evaluateDrillLiveChord(detectedChord) {
+      if (!isDrillActive || drillMatchedThisChord) return;
+      const targetChord = drillSequence[drillCurrentChordIdx];
+      if (!targetChord) return;
+
+      const isMatch = (detectedChord === targetChord) ||
+                      (detectedChord && detectedChord.startsWith(targetChord)) ||
+                      (CHORD_PRESETS[targetChord] && CHORD_PRESETS[targetChord].root === detectedChord);
+
+      if (isMatch) {
+        drillMatchedThisChord = true;
+        const latency = Math.max(80, Date.now() - drillChordStartTime);
+        drillStats.latencies.push(latency);
+        drillStats.matched++;
+        drillStats.streak++;
+        if (drillStats.streak > drillStats.bestStreak) drillStats.bestStreak = drillStats.streak;
+
+        // Visual match flash
+        const heroBox = document.getElementById('drill-hero-box');
+        if (heroBox) {
+          heroBox.classList.add('hit-match');
+        }
+
+        const banner = document.getElementById('drill-feedback-banner');
+        if (banner) {
+          banner.innerHTML = `<strong style="color:var(--accent-emerald); font-size:1.05rem;">✅ MATCHED!</strong> Switched to <strong>${targetChord}</strong> in <span style="color:var(--accent-cyan);">${latency}ms</span>! Streak: <strong>${drillStats.streak} 🔥</strong>`;
+        }
+
+        updateDrillStatsHUD();
+      }
+    }
+
+    function playDrillReferenceChord() {
+      const target = drillSequence[drillCurrentChordIdx] || 'C';
+      playChordSound(target);
+    }
+
+    function playChordSound(chordSymbol) {
+      ensureAudio();
+      const preset = CHORD_PRESETS[chordSymbol];
+      if (!preset) return;
+
+      const activeStrings = [];
+      for (let s = 0; s < 6; s++) {
+        if (preset.frets[s] !== -1) {
+          activeStrings.push(s);
+        }
+      }
+
+      // Strum down low E to high E
+      activeStrings.sort((a, b) => b - a);
+      activeStrings.forEach((s, idx) => {
+        const fret = preset.frets[s];
+        const midi = GUITAR_STRINGS[s].openMidi + fret;
+        const freq = 440 * Math.pow(2, (midi - 69) / 12);
+        playPhysicalGuitarPluck(freq, 0.9, 0.6, idx * 0.025);
+      });
+    }
+
+    function playMetronomeTick(isDownbeat) {
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const freq = isDownbeat ? 880 : 520;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        const volume = isDownbeat ? 0.35 : 0.18;
+        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
+
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.045);
+      } catch(e) {}
+    }
+
+    function finishChordDrill() {
+      stopChordDrill();
+      const attempted = Math.max(1, drillStats.attempted + (drillMatchedThisChord ? 1 : 0));
+      const matched = drillStats.matched;
+      const accuracy = Math.round((matched / attempted) * 100);
+      const avgLatency = drillStats.latencies.length > 0 
+        ? Math.round(drillStats.latencies.reduce((a,b) => a+b, 0) / drillStats.latencies.length) 
+        : 0;
+
+      const banner = document.getElementById('drill-feedback-banner');
+      if (banner) {
+        banner.innerHTML = `<strong style="color:var(--accent-gold); font-size:1.15rem;">🎉 Drill Complete!</strong> Accuracy: <strong style="color:var(--accent-emerald);">${accuracy}%</strong> &bull; Avg Latency: <strong style="color:var(--accent-cyan);">${avgLatency}ms</strong> &bull; Best Streak: <strong style="color:var(--accent-gold);">${drillStats.bestStreak} 🔥</strong>`;
+      }
+      updateDrillStatsHUD();
+    }
+
+    function updateDrillStatsHUD() {
+      const attempted = Math.max(1, drillStats.attempted + (drillMatchedThisChord ? 1 : 0));
+      const accuracy = drillStats.matched > 0 ? Math.round((drillStats.matched / attempted) * 100) : 0;
+      const avgLatency = drillStats.latencies.length > 0 
+        ? Math.round(drillStats.latencies.reduce((a,b) => a+b, 0) / drillStats.latencies.length) 
+        : 0;
+
+      const accEl = document.getElementById('drill-stat-accuracy');
+      const latEl = document.getElementById('drill-stat-latency');
+      const strEl = document.getElementById('drill-stat-streak');
+      const bstEl = document.getElementById('drill-stat-best');
+
+      if (accEl) accEl.textContent = `${accuracy}%`;
+      if (latEl) latEl.textContent = avgLatency > 0 ? `${avgLatency} ms` : `- ms`;
+      if (strEl) strEl.textContent = `${drillStats.streak} 🔥`;
+      if (bstEl) bstEl.textContent = drillStats.bestStreak;
     }
 
     </script>
