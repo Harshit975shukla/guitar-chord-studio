@@ -4593,12 +4593,12 @@ Was [G] blind but [D] now I [G] see"></textarea>
 
     // Standard Guitar Tuning
     const GUITAR_STRINGS = [
-      { name: "E4 (1st)", openMidi: 64, openNote: "E", gaugeClass: "str-1", baseFreq: 329.63 },
-      { name: "B3 (2nd)", openMidi: 59, openNote: "B", gaugeClass: "str-2", baseFreq: 246.94 },
-      { name: "G3 (3rd)", openMidi: 55, openNote: "G", gaugeClass: "str-3", baseFreq: 196.00 },
-      { name: "D3 (4th)", openMidi: 50, openNote: "D", gaugeClass: "str-4", baseFreq: 146.83 },
-      { name: "A2 (5th)", openMidi: 45, openNote: "A", gaugeClass: "str-5", baseFreq: 110.00 },
-      { name: "E2 (6th)", openMidi: 40, openNote: "E", gaugeClass: "str-6", baseFreq: 82.41 }
+      { name: "E4 (1st)", openMidi: 64, openNote: "E", gaugeClass: "str-1", baseFreq: 329.63, stringIndex: 0 },
+      { name: "B3 (2nd)", openMidi: 59, openNote: "B", gaugeClass: "str-2", baseFreq: 246.94, stringIndex: 1 },
+      { name: "G3 (3rd)", openMidi: 55, openNote: "G", gaugeClass: "str-3", baseFreq: 196.00, stringIndex: 2 },
+      { name: "D3 (4th)", openMidi: 50, openNote: "D", gaugeClass: "str-4", baseFreq: 146.83, stringIndex: 3 },
+      { name: "A2 (5th)", openMidi: 45, openNote: "A", gaugeClass: "str-5", baseFreq: 110.00, stringIndex: 4 },
+      { name: "E2 (6th)", openMidi: 40, openNote: "E", gaugeClass: "str-6", baseFreq: 82.41, stringIndex: 5 }
     ];
 
     const CHORD_PRESETS = {
@@ -4707,6 +4707,28 @@ Was [G] blind but [D] now I [G] see"></textarea>
     let lockCooldownTimer = null;
     let candidateVoteHistory = [];
     let stableLockedDecision = null;
+
+    let consecutiveNoteFrames = 0;
+    let consecutiveChordFrames = 0;
+    let currentDisplayMode = 'idle';
+
+    // Static Pre-allocated Buffers for Zero-Allocation Audio Loop
+    let dspFreqBuffer = null;
+    let dspTimeBuffer = null;
+    let dspCleanAmps = null;
+    let dspRawChroma = new Float32Array(12);
+    let lastDspTimestamp = 0;
+
+    // Sustain Hold / Hangover State to eliminate dropped notes & flickering
+    let chordSustainHoldUntil = 0;
+    let noteSustainHoldUntil = 0;
+    let lastDetectedChordSnapshot = null;
+    let lastDetectedNoteSnapshot = null;
+
+    // Dirty-Checking cache for Fretboard & DOM displays
+    let lastRenderedFretState = [-9, -9, -9, -9, -9, -9];
+    let lastHeroDisplayState = { chordName: '', root: '', quality: '', notes: '', intervals: '', confidence: '' };
+    let lastTheoryFormula = '';
 
     // GUITARTUNA NOISE CANCELLATION STATE
     let isCalibratingNoise = false;
@@ -4835,7 +4857,19 @@ Was [G] blind but [D] now I [G] see"></textarea>
       strumCurrentChord('down');
     }
 
-    function renderFretboardState() {
+    function renderFretboardState(force = false) {
+      let isSame = !force;
+      if (isSame) {
+        for (let s = 0; s < 6; s++) {
+          if (currentFretboardState[s] !== lastRenderedFretState[s]) {
+            isSame = false;
+            break;
+          }
+        }
+      }
+      if (isSame) return;
+      for (let s = 0; s < 6; s++) lastRenderedFretState[s] = currentFretboardState[s];
+
       for (let s = 0; s < 6; s++) {
         const fret = currentFretboardState[s];
         const muteBtn = document.getElementById(`mute-btn-${s}`);
@@ -4949,26 +4983,39 @@ Was [G] blind but [D] now I [G] see"></textarea>
     }
 
     function updateHeroDisplay(chordName, root, quality, notes, intervals, confidence) {
-      document.getElementById('display-chord-name').innerHTML = chordName;
-      document.getElementById('info-root').textContent = root;
-      document.getElementById('info-quality').textContent = quality;
-      document.getElementById('info-notes').textContent = notes;
+      if (lastHeroDisplayState.chordName === chordName &&
+          lastHeroDisplayState.root === root &&
+          lastHeroDisplayState.quality === quality &&
+          lastHeroDisplayState.notes === notes &&
+          lastHeroDisplayState.intervals === intervals &&
+          lastHeroDisplayState.confidence === confidence) {
+        return;
+      }
+      lastHeroDisplayState = { chordName, root, quality, notes, intervals, confidence };
+
+      const elChord = document.getElementById('display-chord-name'); if (elChord) elChord.innerHTML = chordName;
+      const elRoot = document.getElementById('info-root'); if (elRoot) elRoot.textContent = root;
+      const elQual = document.getElementById('info-quality'); if (elQual) elQual.textContent = quality;
+      const elNotes = document.getElementById('info-notes'); if (elNotes) elNotes.textContent = notes;
       const intEl = document.getElementById('info-intervals'); if (intEl) intEl.textContent = notes;
-      document.getElementById('info-confidence').innerHTML = confidence;
+      const elConf = document.getElementById('info-confidence'); if (elConf) elConf.innerHTML = confidence;
     }
 
     function updateTheoryTable(match) {
-      document.getElementById('theory-formula').textContent = match.formula;
-      document.getElementById('theory-intervals').textContent = match.intervals;
+      if (!match || lastTheoryFormula === match.formula) return;
+      lastTheoryFormula = match.formula;
+
+      const fEl = document.getElementById('theory-formula'); if (fEl) fEl.textContent = match.formula;
+      const iEl = document.getElementById('theory-intervals'); if (iEl) iEl.textContent = match.intervals;
       let emotion = "Harmonious, Bright";
       let context = "Acoustic Pop, Folk, Ballad, Classical";
-      if (match.quality.includes("Minor")) {
+      if (match.quality && match.quality.includes("Minor")) {
         emotion = "Melancholic, Deep, Soulful";
-      } else if (match.quality.includes("7th")) {
+      } else if (match.quality && match.quality.includes("7th")) {
         emotion = "Bluesy, Suspenseful";
       }
-      document.getElementById('theory-emotion').textContent = emotion;
-      document.getElementById('theory-context').textContent = context;
+      const eEl = document.getElementById('theory-emotion'); if (eEl) eEl.textContent = emotion;
+      const cEl = document.getElementById('theory-context'); if (cEl) cEl.textContent = context;
     }
 
     /* ==========================================================================
@@ -5529,16 +5576,16 @@ Was [G] blind but [D] now I [G] see"></textarea>
         micStream = stream;
         const source = ctx.createMediaStreamSource(stream);
 
-        // Hardware Highpass Filter (kills sub-bass rumble < 75 Hz)
+        // Hardware Highpass Filter (kills sub-bass rumble < 65 Hz, Drop D & Low E pass cleanly)
         highpassFilter = ctx.createBiquadFilter();
         highpassFilter.type = 'highpass';
-        highpassFilter.frequency.value = 75;
+        highpassFilter.frequency.value = 65;
         highpassFilter.Q.value = 0.707;
 
-        // Hardware Lowpass Filter (kills hiss & clicks > 1300 Hz)
+        // Hardware Lowpass Filter (preserves high string harmonics up to 2200 Hz)
         lowpassFilter = ctx.createBiquadFilter();
         lowpassFilter.type = 'lowpass';
-        lowpassFilter.frequency.value = 1300;
+        lowpassFilter.frequency.value = 2200;
         lowpassFilter.Q.value = 0.707;
 
         micGainNode = ctx.createGain();
@@ -5546,7 +5593,13 @@ Was [G] blind but [D] now I [G] see"></textarea>
 
         analyserNode = ctx.createAnalyser();
         analyserNode.fftSize = 4096;
-        analyserNode.smoothingTimeConstant = 0.12;
+        analyserNode.smoothingTimeConstant = 0.10;
+
+        // Preallocate static zero-allocation buffers
+        const bufLen = analyserNode.frequencyBinCount;
+        dspFreqBuffer = new Float32Array(bufLen);
+        dspTimeBuffer = new Float32Array(analyserNode.fftSize);
+        dspCleanAmps = new Float32Array(bufLen);
 
         source.connect(highpassFilter);
         highpassFilter.connect(lowpassFilter);
@@ -5598,7 +5651,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
       noiseGateThreshold = parseFloat(val);
       const gateVal = document.getElementById('gate-val');
       if (gateVal) gateVal.textContent = `${Math.round(val)} dB`;
-      const pct = Math.min(100, Math.max(5, (noiseGateThreshold / 50) * 100));
+      const pct = Math.min(100, Math.max(3, (noiseGateThreshold / 50) * 100));
       const gateMarker = document.getElementById('gate-marker');
       if (gateMarker) gateMarker.style.left = `${pct}%`;
     }
@@ -5615,11 +5668,11 @@ Was [G] blind but [D] now I [G] see"></textarea>
     function findGuitarPosition(midi) {
       const roundMidi = Math.round(midi);
       const candidates = [];
-      GUITAR_STRINGS.forEach(str => {
+      GUITAR_STRINGS.forEach((str, idx) => {
         const fret = roundMidi - str.openMidi;
         if (fret >= 0 && fret <= 15) {
           candidates.push({
-            stringIndex: str.stringIndex,
+            stringIndex: str.stringIndex !== undefined ? str.stringIndex : idx,
             stringName: str.name,
             fret: fret
           });
@@ -5630,29 +5683,111 @@ Was [G] blind but [D] now I [G] see"></textarea>
     }
 
     /* ==========================================================================
+       SUB-HERTZ AUTOCORRELATION ENGINE FOR MONOPHONIC GUITAR PITCH EXTRACTION
+       ========================================================================== */
+    function fastAutocorrelate(timeBuf, sampleRate) {
+      const bufLen = timeBuf.length;
+      let sumSquares = 0;
+      for (let i = 0; i < bufLen; i++) {
+        const val = timeBuf[i];
+        sumSquares += val * val;
+      }
+      const rms = Math.sqrt(sumSquares / bufLen);
+      if (rms < 0.007) return { freq: -1, confidence: 0, rms: rms };
+
+      const minPeriod = Math.floor(sampleRate / 850); // ~51 samples (G5 / fret 15 high E)
+      const maxPeriod = Math.floor(sampleRate / 68);  // ~648 samples (Drop D ~73 Hz, low E 82 Hz)
+      const windowLen = 1024;
+      if (windowLen + maxPeriod > bufLen) return { freq: -1, confidence: 0, rms: rms };
+
+      let energy0 = 0;
+      for (let i = 0; i < windowLen; i++) {
+        energy0 += timeBuf[i] * timeBuf[i];
+      }
+      if (energy0 < 1e-5) return { freq: -1, confidence: 0, rms: rms };
+
+      let bestPeriod = -1;
+      let maxCorr = -1;
+      const correlations = new Float32Array(maxPeriod + 2);
+      let pastZeroDip = false;
+
+      for (let lag = minPeriod; lag <= maxPeriod; lag++) {
+        let dot = 0;
+        let energyLag = 0;
+        for (let i = 0; i < windowLen; i++) {
+          const v0 = timeBuf[i];
+          const vk = timeBuf[i + lag];
+          dot += v0 * vk;
+          energyLag += vk * vk;
+        }
+        const norm = Math.sqrt(energy0 * energyLag) + 1e-9;
+        const r = dot / norm;
+        correlations[lag] = r;
+
+        if (!pastZeroDip && r < 0.20) pastZeroDip = true;
+        if (pastZeroDip && r > maxCorr) {
+          maxCorr = r;
+          bestPeriod = lag;
+        }
+      }
+
+      if (maxCorr < 0.45 || bestPeriod <= 0) {
+        return { freq: -1, confidence: maxCorr > 0 ? maxCorr : 0, rms: rms };
+      }
+
+      // First-peak selection to eliminate subharmonic octave doubling (preventing 2*T trap)
+      let chosenPeriod = bestPeriod;
+      for (let lag = minPeriod + 1; lag < bestPeriod - 2; lag++) {
+        if (correlations[lag] > correlations[lag - 1] &&
+            correlations[lag] > correlations[lag + 1] &&
+            correlations[lag] >= maxCorr * 0.82) {
+          chosenPeriod = lag;
+          break;
+        }
+      }
+
+      // Parabolic sub-sample peak refinement
+      const alpha = correlations[chosenPeriod - 1];
+      const beta = correlations[chosenPeriod];
+      const gamma = correlations[chosenPeriod + 1];
+      const delta = 0.5 * (alpha - gamma) / (alpha - 2 * beta + gamma + 1e-9);
+      const refinedPeriod = chosenPeriod + delta;
+      const freq = sampleRate / refinedPeriod;
+
+      return { freq: freq, confidence: beta, rms: rms };
+    }
+
+    /* ==========================================================================
        MAIN AUDIO LOOP: REAL-TIME DUAL SINGLE-NOTE & CHORD DETECTOR
        ========================================================================== */
     function audioProcessingLoop() {
       if (!isListening || !analyserNode) return;
 
       const bufferLength = analyserNode.frequencyBinCount;
-      const freqData = new Float32Array(bufferLength);
-      analyserNode.getFloatFrequencyData(freqData);
+      if (!dspFreqBuffer || dspFreqBuffer.length !== bufferLength) {
+        dspFreqBuffer = new Float32Array(bufferLength);
+        dspTimeBuffer = new Float32Array(analyserNode.fftSize);
+        dspCleanAmps = new Float32Array(bufferLength);
+      }
+
+      analyserNode.getFloatFrequencyData(dspFreqBuffer);
 
       let maxDb = -120;
       for (let i = 0; i < bufferLength; i++) {
-        if (freqData[i] > maxDb) maxDb = freqData[i];
+        if (dspFreqBuffer[i] > maxDb) maxDb = dspFreqBuffer[i];
       }
 
       const meterVal = Math.max(0, Math.min(100, (maxDb + 75) * 1.66));
-      document.getElementById('audio-meter').style.width = `${meterVal}%`;
-      document.getElementById('db-readout').textContent = `${Math.round(maxDb)} dB`;
+      const meterEl = document.getElementById('audio-meter');
+      if (meterEl) meterEl.style.width = `${meterVal}%`;
+      const dbEl = document.getElementById('db-readout');
+      if (dbEl) dbEl.textContent = `${Math.round(maxDb)} dB`;
 
       // 1. NOISE CALIBRATION ROUTINE
       if (isCalibratingNoise) {
         noiseCalibrationFrames++;
         for (let b = 0; b < bufferLength; b++) {
-          const linAmp = Math.pow(10, freqData[b] / 20);
+          const linAmp = Math.pow(10, dspFreqBuffer[b] / 20);
           noiseProfileAmps[b] += linAmp;
         }
 
@@ -5666,66 +5801,99 @@ Was [G] blind but [D] now I [G] see"></textarea>
         return;
       }
 
-      drawSpectrum(freqData);
+      drawSpectrum(dspFreqBuffer);
 
-      // 2. GUITARTUNA SPECTRAL SUBTRACTION:
-      const cleanAmps = new Float32Array(bufferLength);
-      let totalGuitarBandEnergy = 0;
-      const oversubtraction = 1.35;
-
-      for (let b = 0; b < bufferLength; b++) {
-        const rawAmp = Math.pow(10, freqData[b] / 20);
-        if (isNoiseProfileActive && noiseProfileAmps) {
-          cleanAmps[b] = Math.max(0, rawAmp - noiseProfileAmps[b] * oversubtraction);
-        } else {
-          cleanAmps[b] = rawAmp;
-        }
-        totalGuitarBandEnergy += cleanAmps[b];
-      }
-
-      // 3. LOW-LATENCY STRUM & NOTE ATTACK DETECTION
-      const energyFlux = totalGuitarBandEnergy - prevFrameBandEnergy;
-      prevFrameBandEnergy = totalGuitarBandEnergy;
-
-      const minEnergyThreshold = isNoiseProfileActive ? 0.018 : 0.035;
-      const minDbThreshold = isNoiseProfileActive ? (measuredNoiseFloorDb + 2.5) : -68;
-      const isSignalPresent = (totalGuitarBandEnergy > minEnergyThreshold) && (maxDb > minDbThreshold) && (meterVal >= (noiseGateThreshold / 50) * 100);
-
-      if (!isSignalPresent) {
-        document.getElementById('signal-quality-label').textContent = "Listening • Pluck Note or Strum Chord...";
-        document.getElementById('signal-quality-label').style.color = "var(--text-muted)";
-        for (let i = 0; i < 12; i++) smoothedChroma[i] *= 0.82;
-        updateChromaUI(smoothedChroma, -1);
+      // Heavy DSP Throttle: Spectrum and volume meter animate at 60 FPS,
+      // while FFT peak extraction, autocorrelation, and chord matching run at ~30 FPS (every 32ms)
+      const now = performance.now();
+      if (now - lastDspTimestamp < 32) {
         animationFrameId = requestAnimationFrame(audioProcessingLoop);
         return;
       }
 
-      // Fast-attack snap: if a new strum or pluck onset occurs, immediately reset chroma so new note/chord appears in 16ms!
-      const isNewAttack = energyFlux > 0.040;
-      if (isNewAttack) {
-        document.getElementById('signal-quality-label').textContent = "⚡ Attack Captured (Instant)";
-        document.getElementById('signal-quality-label').style.color = "var(--accent-gold)";
-      } else {
-        document.getElementById('signal-quality-label').textContent = "String Ringing Clear";
-        document.getElementById('signal-quality-label').style.color = "var(--accent-emerald)";
+      // 2. SPECTRAL SUBTRACTION WITH STATIC ARRAYS
+      let totalGuitarBandEnergy = 0;
+      const oversubtraction = 1.30;
+
+      for (let b = 0; b < bufferLength; b++) {
+        const rawAmp = Math.pow(10, dspFreqBuffer[b] / 20);
+        if (isNoiseProfileActive && noiseProfileAmps) {
+          dspCleanAmps[b] = Math.max(0, rawAmp - noiseProfileAmps[b] * oversubtraction);
+        } else {
+          dspCleanAmps[b] = rawAmp;
+        }
+        totalGuitarBandEnergy += dspCleanAmps[b];
       }
 
-      // 4. Peak Extraction with Sub-Bin Parabolic Interpolation (Sub-Hertz Precision)
+      // 3. RESPONSIVE GUITAR STRUM & NOTE ATTACK DETECTION
+      const energyFlux = totalGuitarBandEnergy - prevFrameBandEnergy;
+      prevFrameBandEnergy = totalGuitarBandEnergy;
+      const isNewAttack = energyFlux > 0.025;
+
+      const minEnergyThreshold = isNoiseProfileActive ? 0.008 : 0.012;
+      const minDbThreshold = isNoiseProfileActive ? (measuredNoiseFloorDb + 2.0) : -74;
+      const gatePercent = Math.max(3, (noiseGateThreshold / 50) * 18);
+      const isRawSignalPresent = (totalGuitarBandEnergy > minEnergyThreshold) && (maxDb > minDbThreshold) && (meterVal >= gatePercent);
+
+      let isSignalPresent = isRawSignalPresent;
+      if (!isRawSignalPresent) {
+        if (now < chordSustainHoldUntil && lastDetectedChordSnapshot) {
+          isSignalPresent = true;
+        } else if (now < noteSustainHoldUntil && lastDetectedNoteSnapshot) {
+          isSignalPresent = true;
+        }
+      }
+
+      if (!isSignalPresent) {
+        consecutiveNoteFrames = 0;
+        consecutiveChordFrames = 0;
+        currentDisplayMode = 'idle';
+        lastDetectedChordSnapshot = null;
+        lastDetectedNoteSnapshot = null;
+        const qLabel = document.getElementById('signal-quality-label');
+        if (qLabel) {
+          qLabel.textContent = "Listening • Pluck Note or Strum Chord...";
+          qLabel.style.color = "var(--text-muted)";
+        }
+        for (let i = 0; i < 12; i++) smoothedChroma[i] *= 0.85;
+        updateChromaUI(smoothedChroma, -1);
+        lastDspTimestamp = now;
+        animationFrameId = requestAnimationFrame(audioProcessingLoop);
+        return;
+      }
+
+      lastDspTimestamp = now;
+
+      const sigLabel = document.getElementById('signal-quality-label');
+      if (sigLabel) {
+        if (isNewAttack) {
+          sigLabel.textContent = "⚡ Attack Captured (Instant)";
+          sigLabel.style.color = "var(--accent-gold)";
+        } else {
+          sigLabel.textContent = "String Ringing Clear";
+          sigLabel.style.color = "var(--accent-emerald)";
+        }
+      }
+
+      // 4. TIME-DOMAIN AUTOCORRELATION FOR ROCK-SOLID MONOPHONIC DETECTION
+      analyserNode.getFloatTimeDomainData(dspTimeBuffer);
       const sampleRate = audioCtx.sampleRate;
+      const autoCorr = fastAutocorrelate(dspTimeBuffer, sampleRate);
+
+      // 5. SPECTRAL PEAK EXTRACTION & CHROMA CALCULATION
       const binWidth = sampleRate / analyserNode.fftSize;
-      const rawChroma = new Float32Array(12);
+      dspRawChroma.fill(0);
       const detectedPeaks = [];
 
-      const minBin = Math.floor(75 / binWidth);
-      const maxBin = Math.min(bufferLength - 2, Math.ceil(1100 / binWidth));
+      const minBin = Math.floor(65 / binWidth);
+      const maxBin = Math.min(bufferLength - 2, Math.ceil(1400 / binWidth));
 
       for (let b = minBin; b <= maxBin; b++) {
-        const val = cleanAmps[b];
-        if (val > 0.0022 && val > cleanAmps[b - 1] && val > cleanAmps[b + 1]) {
-          // Sub-bin parabolic peak interpolation
-          const alpha = cleanAmps[b - 1];
-          const beta = cleanAmps[b];
-          const gamma = cleanAmps[b + 1];
+        const val = dspCleanAmps[b];
+        if (val > 0.0016 && val > dspCleanAmps[b - 1] && val > dspCleanAmps[b + 1]) {
+          const alpha = dspCleanAmps[b - 1];
+          const beta = dspCleanAmps[b];
+          const gamma = dspCleanAmps[b + 1];
           const delta = 0.5 * (alpha - gamma) / (alpha - 2 * beta + gamma + 1e-9);
           const interpBin = b + delta;
           const peakFreq = interpBin * binWidth;
@@ -5735,7 +5903,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
           const pitchClass = ((nearestPitch % 12) + 12) % 12;
 
           const freqWeight = Math.min(2.5, Math.max(0.65, peakFreq / 240));
-          rawChroma[pitchClass] += val * freqWeight;
+          dspRawChroma[pitchClass] += val * freqWeight;
 
           detectedPeaks.push({
             freq: peakFreq,
@@ -5747,86 +5915,41 @@ Was [G] blind but [D] now I [G] see"></textarea>
         }
       }
 
-      // Harmonic overtone whitening (suppress 2nd and 3rd harmonics of low strings)
-      detectedPeaks.forEach(pk => {
-        if (pk.freq < 380 && pk.amp > 0.035) {
-          const thirdMidi = Math.round(69 + 12 * Math.log2((pk.freq * 3) / 440));
-          const thirdPc = ((thirdMidi % 12) + 12) % 12;
-          rawChroma[thirdPc] = Math.max(0, rawChroma[thirdPc] - pk.amp * 0.35);
-
-          const secondMidi = Math.round(69 + 12 * Math.log2((pk.freq * 2) / 440));
-          const secondPc = ((secondMidi % 12) + 12) % 12;
-          rawChroma[secondPc] = Math.max(0, rawChroma[secondPc] - pk.amp * 0.20);
-        }
-      });
-
       if (detectedPeaks.length > 0) {
         detectedPeaks.sort((a, b) => b.amp - a.amp);
         const topPeaksStr = detectedPeaks.slice(0, 4).map(p => `${p.note}(${Math.round(p.freq)}Hz)`).join(', ');
-        document.getElementById('detected-peaks-readout').textContent = `Clean Peaks: ${topPeaksStr}`;
+        const pkEl = document.getElementById('detected-peaks-readout');
+        if (pkEl) pkEl.textContent = `Clean Peaks: ${topPeaksStr}`;
       }
 
-      // Normalize rawChroma
+      // Normalize chroma
       let maxChroma = 0;
-      let totalChroma = 0;
       for (let i = 0; i < 12; i++) {
-        if (rawChroma[i] > maxChroma) maxChroma = rawChroma[i];
-        totalChroma += rawChroma[i];
+        if (dspRawChroma[i] > maxChroma) maxChroma = dspRawChroma[i];
       }
       if (maxChroma > 0.0001) {
-        for (let i = 0; i < 12; i++) rawChroma[i] /= maxChroma;
+        for (let i = 0; i < 12; i++) dspRawChroma[i] /= maxChroma;
       }
 
-      // Dynamic Smoothing: on new attack, instant snap (zero delay); on sustain, smooth gently
+      // Dynamic Smoothing: instant snap on attack, gentle smoothing on sustain
       if (isNewAttack) {
-        for (let i = 0; i < 12; i++) smoothedChroma[i] = rawChroma[i];
+        for (let i = 0; i < 12; i++) smoothedChroma[i] = dspRawChroma[i];
       } else {
-        const alpha = 0.50; // Responsive tracking
+        const alpha = 0.45;
         for (let i = 0; i < 12; i++) {
-          smoothedChroma[i] = (1 - alpha) * smoothedChroma[i] + alpha * rawChroma[i];
+          smoothedChroma[i] = (1 - alpha) * smoothedChroma[i] + alpha * dspRawChroma[i];
         }
       }
 
-      // 5. SINGLE NOTE vs POLYPHONIC CHORD DISCRIMINATION
       let activePitchClasses = 0;
-      let dominantPc = -1;
-      let maxChromaEnergy = 0;
-      let sumEnergy = 0;
       for (let i = 0; i < 12; i++) {
-        sumEnergy += smoothedChroma[i];
-        if (smoothedChroma[i] > maxChromaEnergy) {
-          maxChromaEnergy = smoothedChroma[i];
-          dominantPc = i;
-        }
-        if (smoothedChroma[i] > 0.28) {
-          activePitchClasses++;
-        }
+        if (smoothedChroma[i] > 0.28) activePitchClasses++;
       }
 
-      // Find lowest plausible fundamental frequency (75Hz to 450Hz) with solid amplitude
-      const strongestPeak = detectedPeaks[0];
-      const lowCandidates = detectedPeaks.filter(p => p.freq >= 75 && p.freq <= 450 && p.amp >= (strongestPeak ? strongestPeak.amp * 0.25 : 0));
-      lowCandidates.sort((a, b) => a.freq - b.freq);
-      const f0 = (lowCandidates.length > 0) ? lowCandidates[0].freq : (strongestPeak ? strongestPeak.freq : 0);
+      // 6. SINGLE NOTE vs POLYPHONIC CHORD DISCRIMINATION
+      const isSingleNote = (autoCorr.confidence >= 0.76 && autoCorr.freq >= 70 && autoCorr.freq <= 850 && activePitchClasses <= 2);
 
-      // Check harmonic multiples of candidate f0
-      let harmonicMatchCount = 0;
-      detectedPeaks.forEach(p => {
-        const ratio = p.freq / (f0 || 1);
-        const near = Math.round(ratio);
-        if (near >= 1 && near <= 7 && Math.abs(ratio - near) < 0.09) {
-          harmonicMatchCount++;
-        }
-      });
-
-      const isSingleNote = (activePitchClasses <= 1) || 
-                           (maxChromaEnergy / (sumEnergy + 1e-6) >= 0.56) ||
-                           (detectedPeaks.length > 0 && harmonicMatchCount >= detectedPeaks.length * 0.70 && activePitchClasses <= 2);
-
-      // =========================================================================
-      // STABILIZED DUAL SINGLE-NOTE & CHORD DETECTOR (ANTI-FLUCTUATION HYSTERESIS)
-      // =========================================================================
-      if (isSingleNote && f0 >= 75) {
+      if (isSingleNote) {
         consecutiveNoteFrames++;
         consecutiveChordFrames = 0;
       } else {
@@ -5834,104 +5957,88 @@ Was [G] blind but [D] now I [G] see"></textarea>
         consecutiveNoteFrames = 0;
       }
 
-      // Require consensus hold before switching display modes to eliminate jitter
-      const allowModeSwitchToNote = consecutiveNoteFrames >= 4;
+      const allowModeSwitchToNote = consecutiveNoteFrames >= 3;
       const allowModeSwitchToChord = consecutiveChordFrames >= 3;
 
+      // PATH A: SINGLE NOTE DETECTED
       if ((currentDisplayMode === 'note' && !allowModeSwitchToChord) || allowModeSwitchToNote) {
         currentDisplayMode = 'note';
+        noteSustainHoldUntil = now + 500;
 
-        const midi = 69 + 12 * Math.log2(f0 / 440);
-        const roundMidi = Math.round(midi);
-        const noteName = NOTE_NAMES[((roundMidi % 12) + 12) % 12];
-        const octave = Math.floor(roundMidi / 12) - 1;
-        const cents = Math.round((midi - roundMidi) * 100);
-        const noteFullName = `${noteName}${octave}`;
-        const guitarPos = findGuitarPosition(roundMidi);
-        
+        let f0 = autoCorr.freq;
+        if (f0 <= 0 && lastDetectedNoteSnapshot) f0 = lastDetectedNoteSnapshot.f0;
 
-        const centsSign = cents > 0 ? `+${cents}¢` : (cents < 0 ? `${cents}¢` : "±0¢");
-        const tunerVerdict = Math.abs(cents) <= 4 ? "🎯 Perfect Pitch" : (cents < 0 ? "♭ Slightly Flat" : "♯ Slightly Sharp");
-        const tunerColor = Math.abs(cents) <= 4 ? "var(--accent-emerald)" : (Math.abs(cents) <= 12 ? "var(--accent-gold)" : "var(--accent-rose)");
+        if (f0 >= 70 && f0 <= 850) {
+          const midi = 69 + 12 * Math.log2(f0 / 440);
+          const roundMidi = Math.round(midi);
+          const noteName = NOTE_NAMES[((roundMidi % 12) + 12) % 12];
+          const octave = Math.floor(roundMidi / 12) - 1;
+          const cents = Math.round((midi - roundMidi) * 100);
+          const noteFullName = `${noteName}${octave}`;
+          const guitarPos = findGuitarPosition(roundMidi);
 
-        // Update Big Hero Display for Single Note
-        document.getElementById('display-chord-name').innerHTML = `Note: <span style="color:#38bdf8;">${noteFullName}</span>`;
-        document.getElementById('info-root').textContent = noteFullName;
-        document.getElementById('info-quality').textContent = "Single Note";
-        document.getElementById('info-notes').textContent = `${f0.toFixed(1)} Hz (${centsSign})`;
-        const intEl = document.getElementById('info-intervals'); if (intEl) intEl.textContent = noteFullName;
-        document.getElementById('info-confidence').innerHTML = `<span style="color:${tunerColor}">${tunerVerdict}</span>`;
+          lastDetectedNoteSnapshot = { f0, noteFullName, cents, guitarPos, noteName };
 
-        // Update Candidates Row
-        document.getElementById('cand-1').innerHTML = `#1 <strong>${noteFullName}</strong> (${f0.toFixed(1)} Hz)`;
-        document.getElementById('cand-2').innerHTML = `#2 <strong>${tunerVerdict}</strong> (${centsSign})`;
-        if (guitarPos) {
-          document.getElementById('cand-3').innerHTML = `#3 <strong>${guitarPos.stringName}</strong> (Fret ${guitarPos.fret})`;
-        } else {
-          document.getElementById('cand-3').innerHTML = `#3 <strong>Single String</strong>`;
-        }
+          const centsSign = cents > 0 ? `+${cents}¢` : (cents < 0 ? `${cents}¢` : "±0¢");
+          const tunerVerdict = Math.abs(cents) <= 4 ? "🎯 Perfect Pitch" : (cents < 0 ? "♭ Slightly Flat" : "♯ Slightly Sharp");
+          const tunerColor = Math.abs(cents) <= 4 ? "var(--accent-emerald)" : (Math.abs(cents) <= 12 ? "var(--accent-gold)" : "var(--accent-rose)");
 
-        // DUAL INSPECTOR: Switch to Note Precision Cent Tuner (NEVER HIDE PARENT BOX)
-        const chordInspView = document.getElementById('inspector-chord-view');
-        const noteInspView = document.getElementById('inspector-note-view');
-        if (chordInspView) chordInspView.style.display = 'none';
-        if (noteInspView) {
-          noteInspView.style.display = 'block';
-          const centsLabel = document.getElementById('note-cents-label');
-          if (centsLabel) centsLabel.textContent = centsSign;
-          const freqLabel = document.getElementById('note-freq-text');
-          if (freqLabel) freqLabel.textContent = `${f0.toFixed(1)} Hz`;
-          const badge = document.getElementById('note-tuning-badge');
-          if (badge) {
-            badge.textContent = tunerVerdict;
-            badge.className = `verdict-pill ${Math.abs(cents) <= 4 ? 'verdict-triad' : 'verdict-seventh'}`;
+          updateHeroDisplay(`Note: <span style="color:#38bdf8;">${noteFullName}</span>`, noteFullName, "Single Note", `${f0.toFixed(1)} Hz (${centsSign})`, noteFullName, `<span style="color:${tunerColor}">${tunerVerdict}</span>`);
+
+          const c1 = document.getElementById('cand-1'); if (c1) c1.innerHTML = `#1 <strong>${noteFullName}</strong> (${f0.toFixed(1)} Hz)`;
+          const c2 = document.getElementById('cand-2'); if (c2) c2.innerHTML = `#2 <strong>${tunerVerdict}</strong> (${centsSign})`;
+          const c3 = document.getElementById('cand-3');
+          if (c3) {
+            c3.innerHTML = guitarPos ? `#3 <strong>${guitarPos.stringName}</strong> (Fret ${guitarPos.fret})` : `#3 <strong>Single String</strong>`;
           }
-          const needle = document.getElementById('note-pitch-marker');
-          if (needle) {
-            const clampNeedle = Math.max(5, Math.min(95, 50 + cents));
-            needle.style.left = `${clampNeedle}%`;
+
+          const chordInspView = document.getElementById('inspector-chord-view');
+          const noteInspView = document.getElementById('inspector-note-view');
+          if (chordInspView) chordInspView.style.display = 'none';
+          if (noteInspView) {
+            noteInspView.style.display = 'block';
+            const centsLabel = document.getElementById('note-cents-label'); if (centsLabel) centsLabel.textContent = centsSign;
+            const freqLabel = document.getElementById('note-freq-text'); if (freqLabel) freqLabel.textContent = `${f0.toFixed(1)} Hz`;
+            const badge = document.getElementById('note-tuning-badge');
+            if (badge) {
+              badge.textContent = tunerVerdict;
+              badge.className = `verdict-pill ${Math.abs(cents) <= 4 ? 'verdict-triad' : 'verdict-seventh'}`;
+            }
+            const needle = document.getElementById('note-pitch-marker');
+            if (needle) needle.style.left = `${Math.max(5, Math.min(95, 50 + cents))}%`;
+            const desc = document.getElementById('note-tuning-desc');
+            if (desc) {
+              desc.innerHTML = `Detected <strong>${noteFullName}</strong> (${f0.toFixed(1)} Hz) on ${guitarPos ? guitarPos.stringName + ' Fret ' + guitarPos.fret : 'Guitar String'}. Cent offset: ${centsSign}.`;
+            }
           }
-          const desc = document.getElementById('note-tuning-desc');
-          if (desc) {
-            desc.innerHTML = `Detected <strong>${noteFullName}</strong> (${f0.toFixed(1)} Hz) on ${guitarPos ? guitarPos.stringName + ' Fret ' + guitarPos.fret : 'Guitar String'}. Cent offset: ${centsSign}.`;
+
+          const holdBadge = document.getElementById('strum-hold-badge');
+          if (holdBadge) {
+            holdBadge.classList.add('badge-visible');
+            holdBadge.innerHTML = `<span>🎵</span> Note ${noteFullName} (${f0.toFixed(1)} Hz)`;
+            holdBadge.style.background = 'rgba(56, 189, 248, 0.2)';
+            holdBadge.style.color = '#38bdf8';
           }
-        }
 
-        // Update status badge with smooth opacity transition
-        const holdBadge = document.getElementById('strum-hold-badge');
-        if (holdBadge) {
-          holdBadge.classList.add('badge-visible');
-          holdBadge.innerHTML = `<span>🎵</span> Note ${noteFullName} (${f0.toFixed(1)} Hz)`;
-          holdBadge.style.background = 'rgba(56, 189, 248, 0.2)';
-          holdBadge.style.color = '#38bdf8';
-        }
+          if (guitarPos) {
+            currentFretboardState = [-1, -1, -1, -1, -1, -1];
+            currentFretboardState[guitarPos.stringIndex] = guitarPos.fret;
+            renderFretboardState();
+          }
 
-        // Light up single note on Fretboard
-        if (guitarPos) {
-          currentFretboardState = [-1, -1, -1, -1, -1, -1];
-          currentFretboardState[guitarPos.stringIndex] = guitarPos.fret;
-          renderFretboardState();
-        }
+          updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(noteName));
 
-        updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(noteName));
-
-        // Hook to AI Tab Transcriber and Web MIDI Output
-        // Single note processed
-
-        // Real-time Pitch Feed for Headstock Tuner
-        if (currentActiveTab === 'tuner') {
-          updateTunerPitchRealtime(f0, noteFullName, cents);
-        }
-        // Real-time Pitch Feed for Scales Studio
-        if (currentActiveTab === 'scales' && typeof isScaleMicActive !== 'undefined' && isScaleMicActive) {
-          evaluateScaleLivePitch(f0, noteFullName);
+          if (currentActiveTab === 'tuner') {
+            updateTunerPitchRealtime(f0, noteFullName, cents);
+          }
+          if (currentActiveTab === 'scales' && typeof isScaleMicActive !== 'undefined' && isScaleMicActive) {
+            evaluateScaleLivePitch(f0, noteFullName);
+          }
         }
       } 
       // PATH B: POLYPHONIC CHORD DETECTED
       else {
         currentDisplayMode = 'chord';
-
-        // DUAL INSPECTOR: Switch to 7th Disambiguation (NEVER HIDE PARENT BOX)
         const chordInspView = document.getElementById('inspector-chord-view');
         const noteInspView = document.getElementById('inspector-note-view');
         if (chordInspView) chordInspView.style.display = 'block';
@@ -5966,17 +6073,17 @@ Was [G] blind but [D] now I [G] see"></textarea>
           });
         }
 
-        // Add Incumbent Hysteresis Bonus to current locked chord (stops flickering)
+        // Add Incumbent Hysteresis Bonus (+0.14) to eliminate chord fluttering
         matches.forEach(m => {
           if (lastLockedChord === m.short) {
-            m.corr += 0.08;
+            m.corr += 0.14;
           }
         });
 
         matches.sort((a, b) => b.corr - a.corr);
         let best = matches[0];
 
-        // 7th Note Disambiguation & Gating Engine (Am vs Am7)
+        // 7th Note Disambiguation & Gating Engine (Am vs Am7, C vs Cmaj7)
         const rootIdx = NOTE_NAMES.indexOf(best.root);
         const isMinor = best.quality.includes("Minor") || best.quality.includes("m7");
         const triadQuality = isMinor ? "Minor" : "Major";
@@ -6009,12 +6116,14 @@ Was [G] blind but [D] now I [G] see"></textarea>
         const isConsensusWinner = (voteCount >= 2) || (lastLockedChord === best.short);
 
         if (matches.length >= 3) {
-          document.getElementById('cand-1').innerHTML = `#1 <strong>${matches[0].short}</strong> (${Math.round(Math.max(0, matches[0].corr * 100))}%)`;
-          document.getElementById('cand-2').innerHTML = `#2 <strong>${matches[1].short}</strong> (${Math.round(Math.max(0, matches[1].corr * 100))}%)`;
-          document.getElementById('cand-3').innerHTML = `#3 <strong>${matches[2].short}</strong> (${Math.round(Math.max(0, matches[2].corr * 100))}%)`;
+          const c1 = document.getElementById('cand-1'); if (c1) c1.innerHTML = `#1 <strong>${matches[0].short}</strong> (${Math.round(Math.max(0, matches[0].corr * 100))}%)`;
+          const c2 = document.getElementById('cand-2'); if (c2) c2.innerHTML = `#2 <strong>${matches[1].short}</strong> (${Math.round(Math.max(0, matches[1].corr * 100))}%)`;
+          const c3 = document.getElementById('cand-3'); if (c3) c3.innerHTML = `#3 <strong>${matches[2].short}</strong> (${Math.round(Math.max(0, matches[2].corr * 100))}%)`;
         }
 
-        if (best && best.corr > 0.20 && isConsensusWinner) {
+        if (best && best.corr > 0.18 && isConsensusWinner) {
+          chordSustainHoldUntil = now + 650;
+          lastDetectedChordSnapshot = best;
           const confidencePct = Math.min(99, Math.round(best.corr * 100)) + "%";
 
           const activeNotes = [];
@@ -6028,16 +6137,18 @@ Was [G] blind but [D] now I [G] see"></textarea>
           updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(best.root));
 
           const holdBadge = document.getElementById('strum-hold-badge');
-          holdBadge.classList.add('badge-visible');
-          holdBadge.innerHTML = `<span>🎸</span> Chord: ${best.short}`;
-          holdBadge.style.background = 'rgba(255, 179, 0, 0.2)';
-          holdBadge.style.color = '#ffd54f';
-          clearTimeout(lockCooldownTimer);
-          lockCooldownTimer = setTimeout(() => {
-            holdBadge.classList.remove('badge-visible');
-          }, 2000);
+          if (holdBadge) {
+            holdBadge.classList.add('badge-visible');
+            holdBadge.innerHTML = `<span>🎸</span> Chord: ${best.short}`;
+            holdBadge.style.background = 'rgba(255, 179, 0, 0.2)';
+            holdBadge.style.color = '#ffd54f';
+            clearTimeout(lockCooldownTimer);
+            lockCooldownTimer = setTimeout(() => {
+              holdBadge.classList.remove('badge-visible');
+            }, 2000);
+          }
 
-          // Check against active play-along song chord!
+          // Check against active play-along song chord
           checkPlayAlongLiveMatch(best.short);
 
           // Real-time Chord Evaluation for Chord Quiz Trainer
@@ -6092,6 +6203,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
     }
 
     function updateChromaUI(chromaArr, rootIdx) {
+      if (currentActiveTab !== 'detector') return;
       for (let i = 0; i < 12; i++) {
         const fill = document.getElementById(`chroma-fill-${i}`);
         const col = document.getElementById(`chroma-col-${i}`);
@@ -6195,12 +6307,6 @@ Was [G] blind but [D] now I [G] see"></textarea>
        ========================================================================== */
 
     // 1. STUDIO TAB SWITCHING
-    currentActiveTab = 'detector';
-
-    let consecutiveNoteFrames = 0;
-    let consecutiveChordFrames = 0;
-    let currentDisplayMode = 'idle';
-
     function switchStudioTab(tabId) {
       currentActiveTab = tabId;
 
