@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guitar Chord Detective Studio v2</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GuitarStudio">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <style>:root{--bg-dark:#07090e;--panel-bg:#0e121ef0;--card-bg:#141a2ce0;--accent-gold:#ffb300;--accent-amber:#ff8f00;--accent-cyan:#38bdf8;--accent-emerald:#10b981;--accent-rose:#f43f5e;--accent-purple:#a855f7;--text-main:#f8fafc;--text-muted:#94a3b8;--border-subtle:#ffb30040;--border-light:#ffffff14;--space-xs:4px;--space-sm:8px;--space-md:16px;--space-lg:24px;--space-xl:32px;--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;--shadow-sm:0 2px 8px #0000004d;--shadow-md:0 8px 24px #0006;--shadow-lg:0 16px 48px #00000080;--shadow-glow:0 0 20px #ffb3004d}@media (prefers-color-scheme:light){:root{--bg-dark:#f8fafc;--panel-bg:#fffffff2;--card-bg:#f8fafce6;--text-main:#0f172a;--text-muted:#64748b;--border-light:#00000014;--border-subtle:#ff8f004d}}*,:before,:after{box-sizing:border-box}*{margin:0;padding:0}html{-webkit-text-size-adjust:100%;font-size:16px}body{background:var(--bg-dark);color:var(--text-main);flex-direction:column;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5;display:flex;overflow-x:hidden}:focus-visible{outline:2px solid var(--accent-gold);outline-offset:2px}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg-dark)}::-webkit-scrollbar-thumb{background:var(--border-subtle);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--accent-gold)}#top-bar{padding:var(--space-md) var(--space-lg);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border-subtle);z-index:30;justify-content:space-between;align-items:center;gap:var(--space-sm);background:linear-gradient(#101422fa 0%,#090c14eb 100%);flex-wrap:wrap;display:flex}.brand{align-items:center;gap:var(--space-sm);display:flex}.brand-icon{filter:drop-shadow(0 0 8px #ffb30099);font-size:1.8rem}.brand-text h1{background:linear-gradient(90deg,#ffd54f,#ff9100,#ff6d00);-webkit-text-fill-color:transparent;letter-spacing:.5px;-webkit-background-clip:text;font-size:1.25rem;font-weight:800}.brand-text p{color:var(--text-muted);font-size:.75rem}.top-actions{align-items:center;gap:var(--space-sm);flex-wrap:wrap;display:flex}.badge{border:1px solid var(--border-light);border-radius:var(--radius-full);color:var(--text-muted);background:#ffffff0f;align-items:center;gap:6px;padding:6px 12px;font-size:.75rem;display:flex}.badge.active{color:#6ee7b7;background:#10b98126;border-color:#10b98166}.badge.calibrated{color:#7dd3fc;background:#38bdf826;border-color:#38bdf866}.studio-nav-container{border-bottom:1px solid var(--border-light);z-index:1000;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);background:#0a0e18f2;position:sticky;top:0;box-shadow:0 4px 20px #0006}.studio-nav-bar{scrollbar-width:thin;gap:8px;max-width:1400px;margin:0 auto;padding:10px 20px;display:flex;overflow-x:auto}.studio-tab-btn{border-radius:var(--radius-md);color:var(--text-muted);cursor:pointer;white-space:nowrap;-webkit-user-select:none;user-select:none;background:#ffffff08;border:1px solid #ffffff14;align-items:center;gap:8px;padding:9px 18px;font-size:.86rem;font-weight:700;transition:all .2s cubic-bezier(.4,0,.2,1);display:inline-flex}.studio-tab-btn:hover{color:#fff;background:#ffffff14;border-color:#fff3;transform:translateY(-1px)}.studio-tab-btn.active{color:var(--accent-gold);border-color:var(--accent-gold);background:linear-gradient(135deg,#ffb30040,#ff8f001f);box-shadow:0 0 20px #ffb30059}.studio-tab-btn .tab-badge{color:var(--text-muted);background:#ffffff1a;border-radius:6px;padding:2px 6px;font-size:.68rem}.studio-tab-btn.active .tab-badge{background:var(--accent-gold);color:#000}.studio-tab-pane{animation:.22s ease-out tabFadeIn;display:none}.studio-tab-pane.active{display:block}@keyframes tabFadeIn{0%{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}#main-container{padding:var(--space-lg);gap:var(--space-lg);flex:1;grid-template-columns:1fr 400px;width:100%;max-width:1440px;margin:0 auto;display:grid}@media (max-width:1100px){#main-container{grid-template-columns:1fr}}.card{background:var(--card-bg);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-lg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:var(--shadow-md);margin-bottom:var(--space-lg);position:relative;overflow:hidden}.card:before{content:"";background:linear-gradient(90deg, transparent, var(--border-subtle), transparent);height:3px;position:absolute;top:0;left:0;right:0}.card-header{margin-bottom:var(--space-md);justify-content:space-between;align-items:center;display:flex}.card-title{color:var(--text-main);align-items:center;gap:8px;font-size:1rem;font-weight:700;display:flex}.chord-hero-box{border:2px solid var(--accent-gold);border-radius:var(--radius-xl);padding:var(--space-lg);text-align:center;margin-bottom:var(--space-lg);box-sizing:border-box;background:linear-gradient(145deg,#141a2ef2,#0a0e1afa);flex-direction:column;justify-content:space-between;min-height:310px;transition:border-color .25s,box-shadow .25s;display:flex;position:relative;box-shadow:0 0 35px #ffb3002e,inset 0 0 20px #ffb3000d}.status-badge-row{flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;min-height:36px;display:flex}.chord-status-badge{text-transform:uppercase;letter-spacing:1px;border-radius:var(--radius-full);color:var(--text-muted);background:#ffffff14;align-items:center;gap:6px;padding:4px 12px;font-size:.75rem;display:inline-flex}.status-dot{background:#71717a;border-radius:50%;width:8px;height:8px}.status-dot.listening{background:var(--accent-emerald);box-shadow:0 0 10px var(--accent-emerald);animation:1.5s infinite pulse}.status-dot.calibrating{background:var(--accent-cyan);box-shadow:0 0 10px var(--accent-cyan);animation:.8s infinite pulse}@keyframes pulse{0%,to{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}.detected-chord-name{letter-spacing:1px;background:linear-gradient(135deg,#fff 20%,#ffd54f 75%,#ff9100 100%);-webkit-text-fill-color:transparent;text-shadow:0 4px 24px #ffb3004d;text-align:center;-webkit-background-clip:text;justify-content:center;align-items:center;height:78px;min-height:78px;margin:4px 0;font-size:3.6rem;font-weight:900;line-height:1.1;display:flex;overflow:hidden}.top-candidates-row{height:34px;min-height:34px;color:var(--text-muted);justify-content:center;align-items:center;gap:8px;margin:4px 0;font-size:.8rem;display:flex}.candidate-pill{border:1px solid var(--border-light);background:#ffffff0d;border-radius:12px;padding:3px 10px}.candidate-pill strong{color:var(--accent-gold)}.chord-sub-info{flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;min-height:44px;margin-top:8px;display:flex}.info-pill{border:1px solid var(--border-light);background:#ffffff0d;border-radius:12px;align-items:center;gap:6px;padding:6px 14px;font-size:.85rem;display:flex}.info-pill strong{color:var(--accent-cyan)}.seventh-inspector-box{box-sizing:border-box;text-align:left;background:#00000073;border:1px solid #ffb30047;border-radius:14px;height:94px;min-height:94px;margin-top:12px;padding:10px 16px;font-size:.78rem;transition:border-color .25s,background .25s;overflow:hidden}.inspector-header{justify-content:space-between;align-items:center;margin-bottom:6px;display:flex}.verdict-pill{text-transform:uppercase;letter-spacing:.5px;border-radius:12px;padding:3px 10px;font-size:.72rem;font-weight:800}.verdict-triad{color:#34d399;background:#10b98133;border:1px solid #10b98166}.verdict-seventh{color:#fbbf24;background:#f59e0b33;border:1px solid #f59e0b66}.inspector-meter-row{align-items:center;gap:10px;margin:6px 0;display:flex}.seventh-meter-track{background:#ffffff1a;border-radius:4px;flex:1;height:8px;position:relative;overflow:hidden}.seventh-meter-fill{background:linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));width:0%;height:100%;transition:width 80ms}.seventh-meter-marker{z-index:5;background:#f43f5e;width:2px;position:absolute;top:0;bottom:0}.inspector-desc{color:var(--text-muted);font-size:.73rem;line-height:1.4}.meter-box{flex-direction:column;gap:4px;margin-top:14px;display:flex}.meter-labels{color:var(--text-muted);justify-content:space-between;font-size:.7rem;display:flex}.meter-container{background:#ffffff14;border-radius:5px;width:100%;height:10px;position:relative;overflow:hidden}.meter-bar{background:linear-gradient(90deg,#10b981 40%,#ffb300 75%,#f43f5e 95%);width:0%;height:100%;transition:width 50ms}.meter-threshold-marker{z-index:5;background:#f43f5e;width:2px;position:absolute;top:0;bottom:0}.noise-floor-marker{z-index:4;background:#38bdf8;width:2px;position:absolute;top:0;bottom:0}.visualizer-grid{gap:var(--space-md);margin-bottom:var(--space-md);grid-template-columns:1fr 1fr;display:grid}@media (max-width:768px){.visualizer-grid{grid-template-columns:1fr}}.vis-box{border:1px solid var(--border-light);border-radius:var(--radius-md);padding:var(--space-sm);background:#0a0e18d9;flex-direction:column;align-items:center;display:flex}.vis-label{color:var(--text-muted);justify-content:space-between;align-self:flex-start;align-items:center;gap:6px;width:100%;margin-bottom:8px;font-size:.75rem;font-weight:600;display:flex}canvas{border-radius:8px;width:100%;height:140px;display:block}.chroma-bars{justify-content:space-between;align-items:flex-end;gap:4px;width:100%;height:110px;padding:0 4px 4px;display:flex}.chroma-col{flex-direction:column;flex:1;justify-content:flex-end;align-items:center;height:100%;display:flex}.chroma-fill{background:linear-gradient(180deg, var(--accent-gold), #ffb30033);border-radius:4px 4px 0 0;width:100%;height:4%;min-height:3px;transition:height 80ms}.chroma-col.highlight .chroma-fill{background:linear-gradient(#ff4081,#f50057);box-shadow:0 0 10px #f50057b3}.chroma-note-name{color:var(--text-muted);margin-top:6px;font-size:.72rem;font-weight:700}.chroma-col.highlight .chroma-note-name{color:#ff80ab;font-weight:800}.btn-group{gap:var(--space-sm);margin-top:var(--space-md);flex-wrap:wrap;display:flex}.btn{border-radius:var(--radius-md);cursor:pointer;border:none;align-items:center;gap:8px;padding:10px 18px;font-size:.88rem;font-weight:700;transition:all .2s;display:inline-flex}.btn-primary{background:linear-gradient(135deg, var(--accent-gold), var(--accent-amber));color:#07090e;box-shadow:0 4px 15px #ffb3004d}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px #ffb30073}.btn-calibrate{color:#fff;background:linear-gradient(135deg,#0284c7,#0369a1);box-shadow:0 4px 15px #0284c74d}.btn-calibrate:hover{background:linear-gradient(135deg,#0369a1,#075985);transform:translateY(-2px)}.btn-secondary{color:var(--text-main);border:1px solid var(--border-light);background:#ffffff14}.btn-secondary:hover{background:#ffffff24;border-color:#fff3}.btn-test-speaker{color:#fff;background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 4px 12px #10b9814d}.btn-test-speaker:hover{transform:translateY(-2px)}.btn-listen-active{animation:1.5s infinite micPulse;color:#fff!important;background:linear-gradient(135deg,#ef4444,#dc2626)!important;box-shadow:0 0 20px #ef444480!important}@keyframes micPulse{0%,to{box-shadow:0 0 15px #ef444466}50%{box-shadow:0 0 28px #ef4444cc}}.controls-grid{gap:var(--space-md);margin-top:var(--space-md);padding:var(--space-md) var(--space-lg);border-radius:var(--radius-md);background:#00000040;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));display:grid}.slider-item{color:var(--text-muted);flex-direction:column;gap:6px;font-size:.8rem;display:flex}.slider-row{align-items:center;gap:10px;display:flex}.slider-row input[type=range]{accent-color:var(--accent-gold);cursor:pointer;flex:1}.mode-toggle-group{background:#ffffff0d;border-radius:8px;gap:6px;padding:3px;display:flex}.mode-pill{color:var(--text-muted);cursor:pointer;background:0 0;border:none;border-radius:6px;flex:1;padding:5px 8px;font-size:.75rem;font-weight:600;transition:all .2s}.mode-pill.active{background:var(--accent-gold);color:#000;font-weight:700}.fretboard-container{padding:16px 12px 12px;overflow-x:auto;background:linear-gradient(#170f0a 0%,#2a1910 20%,#1f130b 50%,#2a1910 80%,#170f0a 100%)!important;border:2px solid #5a3825!important;border-radius:16px!important;box-shadow:inset 0 3px 12px #000000f2,inset 0 -3px 12px #000000f2,0 12px 35px #0009!important}.fretboard-board{flex-direction:column;min-width:740px;display:flex;position:relative}.fret-numbers{margin-bottom:6px;padding-left:54px;display:flex}.fret-num{text-align:center;color:#8d6e63;flex:1;font-size:.7rem;font-weight:700}.fret-num.marker{text-shadow:0 0 8px #ffb30099;color:var(--accent-gold)!important}.guitar-string-row{align-items:center;height:32px;display:flex;position:relative}.string-header{width:54px;color:var(--text-muted);align-items:center;gap:6px;font-size:.78rem;font-weight:700;display:flex}.string-header .mute-btn{border:1px solid var(--border-light);color:#f43f5e;cursor:pointer;background:#ffffff1a;border-radius:4px;justify-content:center;align-items:center;width:20px;height:20px;font-size:.7rem;font-weight:800;display:flex}.string-header .mute-btn.muted{color:#fff;background:#f43f5e}.fret-cells-container{flex:1;display:flex;position:relative}.string-wire{pointer-events:none;z-index:1;background:linear-gradient(#d4af37,#8c6d32,#3b2f15);position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);box-shadow:0 1px 3px #000c}.str-6{height:4.2px}.str-5{height:3.4px}.str-4{height:2.6px}.str-3{height:2px}.str-2{height:1.5px}.str-1{height:1.1px}.fret-cell{cursor:pointer;z-index:2;border-right:2px solid #bcaaa4;flex:1;justify-content:center;align-items:center;height:32px;transition:background .15s;display:flex;position:relative}.fret-cell:first-child{border-left:6px solid #efebe9}.fret-cell:hover{background:#ffb30026}.fret-cell .finger-dot{background:var(--accent-gold);color:#000;border-radius:50%;justify-content:center;align-items:center;width:22px;height:22px;font-size:.7rem;font-weight:800;animation:.15s cubic-bezier(.175,.885,.32,1.275) popIn;display:flex;box-shadow:0 0 10px #ffb300e6}@keyframes popIn{0%{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}.sidebar{gap:var(--space-lg);flex-direction:column;display:flex}.sound-style-box{border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-sm) var(--space-md);margin-bottom:var(--space-md);background:#ffb30014;flex-direction:column;gap:8px;display:flex}.sound-style-box .label{color:var(--accent-gold);text-transform:uppercase;letter-spacing:.5px;font-size:.75rem;font-weight:700}.sound-buttons{gap:8px;display:flex}.sound-btn{border:1px solid var(--border-light);color:var(--text-main);cursor:pointer;background:#ffffff0d;border-radius:8px;flex:1;justify-content:center;align-items:center;gap:6px;padding:7px 10px;font-size:.78rem;font-weight:600;transition:all .2s;display:flex}.sound-btn.active{background:var(--accent-gold);color:#000;border-color:var(--accent-gold);font-weight:800}.preset-chip-grid{grid-template-columns:repeat(4,1fr);gap:8px;display:grid}.preset-chip{border:1px solid var(--border-light);text-align:center;cursor:pointer;color:var(--text-main);background:#ffffff0d;border-radius:8px;padding:8px 4px;font-size:.82rem;font-weight:700;transition:all .15s}.preset-chip:hover{background:var(--accent-gold);color:#000;border-color:var(--accent-gold);transform:translateY(-2px)}.preset-chip.active{background:var(--accent-gold);color:#000;font-weight:800;box-shadow:0 0 12px #ffb30066}.compare-box{margin-bottom:var(--space-sm);background:#f59e0b1a;border:1px solid #f59e0b4d;border-radius:10px;flex-direction:column;gap:6px;padding:10px;display:flex}.compare-btn-row{gap:8px;display:flex}.compare-btn{border:1px solid var(--border-light);color:var(--text-main);cursor:pointer;text-align:center;background:#ffffff12;border-radius:6px;flex:1;padding:8px 6px;font-size:.78rem;font-weight:700;transition:all .15s}.compare-btn:hover{background:var(--accent-gold);color:#000}.history-log-box{border:1px solid var(--border-light);background:#0000004d;border-radius:10px;flex-direction:column;gap:6px;max-height:160px;padding:8px;font-size:.78rem;display:flex;overflow-y:auto}.history-item{background:#ffffff0a;border-radius:6px;justify-content:space-between;align-items:center;padding:4px 8px;display:flex}.history-item .hist-name{color:var(--accent-gold);font-weight:700}.history-item .hist-time{color:var(--text-muted);font-size:.7rem}.theory-table{border-collapse:collapse;width:100%;font-size:.82rem}.theory-table th,.theory-table td{text-align:left;border-bottom:1px solid var(--border-light);padding:7px 8px}.theory-table th{color:var(--text-muted);font-weight:600}.theory-table td strong{color:var(--accent-cyan)}.diag-box{border-radius:var(--radius-md);padding:var(--space-sm) var(--space-md);color:#bae6fd;background:#38bdf814;border:1px solid #38bdf840;font-size:.8rem;line-height:1.5}.diag-box strong{color:#38bdf8}.rhythm-dock-container{border-top:1px solid var(--border-subtle);justify-content:space-between;align-items:center;gap:var(--space-sm);z-index:100;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);background:linear-gradient(#101626fa,#090d18f5);flex-wrap:wrap;padding:10px 20px;display:flex;position:sticky;bottom:0;box-shadow:0 -4px 25px #00000080}.rhythm-dock-left{align-items:center;gap:var(--space-sm);flex-wrap:wrap;display:flex}.rhythm-select-pill{border:1px solid var(--border-light);color:var(--text-main);cursor:pointer;background:#ffffff0f;border-radius:12px;outline:none;padding:6px 12px;font-size:.8rem;font-weight:700}.rhythm-select-pill option{color:#fff;background:#0d1222}.rhythm-beat-indicators{align-items:center;gap:6px;display:flex}.rhythm-beat-dot{background:#ffffff26;border-radius:50%;width:10px;height:10px;transition:all .1s}.rhythm-beat-dot.sam-beat{border:1.5px solid var(--accent-gold)}.rhythm-beat-dot.active-beat{background:var(--accent-gold);box-shadow:0 0 10px var(--accent-gold);transform:scale(1.3)}.user-profile-btn{border:1px solid var(--border-subtle);color:var(--text-main);cursor:pointer;background:linear-gradient(135deg,#ffb30024,#ff8f0014);border-radius:24px;align-items:center;gap:10px;padding:6px 14px;transition:all .2s;display:inline-flex}.user-profile-btn:hover{border-color:var(--accent-gold);background:linear-gradient(135deg,#ffb30047,#ff8f002e);transform:translateY(-1px);box-shadow:0 4px 15px #ffb30040}.user-avatar-badge{background:#ffffff1a;border:1px solid #ffb30066;border-radius:50%;justify-content:center;align-items:center;width:32px;height:32px;font-size:1.15rem;display:flex;box-shadow:0 0 10px #ffb30059}.user-info-text{text-align:left;flex-direction:column;line-height:1.15;display:flex}.user-name{color:#fff;font-size:.82rem;font-weight:700}.user-level-badge{color:var(--accent-gold);text-transform:uppercase;letter-spacing:.5px;font-size:.65rem;font-weight:600}.modal-backdrop{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);z-index:9999;background:#03060fd9;justify-content:center;align-items:center;padding:20px;display:none;position:fixed;inset:0}.modal-backdrop.active{display:flex}.modal-card{border:1px solid var(--border-subtle);background:linear-gradient(160deg,#0e1424,#080b14);border-radius:24px;flex-direction:column;width:100%;max-width:650px;max-height:90vh;animation:.22s cubic-bezier(.16,1,.3,1) modalPopIn;display:flex;overflow-y:auto;box-shadow:0 20px 60px #000000d9,0 0 30px #ffb3001f}@keyframes modalPopIn{0%{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}.modal-header{border-bottom:1px solid var(--border-light);justify-content:space-between;align-items:center;padding:18px 24px;display:flex}.modal-body{padding:24px}.modal-tab-row{border-bottom:1px solid var(--border-light);gap:10px;margin-bottom:20px;display:flex}.modal-tab-btn{color:var(--text-muted);cursor:pointer;background:0 0;border:none;border-bottom:2px solid #0000;padding:8px 16px;font-size:.85rem;font-weight:700;transition:all .2s}.modal-tab-btn.active{color:var(--accent-gold);border-bottom-color:var(--accent-gold)}.stats-grid-4{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:16px 0;display:grid}.stat-card-mini{border:1px solid var(--border-light);text-align:center;background:#ffffff08;border-radius:14px;padding:14px 10px}.stat-num-mini{color:var(--accent-gold);font-size:1.4rem;font-weight:800}.stat-label-mini{color:var(--text-muted);margin-top:4px;font-size:.72rem}.profile-list-item{border:1px solid var(--border-light);background:#ffffff08;border-radius:14px;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;padding:12px 16px;transition:all .2s;display:flex}.profile-list-item.active-profile{border-color:var(--accent-gold);background:#ffb30014}.modal-pane{display:none}.modal-pane.active{display:block}.recorder-container{max-width:900px;margin:0 auto}.recorder-card{background:var(--panel-bg);border:1px solid var(--border-light);border-radius:var(--radius-xl);margin-bottom:24px;padding:24px 32px}.rec-time-display{color:var(--accent-gold);text-align:center;text-shadow:0 0 20px #ffb30066;margin:16px 0;font-family:Courier New,monospace;font-size:2.5rem;font-weight:800}.rec-button-big{color:#fff;cursor:pointer;background:linear-gradient(145deg,#ef4444,#dc2626);border:4px solid #ffffff1a;border-radius:50%;justify-content:center;align-items:center;width:96px;height:96px;font-size:2.2rem;transition:all .15s;display:flex;box-shadow:0 8px 30px #ef444480,inset 0 -4px 12px #0000004d}.rec-button-big:hover{transform:scale(1.05);box-shadow:0 12px 40px #ef4444b3,inset 0 -4px 12px #0000004d}.rec-button-big.recording-now{background:linear-gradient(145deg,#dc2626,#b91c1c);animation:.8s infinite recPulse}@keyframes recPulse{0%,to{box-shadow:0 8px 30px #ef444480,0 0 #ef4444b3,inset 0 -4px 12px #0000004d}50%{box-shadow:0 8px 30px #ef444480,0 0 0 12px #ef444400,inset 0 -4px 12px #0000004d}}#rec-countin-overlay{text-align:center}#rec-active-player-box audio{width:100%}.rec-list{max-height:400px;overflow-y:auto}.rec-item{border:1px solid var(--border-light);background:#ffffff05;border-radius:12px;justify-content:space-between;align-items:center;margin-bottom:8px;padding:12px 16px;display:flex}.rec-item:hover{border-color:var(--border-subtle)}.badge{border-radius:var(--radius-full);align-items:center;gap:6px;padding:4px 10px;font-size:.75rem;font-weight:600;display:inline-flex}.badge.active{border:1px solid var(--accent-emerald);color:var(--accent-emerald);background:#10b98126}.modal-backdrop{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);z-index:2000;background:#000000bf;justify-content:center;align-items:center;display:none;position:fixed;inset:0}.modal-card{border:1.5px solid var(--accent-purple);border-radius:var(--radius-xl);padding:var(--space-xl);gap:var(--space-md);background:#0f1424;flex-direction:column;width:90%;max-width:540px;display:flex;box-shadow:0 15px 50px #000000b3}.sr-only{clip:rect(0, 0, 0, 0);white-space:nowrap;border:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.hidden{display:none!important}.flex-center{justify-content:center;align-items:center;display:flex}.text-gold{color:var(--accent-gold)}.text-cyan{color:var(--accent-cyan)}.text-emerald{color:var(--accent-emerald)}.songs-container{flex-direction:column;gap:20px;max-width:1300px;margin:20px auto;padding:0 20px;display:flex}.song-hero-card{border:1px solid var(--border-subtle);background:linear-gradient(145deg,#141a30eb,#0c101ef2);border-radius:20px;flex-direction:column;gap:18px;padding:24px;display:flex;box-shadow:0 10px 40px #0006}.song-header-row{flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:16px;display:flex}.song-title-group h2{background:linear-gradient(90deg,#ffd54f,#ff9100,#ff6d00);-webkit-text-fill-color:transparent;-webkit-background-clip:text;align-items:center;gap:10px;margin-bottom:4px;font-size:1.6rem;font-weight:800;display:flex}.song-meta-pills{flex-wrap:wrap;gap:8px;margin-top:6px;display:flex}.song-meta-pill{border:1px solid var(--border-light);color:var(--text-muted);background:#ffffff0d;border-radius:14px;align-items:center;gap:6px;padding:4px 12px;font-size:.76rem;display:inline-flex}.song-meta-pill strong{color:var(--accent-gold)}.song-select-dropdown{border:1.5px solid var(--accent-gold);color:var(--text-main);cursor:pointer;background:#0e121ee6;border-radius:12px;outline:none;min-width:260px;padding:10px 16px;font-size:.92rem;font-weight:700}.song-select-dropdown option{color:#fff;background:#0d111e}.song-playback-bar{border:1px solid var(--border-light);background:#0006;border-radius:16px;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;display:flex}.playback-main-btns{flex-wrap:wrap;align-items:center;gap:8px;display:flex}.btn-song-play{color:#fff;cursor:pointer;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:12px;align-items:center;gap:8px;padding:10px 22px;font-size:.95rem;font-weight:800;transition:transform .15s,box-shadow .15s;display:flex;box-shadow:0 4px 15px #10b98166}.btn-song-play:hover{transform:translateY(-2px);box-shadow:0 6px 20px #10b98199}.btn-song-play.playing{background:linear-gradient(135deg,#f43f5e,#be123c);box-shadow:0 4px 15px #f43f5e66}.song-mode-btn{color:var(--text-muted);cursor:pointer;background:0 0;border:none;border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:700;transition:all .2s}.song-mode-btn.active{background:var(--accent-gold);color:#000;font-weight:800;box-shadow:0 0 12px #ffb30066}.tempo-speed-control{color:var(--text-muted);border:1px solid var(--border-light);background:#ffffff0d;border-radius:10px;align-items:center;gap:8px;padding:6px 12px;font-size:.82rem;font-weight:700;display:flex}.practice-mic-toggle{border:1px solid var(--border-light);color:var(--text-main);cursor:pointer;background:#ffffff0f;border-radius:10px;align-items:center;gap:6px;padding:8px 14px;font-size:.8rem;font-weight:700;display:flex}.practice-mic-toggle.active{border-color:var(--accent-emerald);color:var(--accent-emerald);background:#10b98126}.song-guitar-card{border:1px solid var(--border-light);background:#0006;border-radius:16px;padding:16px}.song-guitar-hud-row{flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;display:flex}.hud-stat-badge{border:1px solid var(--border-light);background:#ffffff0a;border-radius:10px;flex-direction:column;gap:2px;padding:6px 12px;display:flex}.hud-stat-lbl{color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;font-size:.65rem;font-weight:700}.hud-stat-val{color:#fff;font-size:.92rem;font-weight:800}.eval-match-indicator{border:1px solid var(--border-light);color:var(--text-muted);background:#ffffff0f;border-radius:20px;padding:6px 14px;font-size:.82rem;font-weight:700}.eval-match-indicator.match-success{border-color:var(--accent-emerald);color:var(--accent-emerald);background:#10b98133;animation:.4s pulseMatch}@keyframes pulseMatch{0%{transform:scale(1)}50%{transform:scale(1.08)}to{transform:scale(1)}}.lyrics-scroll-container{border:1px solid var(--border-light);background:#0000004d;border-radius:12px;flex-direction:column;gap:10px;max-height:280px;padding:14px;display:flex;overflow-y:auto}.lyric-line-item{cursor:pointer;border-left:3px solid #0000;border-radius:8px;padding:8px 12px;transition:background .15s}.lyric-line-item:hover{background:#ffffff0a}.lyric-line-item.active-line{border-left-color:var(--accent-gold);background:#ffb3001f}.chord-word-pair{flex-direction:column;align-items:flex-start;margin-right:12px;display:inline-flex}.chord-label-over{color:var(--accent-gold);min-height:18px;font-size:.8rem;font-weight:800}.lyric-word-under{color:#fff;font-size:.95rem}.trainer-container{flex-direction:column;gap:18px;max-width:900px;margin:20px auto;padding:0 16px;display:flex}.trainer-stats-row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;display:grid}.trainer-stat-card{border:1px solid var(--border-light);text-align:center;background:#141a2ce0;border-radius:14px;padding:14px}.trainer-stat-val{color:var(--accent-gold);font-size:1.6rem;font-weight:900}.trainer-stat-label{color:var(--text-muted);text-transform:uppercase;margin-top:4px;font-size:.72rem;font-weight:700}.trainer-card-hero{border:1.5px solid var(--accent-gold);text-align:center;background:linear-gradient(145deg,#141a30f0,#0e1220f5);border-radius:20px;padding:30px 20px;box-shadow:0 10px 40px #00000080}.trainer-instruction{color:var(--text-muted);margin-bottom:8px;font-size:1rem}.trainer-target-chord{color:var(--accent-gold);margin:6px 0;font-size:2.6rem;font-weight:900}.quiz-choice-btn{border:1.5px solid var(--border-light);color:#fff;cursor:pointer;background:#ffffff0d;border-radius:12px;padding:14px;font-size:1.2rem;font-weight:800;transition:all .15s}.quiz-choice-btn:hover{border-color:var(--accent-gold);background:#ffb30033;transform:translateY(-2px)}.quiz-choice-btn.correct{box-shadow:0 0 16px #10b98199;border-color:var(--accent-emerald)!important;color:#34d399!important;background:#10b9814d!important}.quiz-choice-btn.incorrect{border-color:var(--accent-rose)!important;color:#f87171!important;background:#f43f5e4d!important}.scales-container{flex-direction:column;gap:20px;max-width:1300px;margin:20px auto;padding:0 16px;display:flex}.scales-header-card{border:1px solid var(--border-subtle);background:linear-gradient(145deg,#141a30f0,#0e1220f5);border-radius:20px;padding:24px;box-shadow:0 10px 40px #0006}.scale-select-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px;display:grid}.scale-control-group{flex-direction:column;gap:6px;display:flex}.scale-control-label{text-transform:uppercase;color:var(--accent-gold);letter-spacing:.5px;align-items:center;gap:6px;font-size:.75rem;font-weight:800;display:flex}.scale-root-selector{flex-wrap:wrap;gap:4px;display:flex}.scale-root-btn{border:1px solid var(--border-light);color:var(--text-main);cursor:pointer;background:#ffffff0d;border-radius:6px;padding:4px 8px;font-size:.78rem;font-weight:700}.scale-root-btn:hover{background:var(--accent-gold);color:#000}.scale-root-btn.active{background:var(--accent-gold);color:#000;border-color:var(--accent-gold);font-weight:800}.scale-preset-dropdown{border:1px solid var(--border-light);color:var(--text-main);background:#0e121ee6;border-radius:10px;padding:8px 12px;font-size:.85rem;font-weight:700}.scale-toggle-btn-group{border:1px solid var(--border-light);background:#0000004d;border-radius:10px;padding:3px;display:flex}.scale-toggle-btn{color:var(--text-muted);cursor:pointer;background:0 0;border:none;border-radius:8px;flex:1;padding:6px 10px;font-size:.75rem;font-weight:700}.scale-toggle-btn.active{background:var(--accent-gold);color:#000}.scale-note-marker{z-index:5;border-radius:50%;justify-content:center;align-items:center;width:22px;height:22px;font-size:.68rem;font-weight:800;display:flex;box-shadow:0 0 8px #000c}.scale-note-marker.root{background:var(--accent-gold);color:#000;border:2px solid #fff;box-shadow:0 0 12px #ffb300e6}.scale-note-marker.tone{color:#000;background:#38bdf8}.scale-note-marker.blue-note{color:#fff;background:#a855f7;box-shadow:0 0 10px #a855f7cc}.scale-note-marker.active-playing{box-shadow:0 0 18px #fff, 0 0 25px var(--accent-gold);z-index:10;transform:scale(1.3)}</style>
+  <script type="module" crossorigin src="./assets/main-DwgjPCEA.js"></script>
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header id="top-bar">
+    <div class="brand">
+      <span class="brand-icon">🎸</span>
+      <div class="brand-text">
+        <h1>Guitar Chord Detective Studio</h1>
+        <p>Noise Rejection • Spectral Subtraction • Physical Modeling Synthesis</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="user-profile-btn" id="btn-user-profile" onclick="openUserProfileModal()" title="Guitarist Profile & Accounts" aria-label="Open Guitarist Profile">
+        <span class="user-avatar-badge" id="top-user-avatar">🎸</span>
+        <div class="user-info-text">
+          <span class="user-name" id="top-user-name">Guest Guitarist</span>
+          <span class="user-level-badge" id="top-user-level">Beginner</span>
+        </div>
+        <span style="font-size:0.65rem; opacity:0.6; margin-left:2px;">▼</span>
+      </button>
+      <button class="midi-badge-btn" id="btn-open-midi-modal" aria-label="Open MIDI Settings">
+        <span>🎹</span> Web MIDI: <span id="top-midi-status">Initializing…</span>
+      </button>
+      <div class="badge" id="noise-reduction-badge">
+        <span>🔇</span> Noise Subtraction: <strong id="noise-status-text" style="color:#ffd54f;">Off (Click Calibrate)</strong>
+      </div>
+      <div class="badge active" id="trigger-mode-badge">
+        <span>⚡</span> Mode: Continuous Real-Time Detection
+      </div>
+    </div>
+  </header>
+
+  <!-- Studio Mode Navigation -->
+  <nav class="studio-nav-container" aria-label="Studio Modes">
+    <div class="studio-nav-bar" role="tablist">
+      <button class="studio-tab-btn active" role="tab" aria-selected="true" data-tab="detector" aria-controls="pane-detector">
+        <span>🎯</span> Live Detector <span class="tab-badge">Real-Time</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="songs" aria-controls="pane-songs">
+        <span>🎸</span> Songs & Play-Along <span class="tab-badge" style="background:#f59e0b; color:#000;">Notes & Chords</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="drill" aria-controls="pane-drill">
+        <span>🎯</span> Chord Change Drill <span class="tab-badge" style="background:#10b981; color:#000;">Practice</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="trainer" aria-controls="pane-trainer">
+        <span>👂</span> Ear Training Quiz <span class="tab-badge" style="background:#8b5cf6; color:#fff;">Cadence & Quiz</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="scales" aria-controls="pane-scales">
+        <span>🎼</span> Scales & 3D Neck <span class="tab-badge" style="background:#06b6d4; color:#000;">BPM Control</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="search" aria-controls="pane-search">
+        <span>🔍</span> Song Search & Chords <span class="tab-badge" style="background:#38bdf8; color:#000;">50+ Songs</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="tuner" aria-controls="pane-tuner">
+        <span>🪕</span> Headstock Tuner <span class="tab-badge">6 Presets</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="chords" aria-controls="pane-chords">
+        <span>📚</span> Chord Library <span class="tab-badge">432+ Voicings</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="metronome" aria-controls="pane-metronome">
+        <span>⏱️</span> Metronome <span class="tab-badge">Visual Strum</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="transcriber" aria-controls="pane-transcriber">
+        <span>📝</span> Tab Transcriber <span class="tab-badge">Audio→Tab</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="looper" aria-controls="pane-looper">
+        <span>🔄</span> Multi-Track Looper <span class="tab-badge">3 Tracks</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="video" aria-controls="pane-video">
+        <span>📹</span> Video Recorder <span class="tab-badge">HUD Overlay</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="rhythm" aria-controls="pane-rhythm">
+        <span>🥁</span> Acoustic Percussion <span class="tab-badge">Western Grooves</span>
+      </button>
+      <button class="studio-tab-btn" role="tab" aria-selected="false" data-tab="recorder" aria-controls="pane-recorder">
+        <span>🎙️</span> Audio Recorder & Looper <span class="tab-badge" style="background:#ef4444; color:#fff;">Live Takes</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       TAB: LIVE DETECTOR
+       ========================================================================== -->
+  <div class="studio-tab-pane active" id="pane-detector" role="tabpanel" aria-labelledby="tab-detector">
+    <main id="main-container">
+      <!-- LEFT COLUMN -->
+      <div class="primary-col">
+        <!-- BIG HERO RESULT CARD -->
+        <section class="chord-hero-box" aria-live="polite" aria-label="Detected chord or note">
+          <div class="status-badge-row">
+            <div class="chord-status-badge">
+              <span class="status-dot" id="status-indicator" aria-hidden="true"></span>
+              <span id="status-text">Ready • Click "Start Listening" or Test Speaker</span>
+            </div>
+            <div class="chord-status-badge" id="strum-hold-badge" style="display:none; background:rgba(255, 179, 0, 0.2); color:#ffd54f;">
+              <span>🎸</span> Strum Captured & Locked
+            </div>
+          </div>
+
+          <div class="detected-chord-name" id="display-chord-name" aria-live="assertive">Ready</div>
+
+          <div class="top-candidates-row" id="candidates-row" aria-label="Top chord matches">
+            <span>Top Matches:</span>
+            <span class="candidate-pill" id="cand-1">#1 <strong>-</strong></span>
+            <span class="candidate-pill" id="cand-2">#2 <strong>-</strong></span>
+            <span class="candidate-pill" id="cand-3">#3 <strong>-</strong></span>
+          </div>
+
+          <div class="chord-sub-info">
+            <div class="info-pill"><span>Root:</span> <strong id="info-root">-</strong></div>
+            <div class="info-pill"><span>Quality:</span> <strong id="info-quality">-</strong></div>
+            <div class="info-pill"><span>Notes:</span> <strong id="info-notes">-</strong></div>
+            <div class="info-pill"><span>Intervals:</span> <strong id="info-intervals">-</strong></div>
+            <div class="info-pill" style="display:none;"><strong id="info-sargam">-</strong></div>
+            <div class="info-pill"><span>Match:</span> <strong id="info-confidence" style="color:var(--accent-emerald);">-</strong></div>
+          </div>
+
+          <!-- REAL-TIME RINGING NOTES & CONTINUOUS STATUS BAR -->
+          <div style="background:rgba(0,0,0,0.4); border:1px solid var(--border-light); border-radius:12px; padding:10px 14px; margin-top:14px;">
+            <div id="live-detector-substatus" style="font-size:0.85rem; color:var(--accent-gold); font-weight:700; text-align:center;">
+              👂 Continuous Listening Active • Strum any chord or pluck any string
+            </div>
+            <div style="margin-top:8px; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Ringing Notes:</span>
+              <div id="live-ringing-notes-chips" style="display:inline-flex; gap:6px; flex-wrap:wrap;">
+                <span class="badge" style="background:rgba(255,255,255,0.04); color:var(--text-muted); font-size:0.75rem;">Silence • Ready for sound</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7th NOTE DISAMBIGUATION INSPECTOR -->
+          <div class="seventh-inspector-box" id="seventh-inspector" aria-label="7th chord disambiguation analysis">
+            <div id="inspector-chord-view">
+              <div class="inspector-header">
+                <span id="inspector-chord-title">🔍 7th Note Disambiguation (Am vs Am7):</span>
+                <span class="verdict-pill verdict-triad" id="seventh-verdict-badge">Clean Triad (Am)</span>
+              </div>
+              <div class="inspector-meter-row">
+                <span>7th Note (<span id="seventh-note-label">G</span>):</span>
+                <div class="seventh-meter-track">
+                  <div class="seventh-meter-fill" id="seventh-meter-fill" style="width: 25%;"></div>
+                  <div class="seventh-meter-marker" id="seventh-marker" style="left: 55%;" title="Cutoff Threshold"></div>
+                </div>
+                <strong id="seventh-ratio-text" style="width: 85px; text-align:right;">25% / 55%</strong>
+              </div>
+              <div class="inspector-desc" id="seventh-desc">Harmonic energy analysis properly separates clean triads from 7th chords.</div>
+            </div>
+            <div id="inspector-note-view" style="display: none;">
+              <div class="inspector-header">
+                <span>🎯 Single Note Pitch & Cent Precision Guide:</span>
+                <span class="verdict-pill verdict-triad" id="note-tuning-badge">In Tune</span>
+              </div>
+              <div class="inspector-meter-row">
+                <span>Pitch Deviation (<span id="note-cents-label">±0¢</span>):</span>
+                <div class="seventh-meter-track" style="position:relative;">
+                  <div style="position:absolute; left:50%; top:0; bottom:0; width:2px; background:#10b981; z-index:2;"></div>
+                  <div class="seventh-meter-marker" id="note-pitch-marker" style="left: 50%; background:#38bdf8; border-color:#fff;" title="Cent Offset"></div>
+                </div>
+                <strong id="note-freq-text" style="width: 85px; text-align:right;">0.0 Hz</strong>
+              </div>
+              <div class="inspector-desc" id="note-tuning-desc">Pluck note clearly. Center marker indicates accurate concert pitch.</div>
+            </div>
+          </div>
+
+          <!-- Audio Volume / Peak Level Meter -->
+          <div class="meter-box">
+            <div class="meter-labels">
+              <span>Signal Level: <strong id="db-readout">-∞ dB</strong></span>
+              <span>Room Noise: <span id="noise-floor-label" style="color:#38bdf8;">Uncalibrated</span></span>
+              <span id="signal-quality-label" style="color:var(--text-muted);">Idle</span>
+            </div>
+            <div class="meter-container">
+              <div class="meter-bar" id="audio-meter"></div>
+              <div class="noise-floor-marker" id="noise-floor-marker" style="left: 20%;" title="Ambient Room Noise Floor"></div>
+              <div class="meter-threshold-marker" id="gate-marker" style="left: 32%;" title="Strum Trigger Threshold"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISUALIZERS -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title"><span>📊</span> Clean Spectrum (Post-Noise Subtraction) & 12-Tone Chromagram</div>
+            <span style="font-size:0.75rem; color:var(--text-muted);" id="detected-peaks-readout">Peaks: None</span>
+          </div>
+          <div class="visualizer-grid">
+            <div class="vis-box">
+              <div class="vis-label"><span>🌊</span> Guitar Band Spectrum (75 Hz – 1250 Hz) <span style="font-size:0.7rem; color:var(--accent-gold);">• Amber = Fundamental Strings</span></div>
+              <canvas id="canvas-spectrum" aria-label="Frequency spectrum"></canvas>
+            </div>
+            <div class="vis-box">
+              <div class="vis-label"><span>🎯</span> 12 Semitone Energy (C to B) <span style="font-size:0.7rem; color:#ff4081;">• Pink = Active Chord Tones</span></div>
+              <div class="chroma-bars" id="chroma-bars-container" aria-label="12-tone chromagram"></div>
+            </div>
+          </div>
+
+          <!-- Buttons & Actions -->
+          <div class="btn-group">
+            <button class="btn btn-primary" id="btn-toggle-mic" aria-label="Start microphone listening">
+              <span>🎙️</span> <span id="mic-btn-text">Start Listening (Microphone)</span>
+            </button>
+            <button class="btn btn-calibrate" id="btn-calibrate-noise" aria-label="Calibrate room noise">
+              <span>🧹</span> <span id="calibrate-btn-text">Calibrate Room Noise (2s Silent Scan)</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-strum-down" aria-label="Strum chord down">
+              <span>🔊</span> Strum Down
+            </button>
+            <button class="btn btn-secondary" id="btn-strum-up" aria-label="Strum chord up">
+              <span>🔊</span> Strum Up
+            </button>
+            <button class="btn btn-secondary" id="btn-strum-arpeggio" aria-label="Play arpeggio">
+              <span>🎶</span> Arpeggio
+            </button>
+            <button class="btn btn-secondary" id="btn-strum-roll" aria-label="Flamenco roll">
+              <span>🌊</span> Roll
+            </button>
+            <button class="btn btn-test-speaker" id="btn-test-speaker" aria-label="Test speaker output">
+              <span>📢</span> Test Speaker
+            </button>
+            <button class="btn btn-secondary" id="btn-clear-fretboard" aria-label="Clear fretboard">
+              <span>🔄</span> Clear
+            </button>
+          </div>
+
+          <!-- Sensitivity, Noise Gate & Controls -->
+          <div class="controls-grid">
+            <div class="slider-item">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Mic Sensitivity:</span>
+                <strong id="gain-val" style="color:var(--accent-gold);">4.0x</strong>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="mic-gain-slider" min="1" max="15" step="0.5" value="4.0" aria-label="Microphone gain">
+              </div>
+              <span style="font-size:0.7rem;">Increase if your guitar strum is quiet.</span>
+            </div>
+            <div class="slider-item">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Noise Gate Threshold:</span>
+                <strong id="gate-val" style="color:var(--accent-rose);">14 dB</strong>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="noise-gate-slider" min="5" max="50" step="1" value="14" aria-label="Noise gate threshold in dB">
+              </div>
+              <span style="font-size:0.7rem;">Only guitar strums above this level are processed.</span>
+            </div>
+            <div class="slider-item">
+              <div style="display:flex; justify-content:space-between;">
+                <span>7th Note Strictness:</span>
+                <strong id="strict-val" style="color:var(--accent-cyan);">55%</strong>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="seventh-strict-slider" min="30" max="85" step="5" value="55" aria-label="7th note detection strictness">
+              </div>
+              <span style="font-size:0.7rem;">Higher = Requires louder 7th for 7th chords.</span>
+            </div>
+            <div class="slider-item">
+              <div style="display:flex; justify-content:space-between;">
+                <span>Detection Mode:</span>
+              </div>
+              <div class="mode-toggle-group">
+                <button class="mode-pill active" id="btn-trigger-guitartuna" aria-pressed="true">🎸 GuitarTuna Trigger</button>
+                <button class="mode-pill" id="btn-trigger-continuous" aria-pressed="false">⏱️ Continuous</button>
+              </div>
+              <span style="font-size:0.7rem;">GuitarTuna mode only fires on real guitar strums!</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- INTERACTIVE FRETBOARD -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title"><span>🎸</span> 6-String Guitar Neck & Fingerings (E A D G B E)</div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Click any fret to change fingers | Click "X" to mute</span>
+          </div>
+          <div class="fretboard-container">
+            <div class="fretboard-board" id="fretboard-board">
+              <div class="fret-numbers">
+                <div class="fret-num">0 (Open)</div>
+                <div class="fret-num">1</div>
+                <div class="fret-num">2</div>
+                <div class="fret-num marker">3 •</div>
+                <div class="fret-num">4</div>
+                <div class="fret-num marker">5 •</div>
+                <div class="fret-num">6</div>
+                <div class="fret-num marker">7 •</div>
+                <div class="fret-num">8</div>
+                <div class="fret-num marker">9 •</div>
+                <div class="fret-num">10</div>
+                <div class="fret-num">11</div>
+                <div class="fret-num marker">12 ••</div>
+              </div>
+              <div id="fretboard-strings-rows" aria-label="Guitar fretboard"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GUITARTUNA TECH EXPLAINER -->
+        <section class="diag-box" aria-label="How noise cancellation works">
+          <strong>💡 How GuitarTuna Cancels Background Noise & What We Implemented:</strong><br>
+          1. <strong>Spectral Noise Subtraction:</strong> When you click <em>"Calibrate Room Noise"</em>, the app takes a 2-second fingerprint of your fan, AC, or ambient hum. It then subtracts that exact noise footprint from every live microphone frame.<br>
+          2. <strong>Hardware Bandpass Filtering:</strong> Web Audio Biquad filters cut off low room rumbles (&lt; 75 Hz) and high-frequency clicks (&gt; 1300 Hz), focusing exclusively on the 6 guitar strings.<br>
+          3. <strong>Strum Onset Triggering (Attack Detection):</strong> Instead of constantly analyzing noisy air, the engine sleeps until you strike a chord. The sudden energy surge triggers analysis during the clean 150ms–400ms ringing sustain phase, then locks the result!
+        </section>
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="sidebar" aria-label="Tools and reference">
+        <!-- DIRECT AM VS AM7 COMPARISON -->
+        <div class="card">
+          <div class="card-header"><div class="card-title"><span>🔬</span> Test: Am vs Am7 Direct</div></div>
+          <div class="compare-box">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Click to compare how the engine tells them apart:</div>
+            <div class="compare-btn-row">
+              <button class="compare-btn" id="btn-preset-am"><span>▶️</span> Play <strong>Am</strong> (A-C-E)<br><span style="font-size:0.68rem; color:#6ee7b7;">3rd string fretted (A3)</span></button>
+              <button class="compare-btn" id="btn-preset-am7"><span>▶️</span> Play <strong>Am7</strong> (A-C-E-G)<br><span style="font-size:0.68rem; color:#ffd54f;">3rd string open (G3!)</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOUND SYNTHESIZER TYPE -->
+        <div class="card">
+          <div class="card-header"><div class="card-title"><span>🔊</span> Acoustic Sound Engine</div></div>
+          <div class="sound-style-box">
+            <div class="label">Acoustic Guitar Model:</div>
+            <div class="sound-buttons">
+              <button class="sound-btn active" id="btn-sound-dreadnought" aria-pressed="true">🎸 Dreadnought Steel</button>
+              <button class="sound-btn" id="btn-sound-nylon" aria-pressed="false">🪕 Spanish Nylon</button>
+              <button class="sound-btn" id="btn-sound-twelve" aria-pressed="false">✨ 12-String Shimmer</button>
+            </div>
+            <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+              <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Strum Style:</span>
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" id="btn-strum-style-down">⬇️ Down</button>
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" id="btn-strum-style-up">⬆️ Up</button>
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" id="btn-strum-style-arpeggio">🎶 Pick</button>
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" id="btn-strum-style-roll">🌊 Roll</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK CHORD PRESETS -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>⚡</span> Quick Guitar Chords</div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Click to Strum</span>
+          </div>
+          <div style="font-size:0.72rem; text-transform:uppercase; color:var(--accent-gold); font-weight:700; margin-bottom:6px;">Standard Open Chords:</div>
+          <div class="preset-chip-grid" id="preset-chips-standard"></div>
+          <div style="font-size:0.72rem; text-transform:uppercase; color:var(--accent-cyan); font-weight:700; margin:14px 0 6px 0;">Bollywood Classics:</div>
+          <div class="preset-chip-grid" id="preset-chips-bollywood"></div>
+        </div>
+
+        <!-- CHORD RECOGNITION LOG -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>📜</span> Chord Recognition Log</div>
+            <button style="background:none; border:none; color:var(--accent-gold); font-size:0.75rem; cursor:pointer;" id="btn-clear-history">Clear</button>
+          </div>
+          <div class="history-log-box" id="history-log" aria-live="polite">
+            <div class="history-item">
+              <span class="hist-name">Ready to detect</span>
+              <span style="color:var(--text-muted);">Play a chord</span>
+              <span class="hist-time">--:--:--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MUSIC THEORY CARD -->
+        <div class="card">
+          <div class="card-header"><div class="card-title"><span>📖</span> Theory & Scale Formula</div></div>
+          <table class="theory-table" id="theory-table">
+            <tr><th>Formula</th><td id="theory-formula">1 - b3 - 5 (Root, Minor 3rd, 5th)</td></tr>
+            <tr><th>Intervals</th><td id="theory-intervals">Root, Minor 3rd, Perfect 5th</td></tr>
+            <tr><th>Degrees</th><td id="theory-degrees">1 - b3 - 5</td></tr>
+            <tr style="display:none;"><td id="theory-sargam">-</td></tr>
+            <tr><th>Mood</th><td id="theory-emotion">Melancholic, Poetic, Nostalgic</td></tr>
+            <tr><th>Musical Style</th><td id="theory-context">Acoustic, Folk, Classic Ballads</td></tr>
+          </table>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: SONGS & 3D GUITAR FRETBOARD STUDIO
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-songs" role="tabpanel" aria-labelledby="tab-songs">
+    <div class="songs-container">
+      <div class="song-hero-card">
+        <div class="song-header-row">
+          <div class="song-title-group">
+            <h2 id="song-display-title">🎸 Hotel California</h2>
+            <p id="song-display-meta" style="font-size:0.85rem; color:var(--text-muted);">
+              Artist: Eagles • Album: Hotel California (1976)
+            </p>
+            <div class="song-meta-pills" id="song-meta-pills">
+              <span class="song-meta-pill">Key: <strong id="song-pill-key">B Minor (Am Capo 2)</strong></span>
+              <span class="song-meta-pill">Chords: <strong id="song-pill-chords">Am, E, G, D, F, C, Dm</strong></span>
+              <span class="song-meta-pill">Strum: <strong id="song-pill-strum">D - D U - U D U</strong></span>
+              <span class="song-meta-pill">Tempo: <strong id="song-pill-bpm">75 BPM</strong></span>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Select Song or Lead Theme:</label>
+            <select class="song-select-dropdown" id="song-selector-select" style="max-width:320px;">
+              <optgroup label="🎸 Western Acoustic Classics">
+                <option value="hotel_california" selected>Hotel California - Eagles</option>
+                <option value="let_it_be">Let It Be - The Beatles</option>
+                <option value="wonderwall">Wonderwall - Oasis</option>
+                <option value="perfect">Perfect - Ed Sheeran</option>
+                <option value="hallelujah">Hallelujah - Leonard Cohen</option>
+                <option value="knockin_on_heaven">Knockin' On Heaven's Door - Bob Dylan</option>
+                <option value="stand_by_me">Stand By Me - Ben E. King</option>
+                <option value="wish_you_were_here">Wish You Were Here - Pink Floyd</option>
+                <option value="yellow">Yellow - Coldplay</option>
+                <option value="riptide">Riptide - Vance Joy</option>
+              </optgroup>
+              <optgroup label="🎬 Famous Theme Melodies">
+                <option value="harry_potter_theme">Harry Potter (Hedwig's Theme)</option>
+                <option value="superman_theme">Superman Theme - John Williams</option>
+                <option value="bella_ciao">Bella Ciao (Money Heist)</option>
+                <option value="ode_to_joy">Ode To Joy - Beethoven</option>
+                <option value="happy_birthday">Happy Birthday Melody</option>
+                <option value="coffin_dance">Coffin Dance (Astronomia)</option>
+                <option value="iphone_ringtone">iPhone Marimba Ringtone</option>
+                <option value="twinkle_twinkle">Twinkle Twinkle Little Star</option>
+              </optgroup>
+              <optgroup label="🎶 Melodic Guitar Solos & Leads">
+                <option value="kal_ho_na_ho">Kal Ho Naa Ho (Heartbeat Lead)</option>
+                <option value="kesariya">Kesariya (Acoustic Lead)</option>
+                <option value="gulabi_aankhen">Gulabi Aankhen (Acoustic Solo)</option>
+                <option value="channa_mereya">Channa Mereya (Acoustic Lead)</option>
+                <option value="raabta">Raabta (Agent Vinod Lead)</option>
+                <option value="zara_zara">Zara Zara (Acoustic Lead)</option>
+                <option value="lag_ja_gale">Lag Ja Gale (Acoustic Classic)</option>
+                <option value="tujhe_dekha_to">Tujhe Dekha To (Lead Mandolin/Guitar)</option>
+                <option value="ek_pyar_ka_nagma">Ek Pyar Ka Nagma Hai (Violin/Lead)</option>
+                <option value="papa_kehte_hain">Papa Kehte Hain (Guitar Solo)</option>
+                <option value="hum_honge_kaamyaab">We Shall Overcome Lead</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- MODE SWITCH: NOTES (LEAD MELODY) VS CHORDS (RHYTHM STRUM) -->
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.4); padding:10px 16px; border-radius:14px; border:1px solid rgba(255,255,255,0.08); margin:14px 0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Guitar Mode:</span>
+            <div style="display:inline-flex; background:rgba(255,255,255,0.06); padding:3px; border-radius:10px; border:1px solid var(--border-light);">
+              <button id="btn-mode-notes" class="song-mode-btn active">
+                🎼 Notes Mode (Lead Melody)
+              </button>
+              <button id="btn-mode-chords" class="song-mode-btn">
+                🎸 Chords Mode (Rhythm Strum)
+              </button>
+            </div>
+          </div>
+          <div id="song-mode-description" style="font-size:0.8rem; color:var(--accent-gold); font-weight:600;">
+            Visualizing lead melody note-by-note on 3D guitar neck (Only plucking notes)
+          </div>
+        </div>
+
+        <!-- Song Playback Controls Bar -->
+        <div class="song-playback-bar">
+          <div class="playback-main-btns">
+            <button class="btn-song-play" id="btn-song-play">
+              <span id="song-play-icon">▶</span> <span id="song-play-text">Play Song</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-song-restart">
+              <span>⏮️</span> Restart
+            </button>
+            <button class="btn btn-secondary" id="btn-step-prev">
+              <span>◀</span> Prev Step
+            </button>
+            <button class="btn btn-secondary" id="btn-step-next">
+              <span>▶</span> Next Step
+            </button>
+          </div>
+
+          <div class="tempo-speed-control">
+            <span>Tempo:</span>
+            <input type="range" id="song-tempo-slider" min="45" max="140" value="75">
+            <strong id="song-tempo-readout" style="color:var(--accent-gold); width:54px;">75 BPM</strong>
+          </div>
+
+          <!-- Strum Buttons for Chords Mode -->
+          <div id="song-strum-actions" style="display:none; align-items:center; gap:6px;">
+            <button class="btn btn-secondary" id="btn-song-strum-down" style="padding:4px 8px; font-size:0.75rem;">⬇️ Down</button>
+            <button class="btn btn-secondary" id="btn-song-strum-up" style="padding:4px 8px; font-size:0.75rem;">⬆️ Up</button>
+            <button class="btn btn-secondary" id="btn-song-strum-pick" style="padding:4px 8px; font-size:0.75rem;">🎶 Pick</button>
+          </div>
+
+          <div class="playback-main-btns">
+            <button class="practice-mic-toggle active" id="btn-toggle-song-mic">
+              <span>🎙️</span> Practice Mic: <strong id="song-mic-status-label">ON</strong>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3D INTERACTIVE GUITAR FRETBOARD DISPLAY FOR SONGS -->
+        <div class="song-guitar-card">
+          <div class="song-guitar-hud-row">
+            <!-- Notes Mode HUD details -->
+            <div id="hud-notes-info" style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">MELODY NOTE</span>
+                <strong class="hud-stat-val" id="lead-active-western" style="color:var(--accent-gold);">B4</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">STRING</span>
+                <strong class="hud-stat-val" id="lead-active-string">1st (High E)</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">FRET</span>
+                <strong class="hud-stat-val" id="lead-active-fret">7th Fret</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">FREQUENCY</span>
+                <strong class="hud-stat-val" id="lead-active-hz" style="color:var(--accent-cyan);">493.9 Hz</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">TAB NOTATION</span>
+                <strong class="hud-stat-val" id="lead-active-tab" style="font-family:monospace; color:#34d399;">e|--7--</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">PROGRESS</span>
+                <strong class="hud-stat-val" id="song-note-counter" style="color:var(--text-muted);">1 / 8</strong>
+              </div>
+            </div>
+
+            <!-- Chords Mode HUD details -->
+            <div id="hud-chords-info" style="display:none; align-items:center; gap:14px; flex-wrap:wrap;">
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">ACTIVE CHORD</span>
+                <strong class="hud-stat-val" id="hud-chord-name" style="color:var(--accent-gold); font-size:1.4rem;">Am</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">FINGERING (E A D G B E)</span>
+                <strong class="hud-stat-val" id="hud-chord-frets" style="font-family:monospace;">x 0 2 2 1 0</strong>
+              </div>
+              <div class="hud-stat-badge">
+                <span class="hud-stat-lbl">STRUMMING RHYTHM</span>
+                <strong class="hud-stat-val" id="song-strum-pattern-visual" style="color:var(--accent-cyan);">↓ - ↓ ↑ - ↑ ↓ ↑</strong>
+              </div>
+            </div>
+
+            <!-- Live Mic Match Indicator -->
+            <div class="eval-match-indicator" id="eval-feedback-badge">
+              Play along on your real guitar!
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-muted);">
+              Score: <strong id="song-practice-score" style="color:var(--accent-gold); font-size:1.1rem;">0</strong> pts
+            </div>
+          </div>
+
+          <!-- Visual 3D Guitar Fretboard -->
+          <div class="fretboard-container" style="margin-top:12px; border:2px solid #5c3818; box-shadow:0 10px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.9);">
+            <div class="fret-numbers">
+              <div class="fret-num">0 (Open)</div>
+              <div class="fret-num">1</div>
+              <div class="fret-num">2</div>
+              <div class="fret-num marker">3 •</div>
+              <div class="fret-num">4</div>
+              <div class="fret-num marker">5 •</div>
+              <div class="fret-num">6</div>
+              <div class="fret-num marker">7 •</div>
+              <div class="fret-num">8</div>
+              <div class="fret-num marker">9 •</div>
+              <div class="fret-num">10</div>
+              <div class="fret-num">11</div>
+              <div class="fret-num marker">12 ••</div>
+            </div>
+            <div class="fretboard-board" id="song-fretboard-strings-rows">
+              <!-- Rendered by buildSongFretboardUI() -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Song Chords Palette Row -->
+        <div style="margin-top:16px;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700; margin-bottom:8px;">
+            Song Chords Palette (Click any chord to preview fingerings on 3D guitar):
+          </div>
+          <div class="song-chords-palette" id="song-chords-palette" style="display:flex; flex-wrap:wrap; gap:8px;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Interactive Lyrics & Chords Scroll View -->
+        <div style="margin-top:16px;">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">
+            Song Lyrics & Chords (Click any line to jump to that part):
+          </div>
+          <div class="lyrics-scroll-container" id="lyrics-scroll-box">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: EAR TRAINING QUIZ & CADENCE WARM-UP
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-trainer" role="tabpanel" aria-labelledby="tab-trainer">
+    <div class="trainer-container">
+      <!-- Mode & Key Selector Ribbon -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+        <div style="display:inline-flex; background:rgba(0,0,0,0.4); padding:4px; border-radius:12px; border:1px solid var(--border-light);">
+          <button id="btn-trainer-mode-ear" class="song-mode-btn active">
+            👂 Ear Training (Listen & Guess)
+          </button>
+          <button id="btn-trainer-mode-strum" class="song-mode-btn">
+            🎸 Strum Training (See & Play on Mic)
+          </button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Key Context:</span>
+          <select id="quiz-key-context" style="background:rgba(0,0,0,0.6); color:var(--accent-gold); border:1px solid var(--accent-gold); padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:700;">
+            <option value="C" selected>C Major (C - Dm - Em - F - G - Am)</option>
+            <option value="G">G Major (G - Am - Bm - C - D - Em)</option>
+            <option value="D">D Major (D - Em - G - A - Bm)</option>
+            <option value="Am">A Minor (Am - C - Dm - Em - F - G)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="trainer-stats-row">
+        <div class="trainer-stat-card">
+          <div class="trainer-stat-val" id="quiz-score">0</div>
+          <div class="trainer-stat-label">Total Score</div>
+        </div>
+        <div class="trainer-stat-card">
+          <div class="trainer-stat-val" id="quiz-streak">🔥 0</div>
+          <div class="trainer-stat-label">Current Streak</div>
+        </div>
+        <div class="trainer-stat-card">
+          <div class="trainer-stat-val" id="quiz-best-streak">🏆 0</div>
+          <div class="trainer-stat-label">Best Streak</div>
+        </div>
+        <div class="trainer-stat-card">
+          <select id="quiz-difficulty" style="background:rgba(0,0,0,0.5); color:var(--text-main); border:1px solid var(--accent-gold); padding:6px 10px; border-radius:8px; font-size:0.8rem; font-weight:700; width:100%;">
+            <option value="beginner">🟢 Beginner (Open Chords)</option>
+            <option value="intermediate">🟡 Intermediate (7th & Sus)</option>
+            <option value="master">🔴 Master (Barre Chords)</option>
+          </select>
+          <div class="trainer-stat-label">Difficulty Level</div>
+        </div>
+      </div>
+
+      <!-- Ear Training Cadence Warm-Up Card -->
+      <div id="quiz-cadence-banner" style="background:rgba(255,179,0,0.08); border:1px solid rgba(255,179,0,0.25); border-radius:12px; padding:12px 16px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:800;">
+            🎵 Step 1: Reference Warm-Up (Ear Calibration)
+          </div>
+          <div id="quiz-cadence-text" style="font-size:0.9rem; color:var(--text-main); margin-top:2px;">
+            First play 3-4 chords in key to calibrate your ear before starting the quiz:
+          </div>
+        </div>
+        <button class="btn btn-secondary" id="btn-play-cadence" style="background:rgba(255,179,0,0.15); border-color:var(--accent-gold); color:var(--accent-gold); font-weight:700;">
+          ▶️ Play 3-4 Reference Chords
+        </button>
+      </div>
+
+      <div class="trainer-card-hero" id="quiz-hero-card">
+        <div style="display:inline-block; font-size:0.8rem; font-weight:800; color:var(--accent-gold); text-transform:uppercase; letter-spacing:2px; background:rgba(255,179,0,0.1); padding:4px 14px; border-radius:30px; margin-bottom:12px;" id="quiz-challenge-badge">
+          🎯 Ear Training Challenge
+        </div>
+        <div class="trainer-instruction" id="quiz-prompt-text">Listen to the mystery chord played below:</div>
+        <div class="trainer-target-chord" id="quiz-target-chord-name" style="font-size:2.4rem;">❓ Mystery Chord</div>
+        <div style="font-size:0.95rem; color:var(--accent-cyan); font-weight:700; margin-bottom:16px; min-height:22px;" id="quiz-target-notes">Which chord did you hear?</div>
+
+        <!-- Multiple Choice Options Grid for Ear Training -->
+        <div id="quiz-choices-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px; max-width:600px; margin:0 auto 20px auto;">
+          <!-- Dynamically populated 4 options -->
+        </div>
+
+        <div class="trainer-diagram-preview" id="quiz-diagram-preview" style="display:none;">
+          <div id="quiz-mini-fretboard" style="font-family:monospace; font-size:0.9rem; color:#fff;">
+            x 3 2 0 1 0
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="btn-quiz-replay">
+            🔊 Replay Mystery Chord
+          </button>
+          <button class="btn btn-secondary" id="btn-quiz-skip">
+            ⏭️ Skip Chord
+          </button>
+          <button class="btn btn-primary" id="btn-quiz-mic">
+            🎙️ Live Guitar Mic (Optional)
+          </button>
+        </div>
+
+        <div class="status-pill" id="quiz-feedback-pill" style="display:inline-flex; align-items:center; gap:8px; font-size:0.95rem; padding:8px 20px; border-radius:30px; background:rgba(255,255,255,0.06); border:1px solid var(--border-light);">
+          <span>👂</span> Click the correct chord above or strum it on your guitar!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: WESTERN SCALES & 3D FRETBOARD STUDIO
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-scales" role="tabpanel" aria-labelledby="tab-scales">
+    <div class="scales-container">
+      <div class="scales-header-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:1.5rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+              <span>🎼</span> Western Guitar Scales & 3D Fretboard
+            </h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+              Master Western scales across frets 0–12 on the master rosewood neck. Play audio scale runs with precision BPM tempo control, or practice with live microphone note recognition.
+            </p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="badge" style="background:rgba(6, 182, 212, 0.15); border:1px solid var(--accent-cyan); color:var(--accent-cyan); font-size:0.8rem;">
+              <span>🎸</span> Standard E A D G B E
+            </span>
+            <span class="badge" id="scale-mic-badge" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-light); font-size:0.8rem;">
+              <span id="scale-mic-dot">⚪</span> <span id="scale-mic-status">Mic Idle</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Scale Selection Grid -->
+        <div class="scale-select-grid">
+          <!-- Root Note Selector -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>🎯</span> Key Root Note
+            </label>
+            <div class="scale-root-selector" id="scale-root-buttons">
+              <!-- Dynamically populated by JS -->
+            </div>
+          </div>
+
+          <!-- Scale Preset Selector -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>📐</span> Western Scale Type
+            </label>
+            <select class="scale-preset-dropdown" id="scale-preset-select">
+              <option value="pentatonic_minor" selected>Pentatonic Minor (Rock / Blues Lead)</option>
+              <option value="blues">Blues Scale (with ♭5 'Blue Note')</option>
+              <option value="pentatonic_major">Pentatonic Major (Country / Southern Rock)</option>
+              <option value="natural_minor">Natural Minor / Aeolian (Melodic Ballad & Metal)</option>
+              <option value="major">Major Scale / Ionian (Western Diatonic Root)</option>
+              <option value="dorian">Dorian Mode (Santana / Funk & Fusion)</option>
+              <option value="mixolydian">Mixolydian Mode (Classic Rock Dominant 7th)</option>
+              <option value="harmonic_minor">Harmonic Minor (Neo-Classical & Spanish)</option>
+            </select>
+          </div>
+
+          <!-- Display Mode (Note Names vs Scale Degrees) -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>🏷️</span> Display Label Mode
+            </label>
+            <div class="scale-toggle-btn-group">
+              <button class="scale-toggle-btn active" id="scale-mode-note">Note Names (C, E, G)</button>
+              <button class="scale-toggle-btn" id="scale-mode-degree">Degrees (1, ♭3, 5)</button>
+            </div>
+          </div>
+
+          <!-- Position Register Filter -->
+          <div class="scale-control-group">
+            <label class="scale-control-label">
+              <span>🔍</span> Fretboard Register
+            </label>
+            <select class="scale-preset-dropdown" id="scale-position-filter">
+              <option value="all" selected>Full Fretboard (Frets 0–12)</option>
+              <option value="open">Open Position (Frets 0–4)</option>
+              <option value="middle">Mid Register (Frets 5–8)</option>
+              <option value="upper">Upper Octave (Frets 9–12)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Scale Info Ribbon -->
+        <div style="margin-top:20px; padding:12px 16px; background:rgba(0,0,0,0.3); border:1px solid var(--border-light); border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Formula & Notes:</span>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+              <span id="scale-ribbon-title" style="font-size:1.1rem; font-weight:800; color:var(--accent-gold);">A Pentatonic Minor</span>
+              <span id="scale-ribbon-formula" style="font-size:0.85rem; color:var(--accent-cyan); font-weight:600;">(1 - ♭3 - 4 - 5 - ♭7)</span>
+            </div>
+            <div id="scale-ribbon-notes" style="font-size:0.85rem; color:#fff; margin-top:3px; font-weight:700;">A • C • D • E • G</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <!-- Scale Tempo BPM Control -->
+            <div style="display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.3); padding:6px 14px; border-radius:10px; border:1px solid var(--border-light);">
+              <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">BPM:</span>
+              <input type="range" id="scale-tempo-slider" min="40" max="240" value="120" step="5" style="width:100px; accent-color:var(--accent-gold); cursor:pointer;">
+              <span id="scale-tempo-readout" style="font-size:0.85rem; font-weight:800; color:var(--accent-gold); min-width:65px;">120 BPM</span>
+            </div>
+            <button class="btn btn-primary" id="btn-scale-run">
+              <span id="btn-scale-run-icon">▶️</span> <span id="btn-scale-run-text">Play Scale Run</span>
+            </button>
+            <button class="btn btn-secondary" id="btn-scale-mic">
+              <span>🎙️</span> <span id="btn-scale-mic-text">Practice with Guitar (Live Mic)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D ROSEWOOD FRETBOARD CONTAINER -->
+      <div class="fretboard-container" style="padding:20px 14px;">
+        <div class="fretboard-board" id="scale-fretboard-board">
+          <div class="fret-numbers">
+            <div class="fret-num">0 (Open)</div>
+            <div class="fret-num">1</div>
+            <div class="fret-num">2</div>
+            <div class="fret-num marker">3 •</div>
+            <div class="fret-num">4</div>
+            <div class="fret-num marker">5 •</div>
+            <div class="fret-num">6</div>
+            <div class="fret-num marker">7 •</div>
+            <div class="fret-num">8</div>
+            <div class="fret-num marker">9 •</div>
+            <div class="fret-num">10</div>
+            <div class="fret-num">11</div>
+            <div class="fret-num marker">12 ••</div>
+          </div>
+          <div id="scale-fretboard-strings-rows">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: CHORD CHANGE DRILL
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-drill" role="tabpanel" aria-labelledby="tab-drill">
+    <div style="padding: var(--space-xl);">
+      <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <div class="card-header"><div class="card-title"><span>🎯</span> Chord Change Drill</div></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-lg);">
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Progression Type</label>
+            <select class="rhythm-select-pill" id="drill-progression-type" style="width:100%;">
+              <option value="random">Random</option>
+              <option value="I-V-vi-IV">I - V - vi - IV (Pop)</option>
+              <option value="ii-V-I">ii - V - I (Jazz)</option>
+              <option value="blues">12-Bar Blues</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">BPM</label>
+            <input type="range" id="drill-bpm" min="50" max="160" value="80" style="width:100%;" oninput="document.getElementById('drill-bpm-val').textContent=this.value+' BPM'">
+            <div style="text-align:right; font-size:0.8rem; color:var(--accent-gold);" id="drill-bpm-val">80 BPM</div>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Bars per Chord</label>
+            <select class="rhythm-select-pill" id="drill-bars-per-chord" style="width:100%;">
+              <option value="1">1 Bar</option>
+              <option value="2" selected>2 Bars</option>
+              <option value="4">4 Bars</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Total Changes</label>
+            <input type="number" id="drill-total-chords" min="4" max="64" value="16" style="width:100%; padding:8px; background:rgba(0,0,0,0.3); border:1px solid var(--border-light); border-radius:8px; color:#fff;">
+          </div>
+        </div>
+        <div style="display:flex; gap:var(--space-sm); flex-wrap:wrap; margin-bottom:var(--space-lg);">
+          <button class="btn btn-primary" id="btn-start-drill"><span>▶️</span> Start Drill</button>
+          <button class="btn btn-secondary" id="btn-stop-drill" disabled><span>⏹️</span> Stop</button>
+          <button class="btn btn-secondary" id="btn-next-drill-chord" disabled><span>⏭️</span> Next Chord</button>
+        </div>
+        <div style="text-align:center; font-size:3rem; font-weight:900; color:var(--accent-gold); min-height:120px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.3); border-radius:var(--radius-lg); border:2px solid var(--border-light);" id="drill-current-chord">—</div>
+        <div style="margin-top:var(--space-md); display:flex; justify-content:center; gap:var(--space-lg); color:var(--text-muted); font-size:0.9rem;">
+          <span>Accuracy: <strong id="drill-accuracy" style="color:var(--accent-emerald);">—%</strong></span>
+          <span>Avg Latency: <strong id="drill-latency" style="color:var(--accent-cyan);">— ms</strong></span>
+          <span>Streak: <strong id="drill-streak" style="color:var(--accent-gold);">0</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: SONG SEARCH
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-search" role="tabpanel" aria-labelledby="tab-search">
+    <div style="padding: var(--space-xl); max-width: 1000px; margin: 0 auto;">
+      <div class="card">
+        <div style="text-align:center; margin-bottom:var(--space-lg);">
+          <h2 style="font-size:1.8rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:10px;"><span>🔍</span> Search ANY Song Chords & Notes</h2>
+          <p style="color:var(--text-muted);">Type any Bollywood, Punjabi, Pop, or Rock song name</p>
+        </div>
+        <div style="max-width:600px; margin:0 auto var(--space-lg);">
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="search-song-input" placeholder="e.g. Tum Hi Ho, Hotel California, Kesariya..." style="flex:1; padding:14px 20px; background:rgba(10,14,26,0.9); border:2px solid var(--accent-cyan); border-radius:30px; font-size:1rem; color:#fff; outline:none;" aria-label="Song search">
+            <button class="btn btn-primary" id="btn-search-song" style="padding:12px 28px; border-radius:30px; white-space:nowrap;"><span>🔎</span> Search</button>
+          </div>
+        </div>
+        <div id="search-results" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: HEADSTOCK TUNER
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-tuner" role="tabpanel" aria-labelledby="tab-tuner">
+    <div style="padding: var(--space-xl); max-width: 1000px; margin: 0 auto;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span>🪕</span> Headstock Tuner</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <label style="font-size:0.75rem; color:var(--text-muted);">Tuning:</label>
+            <select class="rhythm-select-pill" id="tuner-preset-select" style="min-width:180px;"></select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(6, 1fr); gap:8px; margin-bottom:var(--space-lg);" id="tuner-pegs">
+          <!-- Populated by JS -->
+        </div>
+        <div style="text-align:center; background:rgba(0,0,0,0.4); border:2px solid var(--border-light); border-radius:var(--radius-xl); padding:var(--space-xl);" id="tuner-center-display">
+          <div style="font-size:4.5rem; font-weight:900; color:var(--accent-gold);" id="tuner-center-note">E</div>
+          <div style="font-size:1.1rem; color:var(--text-muted); margin:8px 0;" id="tuner-center-freq">Target: 82.4 Hz • Detected: -- Hz</div>
+          <div style="width:100%; max-width:320px; height:14px; background:rgba(255,255,255,0.08); border-radius:10px; position:relative; margin:0 auto 16px; border:1px solid var(--border-light); overflow:hidden;">
+            <div style="position:absolute; left:50%; top:0; bottom:0; width:4px; background:#10b981; transform:translateX(-50%); z-index:2;"></div>
+            <div class="meter-bar" id="tuner-gauge-needle" style="height:100%; width:8px; border-radius:4px; background:var(--accent-gold); transform:translateX(-50%); transition:left 0.1s ease-out; box-shadow:0 0 10px rgba(255,179,0,0.8); z-index:3; left:50%;"></div>
+          </div>
+          <div class="tuner-status-pill" id="tuner-status-badge" style="font-size:1rem; font-weight:800; padding:8px 20px; border-radius:50px; background:rgba(255,255,255,0.05); border:1px solid var(--border-light); display:inline-flex; align-items:center; gap:8px;">Pluck a string</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: CHORD LIBRARY
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-chords" role="tabpanel" aria-labelledby="tab-chords">
+    <div style="padding: var(--space-xl); max-width: 1200px; margin: 0 auto;">
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span>📚</span> Interactive Chord Library</div></div>
+        <div style="margin-bottom:var(--space-md);">
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+            <span style="font-size:0.75rem; color:var(--text-muted); align-self:center;">Root:</span>
+            <div id="lib-root-filters" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <span style="font-size:0.75rem; color:var(--text-muted); align-self:center;">Quality:</span>
+            <div id="lib-quality-filters" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+          </div>
+        </div>
+        <div class="library-grid" id="library-cards-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:var(--space-md);">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: METRONOME
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-metronome" role="tabpanel" aria-labelledby="tab-metronome">
+    <div style="padding: var(--space-xl); max-width: 900px; margin: 0 auto;">
+      <div class="card" style="text-align:center;">
+        <div class="card-title"><span>⏱️</span> Precision Metronome & Strum Guide</div>
+        <div style="font-size:5rem; font-weight:900; color:var(--accent-gold); line-height:1; margin:var(--space-md) 0;" id="metro-bpm-display">100</div>
+        <div style="font-size:1rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:var(--space-lg);" id="metro-tempo-name">Moderato</div>
+        <input type="range" id="metro-slider" class="metro-slider" min="40" max="240" value="100" style="width:100%; max-width:480px; margin:0 auto var(--space-lg); display:block;">
+        <div style="display:flex; justify-content:center; gap:var(--space-md); margin-bottom:var(--space-lg);">
+          <button class="btn btn-secondary" id="metro-bpm-minus" style="width:50px; height:50px; border-radius:50%; font-size:1.5rem;">−</button>
+          <button class="btn btn-primary" id="btn-metro-toggle" style="width:70px; height:70px; border-radius:50%; font-size:1.8rem;"><span id="metro-play-icon">▶️</span></button>
+          <button class="btn btn-secondary" id="metro-bpm-plus" style="width:50px; height:50px; border-radius:50%; font-size:1.5rem;">+</button>
+        </div>
+        <div style="display:flex; justify-content:center; gap:8px; margin-bottom:var(--space-lg);" id="metro-beats-container" aria-label="Beat indicators"></div>
+        <div style="display:flex; justify-content:center; gap:var(--space-sm); flex-wrap:wrap; margin-bottom:var(--space-lg);">
+          <button class="btn btn-secondary" id="metro-tap" style="padding:10px 20px;">👆 Tap Tempo</button>
+          <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--text-muted);"><input type="checkbox" id="metro-accent"> Accent Downbeat</label>
+        </div>
+        <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="metro-sig-3" style="padding:6px 16px;">3/4</button>
+          <button class="btn btn-secondary active" id="metro-sig-4" style="padding:6px 16px;">4/4</button>
+          <button class="btn btn-secondary" id="metro-sig-6" style="padding:6px 16px;">6/8</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:var(--space-lg);">
+        <div class="card-title"><span>🎸</span> Visual Strumming Patterns</div>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:var(--space-md);">
+          <button class="btn btn-secondary" id="strum-island" style="padding:8px 16px;">🏝️ Island (D-DU-UDU)</button>
+          <button class="btn btn-secondary" id="strum-country" style="padding:8px 16px;">🤠 Country (Bass-Down-Up)</button>
+          <button class="btn btn-secondary" id="strum-pop" style="padding:8px 16px;">🎵 Pop (Down-Down-Up)</button>
+          <button class="btn btn-secondary" id="strum-driving" style="padding:8px 16px;">🚗 Driving (DUDUDUDU)</button>
+          <button class="btn btn-secondary" id="strum-waltz" style="padding:8px 16px;">🎻 Waltz (Bass-Down-Up)</button>
+        </div>
+        <div id="strum-arrows-track" style="display:flex; justify-content:space-around; align-items:center; gap:8px; padding:var(--space-md); background:rgba(0,0,0,0.3); border-radius:var(--radius-md);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: AI TAB TRANSCRIBER
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-transcriber" role="tabpanel" aria-labelledby="tab-transcriber">
+    <div style="padding: var(--space-xl); max-width: 1000px; margin: 0 auto;">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-sm); margin-bottom:var(--space-lg);">
+          <div>
+            <h2 style="font-size:1.6rem; font-weight:800; display:flex; align-items:center; gap:10px;"><span>📝</span> Audio-to-Guitar Tab Transcriber</h2>
+            <p style="color:var(--text-muted);">Pluck melody on your guitar — sub-hertz onset tracking writes real tablature in real time!</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-toggle-transcribing"><span>🎙️</span> <span>Start Live Tab Writing</span></button>
+            <button class="btn btn-secondary" id="btn-play-tab"><span>▶️</span> Audition Tab</button>
+            <button class="btn btn-secondary" id="btn-copy-tab"><span>📋</span> Copy Tab</button>
+            <button class="btn btn-secondary" id="btn-download-tab"><span>⬇️</span> Download .txt</button>
+            <button class="btn btn-secondary" id="btn-clear-tab"><span>🔄</span> Clear</button>
+          </div>
+        </div>
+        <pre class="tab-viewport-pre" id="tab-viewport" style="background:#090d16; border:1px solid rgba(56,189,248,0.3); border-radius:var(--radius-md); padding:var(--space-md); font-family:'Courier New',monospace; font-size:1.05rem; line-height:1.6; color:#38bdf8; overflow-x:auto; white-space:pre; box-shadow:inset 0 0 25px rgba(0,0,0,0.8); user-select:text;" aria-label="Guitar tablature output">
+e|-----------------------------------------------------------------|
+B|-----------------------------------------------------------------|
+G|-----------------------------------------------------------------|
+D|-----------------------------------------------------------------|
+A|-----------------------------------------------------------------|
+E|-----------------------------------------------------------------|
+Sargam: (Pluck notes or click 'Start Live Tab Writing' to transcribe)
+        </pre>
+        <div style="margin-top:var(--space-lg);">
+          <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:700; margin-bottom:8px;">Captured Note Log (Click any note to hear):</div>
+          <div class="tab-notes-grid" id="tab-notes-grid" style="display:flex; flex-wrap:wrap; gap:8px; max-height:180px; overflow-y:auto; background:rgba(0,0,0,0.25); border-radius:var(--radius-md); padding:var(--space-md);">
+            <span style="color:var(--text-muted);">No notes recorded yet. Pluck a string!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: MULTI-TRACK LOOPER
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-looper" role="tabpanel" aria-labelledby="tab-looper">
+    <div style="padding: var(--space-xl); max-width: 1200px; margin: 0 auto;">
+      <div class="card" style="background:linear-gradient(145deg, rgba(20,26,48,0.95), rgba(12,16,30,0.98)); border:1px solid var(--accent-purple); box-shadow:0 12px 45px rgba(0,0,0,0.5), 0 0 35px rgba(168,85,247,0.15);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-lg);">
+          <div><h2 style="font-size:1.6rem; font-weight:800; display:flex; align-items:center; gap:10px;"><span>🔄</span> Multi-Track Acoustic Looper</h2></div>
+          <button class="btn btn-primary" id="btn-looper-master-play" style="padding:12px 24px; font-size:1rem;"><span>▶️</span> Master Play</button>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-lg); padding:var(--space-md); background:rgba(0,0,0,0.3); border-radius:var(--radius-lg);">
+          <div style="width:80px; height:80px; border-radius:50%; background:conic-gradient(var(--accent-purple) 0%, rgba(255,255,255,0.1) 0%); display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(168,85,247,0.35);" id="looper-wheel">
+            <div style="width:62px; height:62px; border-radius:50%; background:#0d111d; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; color:var(--accent-purple);">
+              <span id="looper-bar-beat">1.1</span>
+              <span style="font-size:0.6rem;">BAR.BEAT</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:var(--space-md); flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--text-muted);">Bars: <select id="looper-bar-length" class="rhythm-select-pill" style="padding:4px 10px;"><option value="2">2</option><option value="4" selected>4</option><option value="8">8</option></select></label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--text-muted);">BPM: <input type="range" id="looper-bpm" min="50" max="180" value="80" style="width:120px;"></label>
+            <button class="btn btn-secondary" id="btn-looper-clear-all" style="color:#f43f5e;">🗑️ Clear All</button>
+          </div>
+        </div>
+        <div class="looper-tracks-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-md);" id="looper-tracks">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: VIDEO RECORDER
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-video" role="tabpanel" aria-labelledby="tab-video">
+    <div style="padding: var(--space-xl); max-width: 1000px; margin: 0 auto;">
+      <div class="card" style="text-align:center;">
+        <h2 style="font-size:1.6rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:var(--space-md);"><span>📹</span> Video Studio & Social Cover Recorder</h2>
+        <p style="color:var(--text-muted);">Record full video covers with real-time HUD (detected chords, fretboard tabs & audio visualizer) burned in!</p>
+        <div style="width:100%; max-width:860px; aspect-ratio:16/9; background:#000; border-radius:var(--radius-xl); overflow:hidden; position:relative; border:2px solid rgba(255,255,255,0.1); box-shadow:0 8px 30px rgba(0,0,0,0.7); margin:0 auto var(--space-lg);">
+          <video id="camera-video-element" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
+          <canvas id="video-overlay-canvas" width="1280" height="720" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></canvas>
+        </div>
+        <div style="display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:var(--space-md);">
+          <button class="btn btn-secondary" id="btn-toggle-webcam"><span>📷</span> Enable Camera</button>
+          <button class="btn btn-primary" id="btn-video-record" style="background:linear-gradient(135deg, #ef4444, #b91c1c);"><span>🔴</span> <span>Record Video Cover</span></button>
+          <span class="badge" id="video-rec-timer" style="font-size:0.9rem; font-weight:700; font-family:monospace; display:none;">00:00</span>
+          <a id="btn-video-download" class="btn btn-secondary" style="display:none; text-decoration:none;" download="guitar_cover_hud.webm">⬇️ Download Video</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: TABLA & PERCUSSION
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-rhythm" role="tabpanel" aria-labelledby="tab-rhythm">
+    <div style="padding: var(--space-xl); max-width: 1200px; margin: 0 auto;">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-sm); margin-bottom:var(--space-lg);">
+          <div><h2 style="font-size:1.6rem; font-weight:800; display:flex; align-items:center; gap:10px;"><span>🥁</span> Acoustic Tabla, Cajón & Percussion</h2><p style="color:var(--text-muted);">Authentic synthesized Indian classical Thekas & western cajón rhythms</p></div>
+          <button class="btn btn-primary" id="btn-rhythm-master-toggle"><span>▶️</span> <span>Start Rhythm</span></button>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:var(--space-md); margin-bottom:var(--space-lg);" id="rhythm-presets">
+          <!-- Populated by JS -->
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:var(--space-lg); background:rgba(0,0,0,0.3); padding:var(--space-lg); border-radius:var(--radius-lg); border:1px solid var(--border-light);">
+          <div style="flex:1; min-width:180px;"><div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>Tempo:</span><strong id="rhythm-tempo-val" style="color:var(--accent-gold);">80 BPM</strong></div><input type="range" id="rhythm-tempo" min="50" max="160" value="80" style="width:100%;"></div>
+          <div style="flex:1; min-width:180px;"><div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>Bass Volume:</span><strong id="rhythm-bass-vol">80%</strong></div><input type="range" id="rhythm-bass-volume" min="0" max="1" step="0.05" value="0.8" style="width:100%;"></div>
+          <div style="flex:1; min-width:180px;"><div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>Treble Volume:</span><strong id="rhythm-treble-vol">75%</strong></div><input type="range" id="rhythm-treble-volume" min="0" max="1" step="0.05" value="0.75" style="width:100%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       TAB: AUDIO RECORDER & LOOPER
+       ========================================================================== -->
+  <div class="studio-tab-pane" id="pane-recorder" role="tabpanel" aria-labelledby="tab-recorder">
+    <!-- Populated by JS from src/tabs/recorder.ts -->
+  </div>
+
+  <!-- ==========================================================================
+       PERSISTENT RHYTHM DOCK
+       ========================================================================== -->
+  <div class="rhythm-dock-container" id="rhythm-dock" aria-label="Persistent rhythm controls">
+    <div class="rhythm-dock-left">
+      <select class="rhythm-select-pill" id="dock-rhythm-select" aria-label="Rhythm pattern"></select>
+      <div class="rhythm-beat-indicators" id="dock-beat-dots" aria-label="Beat indicators"></div>
+      <button class="btn btn-primary" id="btn-dock-rhythm-toggle" style="padding:8px 16px;"><span>▶️</span> <span>Rhythm</span></button>
+    </div>
+    <div style="display:flex; align-items:center; gap:var(--space-md);">
+      <label style="font-size:0.75rem; color:var(--text-muted);">Tempo: <input type="range" id="dock-tempo-slider" min="50" max="160" value="80" style="width:100px; margin-left:8px;"><span id="dock-tempo-readout" style="color:var(--accent-gold); min-width:40px;">80</span></label>
+      <label style="font-size:0.75rem; color:var(--text-muted);">Bass: <input type="range" id="dock-bass-vol" min="0" max="1" step="0.05" value="0.8" style="width:80px; margin-left:8px;"></label>
+      <label style="font-size:0.75rem; color:var(--text-muted);">Treble: <input type="range" id="dock-treble-vol" min="0" max="1" step="0.05" value="0.75" style="width:80px; margin-left:8px;"></label>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MIDI MODAL
+       ========================================================================== -->
+  <div class="modal-backdrop" id="midi-modal" role="dialog" aria-modal="true" aria-labelledby="midi-modal-title">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-sm);">
+        <h2 id="midi-modal-title" style="font-size:1.4rem; font-weight:800; color:var(--accent-purple);">🎹 Web MIDI Output</h2>
+        <button class="btn btn-secondary" onclick="document.getElementById('midi-modal').style.display='none'" style="padding:4px 12px;">✕ Close</button>
+      </div>
+      <div style="margin-bottom:var(--space-md);">
+        <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Output Device</label>
+        <select class="rhythm-select-pill" id="midi-device-select" style="width:100%;"></select>
+      </div>
+      <div style="display:flex; gap:var(--space-md); flex-wrap:wrap; margin-bottom:var(--space-md);">
+        <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem;"><input type="checkbox" id="midi-send-chords" checked> Send Chords</label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem;"><input type="checkbox" id="midi-send-notes" checked> Send Single Notes</label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem;">Channel: <select id="midi-channel-select" class="rhythm-select-pill" style="width:60px;"><option value="0">1</option><option value="1">2</option><option value="9">10 (Drums)</option><option value="2">3</option></select></label>
+      </div>
+      <div style="display:flex; gap:var(--space-md); flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btn-midi-test"><span>🎵</span> Test C Major</button>
+        <button class="btn btn-secondary" id="btn-midi-panic"><span>🛑</span> Panic (All Notes Off)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM SONG CREATOR MODAL -->
+  <div class="modal-backdrop" id="custom-song-modal" role="dialog" aria-modal="true" aria-labelledby="custom-song-title">
+    <div class="modal-card" style="max-width:800px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-md);">
+        <h2 id="custom-song-title" style="font-size:1.4rem; font-weight:800; color:var(--accent-gold);">📝 Create Custom Song</h2>
+        <button class="btn btn-secondary" onclick="document.getElementById('custom-song-modal').style.display='none'" style="padding:4px 12px;">✕ Close</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:var(--space-md); margin-bottom:var(--space-md);">
+        <div><label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Song Title *</label><input type="text" id="custom-song-title-input" class="rhythm-select-pill" style="width:100%; padding:10px;" placeholder="My Song"></div>
+        <div><label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Artist / Movie</label><input type="text" id="custom-song-artist-input" class="rhythm-select-pill" style="width:100%; padding:10px;" placeholder="Original / Band"></div>
+        <div><label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Key</label><select id="custom-song-key" class="rhythm-select-pill" style="width:100%;"><option>C Major</option><option>D Major</option><option>D Minor</option><option>E Minor</option><option>G Major</option><option>A Minor</option><option>F Major</option><option>B Minor</option></select></div>
+        <div><label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">BPM</label><input type="number" id="custom-song-bpm" class="rhythm-select-pill" style="width:100%; padding:10px;" value="80" min="40" max="220"></div>
+        <div><label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Strum Pattern</label><select id="custom-song-strum" class="rhythm-select-pill" style="width:100%;"><option value="D - D U - U D -">D - D U - U D - (Folk)</option><option value="D - D - D U D U">D - D - D U D U (Bollywood)</option><option value="D D U U D U">D D U U D U (Campfire)</option><option value="D - D - D - D -">D - D - D - D - (Slow 4/4)</option></select></div>
+      </div>
+      <div style="margin-bottom:var(--space-md);"><label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Lyrics with [Chord] tags:</label><textarea id="custom-song-lyrics" rows="8" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--border-light); border-radius:var(--radius-md); color:#fff; padding:var(--space-md); font-family:monospace; font-size:0.85rem; line-height:1.5; resize:vertical;" placeholder="[G] Amazing grace how [C] sweet the sound&#10;That [G] saved a wretch like [D] me&#10;[G] I once was lost but [C] now I'm found&#10;Was [G] blind but [D] now I [G] see"></textarea><span style="font-size:0.7rem; color:var(--text-muted);">Tip: Chords in [brackets] like [C], [G], [Am], [F] are auto-recognized.</span></div>
+      <div style="display:flex; justify-content:flex-end; gap:var(--space-sm);">
+        <button class="btn btn-secondary" onclick="document.getElementById('custom-song-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-custom-song"><span>💾</span> Save to Library</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW:', err));
+      });
+    }
+  </script>
+  
+</body>
+</html>
