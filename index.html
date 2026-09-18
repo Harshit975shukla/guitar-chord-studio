@@ -2986,6 +2986,23 @@
           </div>
         </div>
 
+        <!-- EBOOK CHORD VOICINGS (ALL 4 NECK SHAPES) -->
+        <div id="detected-voicings-box" style="display:none; margin:14px 0; background:rgba(15,23,42,0.85); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:12px 16px; box-shadow:0 4px 16px rgba(0,0,0,0.5);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.1rem;">📖</span>
+              <span style="font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent-gold); font-weight:800;">
+                Ebook Chord Voicings (All 4 Neck Shapes):
+              </span>
+              <strong id="detected-voicing-chord-name" style="color:#38bdf8; font-size:1rem;">-</strong>
+            </div>
+            <span style="font-size:0.72rem; color:var(--text-muted);">Click any voicing to preview frets & strum shape on 3D guitar</span>
+          </div>
+          <div id="detected-voicings-chips" style="display:flex; flex-wrap:wrap; gap:8px;">
+            <!-- Populated on chord detection -->
+          </div>
+        </div>
+
         <!-- Audio Volume / Peak Level Meter with Noise Floor Marker -->
         <div class="meter-box">
           <div class="meter-labels">
@@ -3324,18 +3341,43 @@
           </div>
 
           <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
-            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Select Acoustic Classic:</label>
-            <select class="song-select-dropdown" id="song-selector-select" onchange="loadSongById(this.value)">
-              <option value="hotel_california">1. Hotel California - Eagles</option>
-              <option value="let_it_be">2. Let It Be - The Beatles</option>
-              <option value="wonderwall">3. Wonderwall - Oasis</option>
-              <option value="perfect">4. Perfect - Ed Sheeran</option>
-              <option value="hallelujah">5. Hallelujah - Leonard Cohen</option>
-              <option value="knockin_on_heaven">6. Knockin' On Heaven's Door - Bob Dylan</option>
-              <option value="stand_by_me">7. Stand By Me - Ben E. King</option>
-              <option value="wish_you_were_here">8. Wish You Were Here - Pink Floyd</option>
-              <option value="yellow">9. Yellow - Coldplay</option>
-              <option value="riptide">10. Riptide - Vance Joy</option>
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Select Song or Theme Melody:</label>
+            <select class="song-select-dropdown" id="song-selector-select" onchange="loadSongById(this.value)" style="max-width:320px;">
+              <optgroup label="🎸 Western Acoustic Classics">
+                <option value="hotel_california">Hotel California - Eagles</option>
+                <option value="let_it_be">Let It Be - The Beatles</option>
+                <option value="wonderwall">Wonderwall - Oasis</option>
+                <option value="perfect">Perfect - Ed Sheeran</option>
+                <option value="hallelujah">Hallelujah - Leonard Cohen</option>
+                <option value="knockin_on_heaven">Knockin' On Heaven's Door - Bob Dylan</option>
+                <option value="stand_by_me">Stand By Me - Ben E. King</option>
+                <option value="wish_you_were_here">Wish You Were Here - Pink Floyd</option>
+                <option value="yellow">Yellow - Coldplay</option>
+                <option value="riptide">Riptide - Vance Joy</option>
+              </optgroup>
+              <optgroup label="🎬 Famous Theme Melodies (Ebook)">
+                <option value="harry_potter_theme">Harry Potter (Hedwig's Theme)</option>
+                <option value="superman_theme">Superman Theme - John Williams</option>
+                <option value="bella_ciao">Bella Ciao (Money Heist)</option>
+                <option value="ode_to_joy">Ode To Joy - Beethoven</option>
+                <option value="happy_birthday">Happy Birthday Melody</option>
+                <option value="coffin_dance">Coffin Dance (Astronomia)</option>
+                <option value="iphone_ringtone">iPhone Marimba Ringtone</option>
+                <option value="twinkle_twinkle">Twinkle Twinkle Little Star</option>
+              </optgroup>
+              <optgroup label="🎶 Melodic Guitar Songs & Solos (Ebook)">
+                <option value="kal_ho_na_ho">Kal Ho Naa Ho (Heartbeat Lead)</option>
+                <option value="kesariya">Kesariya (Brahmastra Lead)</option>
+                <option value="gulabi_aankhen">Gulabi Aankhen (Acoustic Solo)</option>
+                <option value="channa_mereya">Channa Mereya (Acoustic Lead)</option>
+                <option value="raabta">Raabta (Agent Vinod Lead)</option>
+                <option value="zara_zara">Zara Zara (RHTDM Lead)</option>
+                <option value="lag_ja_gale">Lag Ja Gale (Acoustic Classic)</option>
+                <option value="tujhe_dekha_to">Tujhe Dekha To (DDLJ Mandolin/Guitar)</option>
+                <option value="ek_pyar_ka_nagma">Ek Pyar Ka Nagma Hai (Violin/Lead)</option>
+                <option value="papa_kehte_hain">Papa Kehte Hain (Guitar Solo)</option>
+                <option value="hum_honge_kaamyaab">We Shall Overcome / Hum Honge Kaamyaab</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -4582,6 +4624,8 @@ Was [G] blind but [D] now I [G] see"></textarea>
     </div>
   </div>
 
+  <script src="all_chord_shapes.js"></script>
+  <script src="song_catalog_data.js"></script>
   <script>
     /* ==========================================================================
        AI GUITAR CHORD DETECTIVE - HIGH-PRECISION AUDIO & ACOUSTIC SYNTHESIZER
@@ -5554,6 +5598,14 @@ Was [G] blind but [D] now I [G] see"></textarea>
       toggleMicrophone();
     }
 
+    async function startListening() {
+      if (!isListening) await startMicrophone();
+    }
+
+    function stopListening() {
+      if (isListening) stopMicrophone();
+    }
+
     async function toggleMicrophone() {
       if (isListening) stopMicrophone();
       else await startMicrophone();
@@ -5829,6 +5881,10 @@ Was [G] blind but [D] now I [G] see"></textarea>
       const energyFlux = totalGuitarBandEnergy - prevFrameBandEnergy;
       prevFrameBandEnergy = totalGuitarBandEnergy;
       const isNewAttack = energyFlux > 0.025;
+      if (isNewAttack) {
+        lastLockedChord = null;
+        candidateVoteHistory = [];
+      }
 
       const minEnergyThreshold = isNoiseProfileActive ? 0.008 : 0.012;
       const minDbThreshold = isNoiseProfileActive ? (measuredNoiseFloorDb + 2.0) : -74;
@@ -5946,8 +6002,8 @@ Was [G] blind but [D] now I [G] see"></textarea>
         if (smoothedChroma[i] > 0.28) activePitchClasses++;
       }
 
-      // 6. SINGLE NOTE vs POLYPHONIC CHORD DISCRIMINATION
-      const isSingleNote = (autoCorr.confidence >= 0.76 && autoCorr.freq >= 70 && autoCorr.freq <= 850 && activePitchClasses <= 2);
+      // 6. SINGLE NOTE vs POLYPHONIC CHORD DISCRIMINATION (Rock solid single note unfreezer)
+      const isSingleNote = (autoCorr.confidence >= 0.74 && autoCorr.freq >= 70 && autoCorr.freq <= 850);
 
       if (isSingleNote) {
         consecutiveNoteFrames++;
@@ -5957,13 +6013,19 @@ Was [G] blind but [D] now I [G] see"></textarea>
         consecutiveNoteFrames = 0;
       }
 
-      const allowModeSwitchToNote = consecutiveNoteFrames >= 3;
-      const allowModeSwitchToChord = consecutiveChordFrames >= 3;
+      const allowModeSwitchToNote = consecutiveNoteFrames >= 2;
+      const allowModeSwitchToChord = consecutiveChordFrames >= 2;
 
       // PATH A: SINGLE NOTE DETECTED
       if ((currentDisplayMode === 'note' && !allowModeSwitchToChord) || allowModeSwitchToNote) {
         currentDisplayMode = 'note';
         noteSustainHoldUntil = now + 500;
+        lastLockedChord = null;
+        for (let i = 0; i < 12; i++) smoothedChroma[i] *= 0.35;
+
+        // Hide chord alternative voicings box during single note pluck
+        const vBox = document.getElementById('detected-voicings-box');
+        if (vBox) vBox.style.display = 'none';
 
         let f0 = autoCorr.freq;
         if (f0 <= 0 && lastDetectedNoteSnapshot) f0 = lastDetectedNoteSnapshot.f0;
@@ -6034,6 +6096,10 @@ Was [G] blind but [D] now I [G] see"></textarea>
           if (currentActiveTab === 'scales' && typeof isScaleMicActive !== 'undefined' && isScaleMicActive) {
             evaluateScaleLivePitch(f0, noteFullName);
           }
+          // Real-time evaluation for single note play-along
+          if (typeof checkPlayAlongLiveSingleNote === 'function') {
+            checkPlayAlongLiveSingleNote(noteFullName);
+          }
         }
       } 
       // PATH B: POLYPHONIC CHORD DETECTED
@@ -6073,10 +6139,10 @@ Was [G] blind but [D] now I [G] see"></textarea>
           });
         }
 
-        // Add Incumbent Hysteresis Bonus (+0.14) to eliminate chord fluttering
+        // Add subtle Hysteresis Bonus (+0.05) to eliminate transient noise without sticking/freezing
         matches.forEach(m => {
           if (lastLockedChord === m.short) {
-            m.corr += 0.14;
+            m.corr += 0.05;
           }
         });
 
@@ -6109,11 +6175,11 @@ Was [G] blind but [D] now I [G] see"></textarea>
           }
         }
 
-        // Consensus Voting Buffer (eliminates 1-frame transient flicker)
+        // Consensus Voting Buffer (2 consecutive frames or high correlation triggers change immediately)
         candidateVoteHistory.push(best.short);
-        if (candidateVoteHistory.length > 4) candidateVoteHistory.shift();
+        if (candidateVoteHistory.length > 3) candidateVoteHistory.shift();
         const voteCount = candidateVoteHistory.filter(c => c === best.short).length;
-        const isConsensusWinner = (voteCount >= 2) || (lastLockedChord === best.short);
+        const isConsensusWinner = (voteCount >= 2) || (best.corr >= 0.32);
 
         if (matches.length >= 3) {
           const c1 = document.getElementById('cand-1'); if (c1) c1.innerHTML = `#1 <strong>${matches[0].short}</strong> (${Math.round(Math.max(0, matches[0].corr * 100))}%)`;
@@ -6135,6 +6201,11 @@ Was [G] blind but [D] now I [G] see"></textarea>
           updateHeroDisplay(best.short, best.root, best.quality, notesStr, "Chord Detected", confidencePct);
           updateTheoryTable(best);
           updateChromaUI(smoothedChroma, NOTE_NAMES.indexOf(best.root));
+
+          // Render all 4 Ebook Voicings for detected chord
+          if (typeof renderDetectedVoicingsUI === 'function') {
+            renderDetectedVoicingsUI(best.short);
+          }
 
           const holdBadge = document.getElementById('strum-hold-badge');
           if (holdBadge) {
@@ -6166,6 +6237,10 @@ Was [G] blind but [D] now I [G] see"></textarea>
           if (CHORD_PRESETS[best.short]) {
             currentFretboardState = [...CHORD_PRESETS[best.short].frets];
             renderFretboardState();
+          } else if (window.ALL_CHORD_VOICINGS && window.ALL_CHORD_VOICINGS[best.short]) {
+            const v = window.ALL_CHORD_VOICINGS[best.short][0];
+            currentFretboardState = [...v.frets].reverse();
+            renderFretboardState();
           }
 
           if (lastLockedChord !== best.short) {
@@ -6178,6 +6253,68 @@ Was [G] blind but [D] now I [G] see"></textarea>
       }
 
       animationFrameId = requestAnimationFrame(audioProcessingLoop);
+    }
+
+    function renderDetectedVoicingsUI(chordShort) {
+      const box = document.getElementById('detected-voicings-box');
+      const chips = document.getElementById('detected-voicings-chips');
+      const titleName = document.getElementById('detected-voicing-chord-name');
+      if (!box || !chips) return;
+
+      if (!window.ALL_CHORD_VOICINGS) {
+        box.style.display = 'none';
+        return;
+      }
+
+      let voicings = window.ALL_CHORD_VOICINGS[chordShort];
+      if (!voicings) {
+        const clean = (chordShort || '').replace(/\s+/g, '');
+        voicings = window.ALL_CHORD_VOICINGS[clean];
+      }
+
+      if (!voicings || voicings.length === 0) {
+        box.style.display = 'none';
+        return;
+      }
+
+      box.style.display = 'block';
+      if (titleName) titleName.textContent = chordShort;
+      chips.innerHTML = '';
+
+      voicings.forEach((v, idx) => {
+        const chip = document.createElement('button');
+        chip.className = 'btn btn-secondary';
+        chip.style.padding = '8px 14px';
+        chip.style.fontSize = '0.78rem';
+        chip.style.display = 'flex';
+        chip.style.flexDirection = 'column';
+        chip.style.alignItems = 'flex-start';
+        chip.style.gap = '2px';
+        chip.style.borderColor = idx === 0 ? 'var(--accent-gold)' : 'rgba(255,255,255,0.12)';
+        chip.style.background = idx === 0 ? 'rgba(255,179,0,0.14)' : 'rgba(255,255,255,0.04)';
+
+        // v.frets is [6th, 5th, 4th, 3rd, 2nd, 1st]
+        const fretsDisplay = v.frets.map(f => f === -1 ? 'X' : f).join(' ');
+
+        chip.innerHTML = `
+          <span style="font-weight:800; color:var(--accent-gold);">Voicing ${v.voicing}: ${v.label}</span>
+          <span style="font-family:monospace; font-size:0.72rem; color:var(--text-muted);">Frets: ${fretsDisplay} (${v.fretRange})</span>
+        `;
+
+        chip.onclick = () => {
+          currentFretboardState = [...v.frets].reverse();
+          renderFretboardState();
+          ensureAudio();
+          strumAcousticPhysical(currentFretboardState, 'down', 0.85);
+
+          Array.from(chips.children).forEach(c => {
+            c.style.borderColor = (c === chip) ? 'var(--accent-gold)' : 'rgba(255,255,255,0.12)';
+            c.style.background = (c === chip) ? 'rgba(255,179,0,0.22)' : 'rgba(255,255,255,0.04)';
+          });
+        };
+
+        chips.appendChild(chip);
+      });
     }
 
     function updateSeventhInspectorUI(root, isMinor, seventhNote, ratio) {
@@ -6349,6 +6486,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
         updateTunerUI();
       } else if (tabId === 'trainer') {
         if (!quizTargetChord) nextQuizChord();
+        if (!isListening) startListening();
       } else if (tabId === 'metronome') {
         renderMetroBeats();
         renderStrumArrows();
@@ -6602,9 +6740,16 @@ Was [G] blind but [D] now I [G] see"></textarea>
     function checkQuizChordMatch(detectedChordShortName) {
       if (currentActiveTab !== 'trainer' || quizCooldown || !quizTargetChord) return;
 
-      const targetData = CHORD_PRESETS[quizTargetChord];
-      const isMatch = detectedChordShortName === quizTargetChord ||
-                      (detectedChordShortName && detectedChordShortName.startsWith(quizTargetChord));
+      const target = (quizTargetChord || '').trim();
+      const det = (detectedChordShortName || '').trim();
+
+      const isMatch = (det === target) ||
+                      (det.startsWith(target) && (det.length === target.length || det[target.length] === '7' || det[target.length] === 'm')) ||
+                      (target === 'C' && (det === 'C' || det === 'Cmaj7')) ||
+                      (target === 'Am' && (det === 'Am' || det === 'Am7')) ||
+                      (target === 'G' && (det === 'G' || det === 'G7')) ||
+                      (target === 'D' && (det === 'D' || det === 'D7')) ||
+                      (target === 'Em' && (det === 'Em' || det === 'Em7'));
 
       if (isMatch) {
         quizCooldown = true;
@@ -6945,7 +7090,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
       const qualContainer = document.getElementById('lib-quality-filters');
       if (!rootContainer || rootContainer.children.length > 0) return;
 
-      const roots = ['All', 'C', 'D', 'E', 'F', 'F#', 'G', 'A', 'B'];
+      const roots = ['All', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
       roots.forEach(r => {
         const btn = document.createElement('button');
         btn.className = 'library-filter-pill' + (r === 'All' ? ' active' : '');
@@ -6979,7 +7124,27 @@ Was [G] blind but [D] now I [G] see"></textarea>
       if (!grid) return;
       grid.innerHTML = '';
 
-      const filtered = EXTENDED_LIBRARY.filter(c => {
+      let chordList = [...EXTENDED_LIBRARY];
+      if (window.ALL_CHORD_VOICINGS) {
+        Object.keys(window.ALL_CHORD_VOICINGS).forEach(k => {
+          if (!chordList.some(c => c.key === k)) {
+            const vArr = window.ALL_CHORD_VOICINGS[k];
+            if (vArr && vArr.length > 0) {
+              const v0 = vArr[0];
+              chordList.push({
+                key: k,
+                name: `${v0.root} ${v0.quality}`,
+                root: v0.root,
+                qual: v0.quality.includes('Minor') ? 'Minor' : (v0.quality.includes('Maj7') ? 'Maj7' : (v0.quality.includes('Min7') ? 'Min7' : (v0.quality.includes('7') ? '7th' : (v0.quality.includes('Sus4') ? 'Sus4' : (v0.quality.includes('Sus2') ? 'Sus2' : 'Major'))))),
+                frets: [...v0.frets].reverse(),
+                notes: `${v0.root} ebook chord voicings`
+              });
+            }
+          }
+        });
+      }
+
+      const filtered = chordList.filter(c => {
         const rootMatch = libSelectedRoot === 'All' || c.root === libSelectedRoot;
         const qualMatch = libSelectedQuality === 'All' || c.qual === libSelectedQuality;
         return rootMatch && qualMatch;
@@ -6989,16 +7154,35 @@ Was [G] blind but [D] now I [G] see"></textarea>
         const card = document.createElement('div');
         card.className = 'library-chord-card';
         const fretsStr = chord.frets.map(f => f === -1 ? 'x' : f.toString()).reverse().join('  ');
+
+        const voicings = (window.ALL_CHORD_VOICINGS && window.ALL_CHORD_VOICINGS[chord.key]) || [];
+        let voicingsHtml = '';
+        if (voicings.length > 0) {
+          voicingsHtml = `
+            <div style="margin-top:8px;">
+              <div style="font-size:0.7rem; color:var(--accent-gold); font-weight:700; margin-bottom:4px;">Ebook Voicings (4 Shapes):</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                ${voicings.map((v, vIdx) => `
+                  <button class="btn btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px; font-weight:700;" onclick="loadEbookVoicing('${chord.key}', ${vIdx})" title="${v.label} (${v.fretRange})">
+                    V${v.voicing}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
         card.innerHTML = `
           <div class="lib-chord-title">
             <span>${chord.name}</span>
             <span style="font-size:0.75rem; color:var(--text-muted);">${chord.qual}</span>
           </div>
           <div class="lib-chord-notes">${chord.notes}</div>
-          <div style="font-family:monospace; font-size:0.8rem; background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:6px; color:var(--accent-gold);">
+          <div id="lib-frets-display-${chord.key}" style="font-family:monospace; font-size:0.8rem; background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:6px; color:var(--accent-gold);">
             Frets: ${fretsStr}
           </div>
-          <div style="display:flex; gap:8px; margin-top:4px;">
+          ${voicingsHtml}
+          <div style="display:flex; gap:8px; margin-top:10px;">
             <button class="lib-chord-strum-btn" onclick="strumLibChord('${chord.key}')">
               🔊 Strum Acoustic
             </button>
@@ -7009,6 +7193,21 @@ Was [G] blind but [D] now I [G] see"></textarea>
         `;
         grid.appendChild(card);
       });
+    }
+
+    function loadEbookVoicing(key, voicingIdx) {
+      ensureAudio();
+      const voicings = window.ALL_CHORD_VOICINGS ? window.ALL_CHORD_VOICINGS[key] : null;
+      if (!voicings || !voicings[voicingIdx]) return;
+      const v = voicings[voicingIdx];
+      currentFretboardState = [...v.frets].reverse();
+      renderFretboardState();
+      strumAcousticPhysical(currentFretboardState, 'down', 0.85);
+
+      const fEl = document.getElementById('lib-frets-display-' + key);
+      if (fEl) {
+        fEl.innerHTML = `V${v.voicing} (${v.label}): <strong>${v.frets.map(f => f === -1 ? 'X' : f).join(' ')}</strong>`;
+      }
     }
 
     function strumLibChord(key) {
@@ -7025,1519 +7224,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
     /* ==========================================================================
        DEDICATED SONGS & PLAY-ALONG STUDIO ENGINE
        ========================================================================== */
-    const SONG_CATALOG = {
-  "hotel_california": {
-    "id": "hotel_california",
-    "title": "Hotel California",
-    "artist": "Eagles",
-    "album": "Hotel California (1976)",
-    "key": "B Minor (Am Capo 2)",
-    "bpm": 75,
-    "strum": "D - D U - U D U",
-    "strumPatternVisual": "↓ - ↓ ↑ - ↑ ↓ ↑",
-    "chordsUsed": [
-      "Am",
-      "E",
-      "G",
-      "D",
-      "F",
-      "C",
-      "Dm"
-    ],
-    "leadNotes": [
-      {
-        "note": "B4",
-        "str": 1,
-        "fret": 7,
-        "beats": 0.8,
-        "freq": 493.88,
-        "lyric": "On a"
-      },
-      {
-        "note": "A4",
-        "str": 1,
-        "fret": 5,
-        "beats": 0.8,
-        "freq": 440,
-        "lyric": "dark"
-      },
-      {
-        "note": "G4",
-        "str": 1,
-        "fret": 3,
-        "beats": 0.8,
-        "freq": 392,
-        "lyric": "de-sert"
-      },
-      {
-        "note": "F#4",
-        "str": 1,
-        "fret": 2,
-        "beats": 0.8,
-        "freq": 369.99,
-        "lyric": "high-way"
-      },
-      {
-        "note": "E4",
-        "str": 1,
-        "fret": 0,
-        "beats": 0.8,
-        "freq": 329.63,
-        "lyric": "cool wind"
-      },
-      {
-        "note": "D4",
-        "str": 2,
-        "fret": 3,
-        "beats": 0.8,
-        "freq": 293.66,
-        "lyric": "in my"
-      },
-      {
-        "note": "C4",
-        "str": 2,
-        "fret": 1,
-        "beats": 0.8,
-        "freq": 261.63,
-        "lyric": "hair"
-      },
-      {
-        "note": "B3",
-        "str": 2,
-        "fret": 0,
-        "beats": 1.4,
-        "freq": 246.94,
-        "lyric": "rising"
-      }
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "On a dark desert highway, cool wind in my hair",
-        "chords": [
-          {
-            "chord": "Am",
-            "word": "On a dark"
-          },
-          {
-            "chord": "E",
-            "word": "cool wind"
-          }
-        ],
-        "notes": [
-          {
-            "note": "B4",
-            "str": 1,
-            "fret": 7,
-            "beats": 0.8,
-            "freq": 493.88,
-            "lyric": "On a"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 0.8,
-            "freq": 440,
-            "lyric": "dark"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 392,
-            "lyric": "de-sert"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 1.2,
-            "freq": 369.99,
-            "lyric": "highway"
-          }
-        ]
-      },
-      {
-        "sec": "Verse 1 - Line 2",
-        "text": "Warm smell of colitas, rising up through the air",
-        "chords": [
-          {
-            "chord": "G",
-            "word": "Warm smell"
-          },
-          {
-            "chord": "D",
-            "word": "rising up"
-          }
-        ],
-        "notes": [
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 392,
-            "lyric": "Warm"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 369.99,
-            "lyric": "smell of"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 329.63,
-            "lyric": "colitas"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 1.2,
-            "freq": 293.66,
-            "lyric": "the air"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Welcome to the Hotel California, such a lovely place",
-        "chords": [
-          {
-            "chord": "F",
-            "word": "Welcome"
-          },
-          {
-            "chord": "C",
-            "word": "Hotel"
-          },
-          {
-            "chord": "E",
-            "word": "lovely"
-          }
-        ],
-        "notes": [
-          {
-            "note": "C5",
-            "str": 1,
-            "fret": 8,
-            "beats": 0.8,
-            "freq": 523.25,
-            "lyric": "Welcome"
-          },
-          {
-            "note": "B4",
-            "str": 1,
-            "fret": 7,
-            "beats": 0.8,
-            "freq": 493.88,
-            "lyric": "to the"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 1,
-            "freq": 440,
-            "lyric": "Hotel"
-          },
-          {
-            "note": "G#4",
-            "str": 1,
-            "fret": 4,
-            "beats": 1.4,
-            "freq": 415.3,
-            "lyric": "place"
-          }
-        ]
-      }
-    ]
-  },
-  "let_it_be": {
-    "id": "let_it_be",
-    "title": "Let It Be",
-    "artist": "The Beatles",
-    "album": "Let It Be (1970)",
-    "key": "C Major",
-    "bpm": 72,
-    "strum": "D - D - D - D -",
-    "strumPatternVisual": "↓ - ↓ - ↓ - ↓ -",
-    "chordsUsed": [
-      "C",
-      "G",
-      "Am",
-      "F",
-      "Em",
-      "Dm"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "When I find myself in times of trouble, Mother Mary comes to me",
-        "chords": [
-          {
-            "chord": "C",
-            "word": "When I"
-          },
-          {
-            "chord": "G",
-            "word": "times of"
-          },
-          {
-            "chord": "Am",
-            "word": "trouble"
-          },
-          {
-            "chord": "F",
-            "word": "comes to me"
-          }
-        ],
-        "notes": [
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.6,
-            "freq": 329.63,
-            "lyric": "When I"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.6,
-            "freq": 329.63,
-            "lyric": "find my-"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.6,
-            "freq": 329.63,
-            "lyric": "-self in"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 293.66,
-            "lyric": "times of"
-          },
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 1.2,
-            "freq": 261.63,
-            "lyric": "trouble"
-          }
-        ]
-      },
-      {
-        "sec": "Verse 1 - Line 2",
-        "text": "Speaking words of wisdom, let it be",
-        "chords": [
-          {
-            "chord": "C",
-            "word": "Speaking"
-          },
-          {
-            "chord": "G",
-            "word": "words of"
-          },
-          {
-            "chord": "F",
-            "word": "let it"
-          },
-          {
-            "chord": "C",
-            "word": "be"
-          }
-        ],
-        "notes": [
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.7,
-            "freq": 392,
-            "lyric": "Speaking"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.7,
-            "freq": 329.63,
-            "lyric": "words of"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 0.7,
-            "freq": 293.66,
-            "lyric": "wisdom"
-          },
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 1.4,
-            "freq": 261.63,
-            "lyric": "let it be"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Let it be, let it be, let it be, let it be, whisper words of wisdom",
-        "chords": [
-          {
-            "chord": "Am",
-            "word": "Let it be"
-          },
-          {
-            "chord": "G",
-            "word": "let it be"
-          },
-          {
-            "chord": "F",
-            "word": "let it be"
-          },
-          {
-            "chord": "C",
-            "word": "wisdom"
-          }
-        ],
-        "notes": [
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 0.8,
-            "freq": 440,
-            "lyric": "Let it"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 392,
-            "lyric": "be"
-          },
-          {
-            "note": "F4",
-            "str": 1,
-            "fret": 1,
-            "beats": 0.8,
-            "freq": 349.23,
-            "lyric": "let it"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 329.63,
-            "lyric": "be"
-          }
-        ]
-      }
-    ]
-  },
-  "wonderwall": {
-    "id": "wonderwall",
-    "title": "Wonderwall",
-    "artist": "Oasis",
-    "album": "(What's the Story) Morning Glory (1995)",
-    "key": "Em (Capo 2: F#m)",
-    "bpm": 86,
-    "strum": "D - D - D U D U D - D U",
-    "strumPatternVisual": "↓ - ↓ - ↓ ↑ ↓ ↑ ↓ - ↓ ↑",
-    "chordsUsed": [
-      "Em",
-      "G",
-      "D",
-      "A",
-      "C"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "Today is gonna be the day that they're gonna throw it back to you",
-        "chords": [
-          {
-            "chord": "Em",
-            "word": "Today is"
-          },
-          {
-            "chord": "G",
-            "word": "gonna be"
-          },
-          {
-            "chord": "D",
-            "word": "throw it"
-          },
-          {
-            "chord": "A",
-            "word": "back to you"
-          }
-        ],
-        "notes": [
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.7,
-            "freq": 329.63,
-            "lyric": "To-day"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 0.7,
-            "freq": 369.99,
-            "lyric": "is gonna"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 392,
-            "lyric": "be the"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 1.2,
-            "freq": 440,
-            "lyric": "day"
-          }
-        ]
-      },
-      {
-        "sec": "Verse 1 - Line 2",
-        "text": "By now you should've somehow realized what you gotta do",
-        "chords": [
-          {
-            "chord": "Em",
-            "word": "By now"
-          },
-          {
-            "chord": "G",
-            "word": "should have"
-          },
-          {
-            "chord": "D",
-            "word": "realized"
-          },
-          {
-            "chord": "A",
-            "word": "gotta do"
-          }
-        ],
-        "notes": [
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.7,
-            "freq": 392,
-            "lyric": "By now"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 0.7,
-            "freq": 369.99,
-            "lyric": "you should"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.7,
-            "freq": 329.63,
-            "lyric": "have some-"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 1.2,
-            "freq": 293.66,
-            "lyric": "-how"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Because maybe, you're gonna be the one that saves me",
-        "chords": [
-          {
-            "chord": "C",
-            "word": "Because"
-          },
-          {
-            "chord": "D",
-            "word": "maybe"
-          },
-          {
-            "chord": "Em",
-            "word": "saves me"
-          },
-          {
-            "chord": "G",
-            "word": "wonderwall"
-          }
-        ],
-        "notes": [
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 392,
-            "lyric": "Be-cause"
-          },
-          {
-            "note": "B4",
-            "str": 1,
-            "fret": 7,
-            "beats": 1,
-            "freq": 493.88,
-            "lyric": "may-be"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 0.8,
-            "freq": 440,
-            "lyric": "you're gonna"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 1.4,
-            "freq": 392,
-            "lyric": "save me"
-          }
-        ]
-      }
-    ]
-  },
-  "perfect": {
-    "id": "perfect",
-    "title": "Perfect",
-    "artist": "Ed Sheeran",
-    "album": "Divide (2017)",
-    "key": "G Major",
-    "bpm": 63,
-    "strum": "D - D - D - (6/8 Ballad)",
-    "strumPatternVisual": "↓ - ↓ - ↓ - ↓ - ↓ - ↓ -",
-    "chordsUsed": [
-      "G",
-      "Em",
-      "C",
-      "D"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "I found a love for me, darling just dive right in and follow my lead",
-        "chords": [
-          {
-            "chord": "G",
-            "word": "I found a"
-          },
-          {
-            "chord": "Em",
-            "word": "love for me"
-          },
-          {
-            "chord": "C",
-            "word": "dive right in"
-          },
-          {
-            "chord": "D",
-            "word": "follow my lead"
-          }
-        ],
-        "notes": [
-          {
-            "note": "G3",
-            "str": 3,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 196,
-            "lyric": "I found"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 246.94,
-            "lyric": "a love"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 1,
-            "freq": 293.66,
-            "lyric": "for me"
-          },
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 1.2,
-            "freq": 261.63,
-            "lyric": "darling"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Baby I'm dancing in the dark, with you between my arms",
-        "chords": [
-          {
-            "chord": "G",
-            "word": "Baby I'm"
-          },
-          {
-            "chord": "Em",
-            "word": "dancing"
-          },
-          {
-            "chord": "C",
-            "word": "in the dark"
-          },
-          {
-            "chord": "D",
-            "word": "between my arms"
-          }
-        ],
-        "notes": [
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 293.66,
-            "lyric": "Ba-by"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 329.63,
-            "lyric": "I'm"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 1,
-            "freq": 392,
-            "lyric": "dancing"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 1.4,
-            "freq": 369.99,
-            "lyric": "in the dark"
-          }
-        ]
-      }
-    ]
-  },
-  "hallelujah": {
-    "id": "hallelujah",
-    "title": "Hallelujah",
-    "artist": "Leonard Cohen / Jeff Buckley",
-    "album": "Various (1984 / 1994)",
-    "key": "C Major",
-    "bpm": 58,
-    "strum": "D - D - D - (6/8 Fingerpick)",
-    "strumPatternVisual": "↓ - ↓ - ↓ - ↓ - ↓ - ↓ -",
-    "chordsUsed": [
-      "C",
-      "Am",
-      "F",
-      "G",
-      "E7"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "I've heard there was a secret chord that David played and it pleased the Lord",
-        "chords": [
-          {
-            "chord": "C",
-            "word": "secret chord"
-          },
-          {
-            "chord": "Am",
-            "word": "David played"
-          },
-          {
-            "chord": "F",
-            "word": "pleased the Lord"
-          },
-          {
-            "chord": "G",
-            "word": "music"
-          }
-        ],
-        "notes": [
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 0.8,
-            "freq": 261.63,
-            "lyric": "I've heard"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 329.63,
-            "lyric": "there was"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 392,
-            "lyric": "a secret"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 1.4,
-            "freq": 440,
-            "lyric": "chord"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Hallelujah, Hallelujah, Hallelujah, Hallelujah",
-        "chords": [
-          {
-            "chord": "F",
-            "word": "Hallelujah"
-          },
-          {
-            "chord": "Am",
-            "word": "Hallelujah"
-          },
-          {
-            "chord": "F",
-            "word": "Hallelujah"
-          },
-          {
-            "chord": "C",
-            "word": "Hallelu-"
-          },
-          {
-            "chord": "G",
-            "word": "-jah"
-          }
-        ],
-        "notes": [
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 1,
-            "freq": 440,
-            "lyric": "Hal-le-"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 1,
-            "freq": 392,
-            "lyric": "-lu-"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 329.63,
-            "lyric": "-jah"
-          }
-        ]
-      }
-    ]
-  },
-  "knockin_on_heaven": {
-    "id": "knockin_on_heaven",
-    "title": "Knockin' On Heaven's Door",
-    "artist": "Bob Dylan",
-    "album": "Pat Garrett & Billy the Kid (1973)",
-    "key": "G Major",
-    "bpm": 68,
-    "strum": "D - D - D U D U",
-    "strumPatternVisual": "↓ - ↓ - ↓ ↑ ↓ ↑",
-    "chordsUsed": [
-      "G",
-      "D",
-      "Am",
-      "C"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "Mama take this badge off of me, I can't use it anymore",
-        "chords": [
-          {
-            "chord": "G",
-            "word": "Mama take"
-          },
-          {
-            "chord": "D",
-            "word": "badge off"
-          },
-          {
-            "chord": "Am",
-            "word": "of me"
-          },
-          {
-            "chord": "C",
-            "word": "anymore"
-          }
-        ],
-        "notes": [
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 293.66,
-            "lyric": "Mama"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 246.94,
-            "lyric": "take this"
-          },
-          {
-            "note": "A3",
-            "str": 3,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 220,
-            "lyric": "badge off"
-          },
-          {
-            "note": "G3",
-            "str": 3,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 196,
-            "lyric": "of me"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Knock, knock, knockin' on heaven's door",
-        "chords": [
-          {
-            "chord": "G",
-            "word": "Knock knock"
-          },
-          {
-            "chord": "D",
-            "word": "knockin' on"
-          },
-          {
-            "chord": "Am",
-            "word": "heaven's door"
-          }
-        ],
-        "notes": [
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.7,
-            "freq": 246.94,
-            "lyric": "Knock"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.7,
-            "freq": 246.94,
-            "lyric": "knock"
-          },
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 0.8,
-            "freq": 261.63,
-            "lyric": "knockin'"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 246.94,
-            "lyric": "door"
-          }
-        ]
-      }
-    ]
-  },
-  "stand_by_me": {
-    "id": "stand_by_me",
-    "title": "Stand By Me",
-    "artist": "Ben E. King",
-    "album": "Don't Play That Song! (1961)",
-    "key": "A Major",
-    "bpm": 118,
-    "strum": "D - X U - U D U",
-    "strumPatternVisual": "↓ - ✕ ↑ - ↑ ↓ ↑",
-    "chordsUsed": [
-      "A",
-      "F#m",
-      "D",
-      "E"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "When the night has come, and the land is dark, and the moon is the only light we'll see",
-        "chords": [
-          {
-            "chord": "A",
-            "word": "night has come"
-          },
-          {
-            "chord": "F#m",
-            "word": "land is dark"
-          },
-          {
-            "chord": "D",
-            "word": "moon is the"
-          },
-          {
-            "chord": "E",
-            "word": "only light"
-          },
-          {
-            "chord": "A",
-            "word": "we'll see"
-          }
-        ],
-        "notes": [
-          {
-            "note": "A3",
-            "str": 3,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 220,
-            "lyric": "When the"
-          },
-          {
-            "note": "C#4",
-            "str": 2,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 277.18,
-            "lyric": "night"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 246.94,
-            "lyric": "has come"
-          },
-          {
-            "note": "A3",
-            "str": 3,
-            "fret": 2,
-            "beats": 1.4,
-            "freq": 220,
-            "lyric": "and the land"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "So darling darling stand by me, oh stand by me, oh stand, stand by me",
-        "chords": [
-          {
-            "chord": "A",
-            "word": "stand by me"
-          },
-          {
-            "chord": "F#m",
-            "word": "stand by me"
-          },
-          {
-            "chord": "D",
-            "word": "stand"
-          },
-          {
-            "chord": "E",
-            "word": "stand by me"
-          }
-        ],
-        "notes": [
-          {
-            "note": "C#4",
-            "str": 2,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 277.18,
-            "lyric": "Stand"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 246.94,
-            "lyric": "by"
-          },
-          {
-            "note": "A3",
-            "str": 3,
-            "fret": 2,
-            "beats": 1.4,
-            "freq": 220,
-            "lyric": "me"
-          }
-        ]
-      }
-    ]
-  },
-  "wish_you_were_here": {
-    "id": "wish_you_were_here",
-    "title": "Wish You Were Here",
-    "artist": "Pink Floyd",
-    "album": "Wish You Were Here (1975)",
-    "key": "G Major",
-    "bpm": 60,
-    "strum": "D - D - D U D U",
-    "strumPatternVisual": "↓ - ↓ - ↓ ↑ ↓ ↑",
-    "chordsUsed": [
-      "G",
-      "Em",
-      "A",
-      "C",
-      "D",
-      "Am"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "So, so you think you can tell, heaven from hell, blue skies from pain",
-        "chords": [
-          {
-            "chord": "C",
-            "word": "think you can tell"
-          },
-          {
-            "chord": "D",
-            "word": "heaven from hell"
-          },
-          {
-            "chord": "Am",
-            "word": "blue skies"
-          },
-          {
-            "chord": "G",
-            "word": "from pain"
-          }
-        ],
-        "notes": [
-          {
-            "note": "G3",
-            "str": 3,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 196,
-            "lyric": "So"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 246.94,
-            "lyric": "you think"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 293.66,
-            "lyric": "you can"
-          },
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 1.4,
-            "freq": 261.63,
-            "lyric": "tell"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "How I wish, how I wish you were here, we're just two lost souls swimming in a fish bowl",
-        "chords": [
-          {
-            "chord": "C",
-            "word": "How I wish"
-          },
-          {
-            "chord": "D",
-            "word": "wish you were here"
-          },
-          {
-            "chord": "Am",
-            "word": "two lost souls"
-          },
-          {
-            "chord": "G",
-            "word": "year after year"
-          }
-        ],
-        "notes": [
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 329.63,
-            "lyric": "How I"
-          },
-          {
-            "note": "D4",
-            "str": 2,
-            "fret": 3,
-            "beats": 0.8,
-            "freq": 293.66,
-            "lyric": "wish you"
-          },
-          {
-            "note": "C4",
-            "str": 2,
-            "fret": 1,
-            "beats": 0.8,
-            "freq": 261.63,
-            "lyric": "were"
-          },
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 246.94,
-            "lyric": "here"
-          }
-        ]
-      }
-    ]
-  },
-  "yellow": {
-    "id": "yellow",
-    "title": "Yellow",
-    "artist": "Coldplay",
-    "album": "Parachutes (2000)",
-    "key": "B Major",
-    "bpm": 88,
-    "strum": "D - D - D U D U",
-    "strumPatternVisual": "↓ - ↓ - ↓ ↑ ↓ ↑",
-    "chordsUsed": [
-      "B",
-      "F#",
-      "E",
-      "G#m"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "Look at the stars, look how they shine for you, and everything you do",
-        "chords": [
-          {
-            "chord": "B",
-            "word": "Look at the stars"
-          },
-          {
-            "chord": "F#",
-            "word": "shine for you"
-          },
-          {
-            "chord": "E",
-            "word": "everything you do"
-          }
-        ],
-        "notes": [
-          {
-            "note": "B3",
-            "str": 2,
-            "fret": 0,
-            "beats": 0.8,
-            "freq": 246.94,
-            "lyric": "Look at"
-          },
-          {
-            "note": "D#4",
-            "str": 2,
-            "fret": 4,
-            "beats": 0.8,
-            "freq": 311.13,
-            "lyric": "the stars"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 1,
-            "freq": 369.99,
-            "lyric": "shine"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 329.63,
-            "lyric": "for you"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Your skin, oh yeah your skin and bones, turn into something beautiful",
-        "chords": [
-          {
-            "chord": "B",
-            "word": "Your skin"
-          },
-          {
-            "chord": "F#",
-            "word": "skin and bones"
-          },
-          {
-            "chord": "E",
-            "word": "something beautiful"
-          },
-          {
-            "chord": "B",
-            "word": "yellow"
-          }
-        ],
-        "notes": [
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 369.99,
-            "lyric": "Your"
-          },
-          {
-            "note": "G#4",
-            "str": 1,
-            "fret": 4,
-            "beats": 1,
-            "freq": 415.3,
-            "lyric": "skin"
-          },
-          {
-            "note": "F#4",
-            "str": 1,
-            "fret": 2,
-            "beats": 0.8,
-            "freq": 369.99,
-            "lyric": "and"
-          },
-          {
-            "note": "E4",
-            "str": 1,
-            "fret": 0,
-            "beats": 1.4,
-            "freq": 329.63,
-            "lyric": "bones"
-          }
-        ]
-      }
-    ]
-  },
-  "riptide": {
-    "id": "riptide",
-    "title": "Riptide",
-    "artist": "Vance Joy",
-    "album": "Dream Your Life Away (2013)",
-    "key": "Am (Capo 1)",
-    "bpm": 102,
-    "strum": "D - D - D U D U",
-    "strumPatternVisual": "↓ - ↓ - ↓ ↑ ↓ ↑",
-    "chordsUsed": [
-      "Am",
-      "G",
-      "C",
-      "F"
-    ],
-    "lines": [
-      {
-        "sec": "Verse 1",
-        "text": "I was scared of dentists and the dark, I was scared of pretty girls and starting conversations",
-        "chords": [
-          {
-            "chord": "Am",
-            "word": "dentists"
-          },
-          {
-            "chord": "G",
-            "word": "and the dark"
-          },
-          {
-            "chord": "C",
-            "word": "pretty girls"
-          }
-        ],
-        "notes": [
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 0.8,
-            "freq": 440,
-            "lyric": "I was"
-          },
-          {
-            "note": "C5",
-            "str": 1,
-            "fret": 8,
-            "beats": 0.8,
-            "freq": 523.25,
-            "lyric": "scared"
-          },
-          {
-            "note": "B4",
-            "str": 1,
-            "fret": 7,
-            "beats": 0.8,
-            "freq": 493.88,
-            "lyric": "of the"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 1.4,
-            "freq": 440,
-            "lyric": "dark"
-          }
-        ]
-      },
-      {
-        "sec": "Chorus",
-        "text": "Lady, running down to the riptide, taken away to the dark side, I wanna be your left hand man",
-        "chords": [
-          {
-            "chord": "Am",
-            "word": "Lady"
-          },
-          {
-            "chord": "G",
-            "word": "riptide"
-          },
-          {
-            "chord": "C",
-            "word": "dark side"
-          },
-          {
-            "chord": "Am",
-            "word": "left hand man"
-          }
-        ],
-        "notes": [
-          {
-            "note": "C5",
-            "str": 1,
-            "fret": 8,
-            "beats": 0.8,
-            "freq": 523.25,
-            "lyric": "La-dy"
-          },
-          {
-            "note": "B4",
-            "str": 1,
-            "fret": 7,
-            "beats": 0.8,
-            "freq": 493.88,
-            "lyric": "running down"
-          },
-          {
-            "note": "A4",
-            "str": 1,
-            "fret": 5,
-            "beats": 1,
-            "freq": 440,
-            "lyric": "rip-tide"
-          },
-          {
-            "note": "G4",
-            "str": 1,
-            "fret": 3,
-            "beats": 1.4,
-            "freq": 392,
-            "lyric": "dark side"
-          }
-        ]
-      }
-    ]
-  }
-};
+    const SONG_CATALOG = window.SONG_CATALOG || {};
 
     let activeSongId = 'hotel_california';
     let isSongPlaying = false;
@@ -8549,10 +7236,72 @@ Was [G] blind but [D] now I [G] see"></textarea>
     let songTempoMultiplier = 1.0;
 
     function initSongsStudio() {
+      populateSongSelectorDropdown();
       loadSongById(activeSongId);
     }
 
-    
+    function populateSongSelectorDropdown() {
+      const dropdown = document.getElementById('song-selector-select');
+      if (!dropdown) return;
+      dropdown.innerHTML = `
+        <optgroup label="🎸 Western Acoustic Classics">
+          <option value="hotel_california">Hotel California - Eagles</option>
+          <option value="let_it_be">Let It Be - The Beatles</option>
+          <option value="wonderwall">Wonderwall - Oasis</option>
+          <option value="perfect">Perfect - Ed Sheeran</option>
+          <option value="hallelujah">Hallelujah - Leonard Cohen</option>
+          <option value="knockin_on_heaven">Knockin' On Heaven's Door - Bob Dylan</option>
+          <option value="stand_by_me">Stand By Me - Ben E. King</option>
+          <option value="wish_you_were_here">Wish You Were Here - Pink Floyd</option>
+          <option value="yellow">Yellow - Coldplay</option>
+          <option value="riptide">Riptide - Vance Joy</option>
+        </optgroup>
+        <optgroup label="🎬 Famous Theme Melodies (Ebook)">
+          <option value="harry_potter_theme">Harry Potter (Hedwig's Theme)</option>
+          <option value="superman_theme">Superman Theme - John Williams</option>
+          <option value="bella_ciao">Bella Ciao (Money Heist)</option>
+          <option value="ode_to_joy">Ode To Joy - Beethoven</option>
+          <option value="happy_birthday">Happy Birthday Melody</option>
+          <option value="coffin_dance">Coffin Dance (Astronomia)</option>
+          <option value="iphone_ringtone">iPhone Marimba Ringtone</option>
+          <option value="twinkle_twinkle">Twinkle Twinkle Little Star</option>
+        </optgroup>
+        <optgroup label="🎶 Melodic Guitar Songs & Solos (Ebook)">
+          <option value="kal_ho_na_ho">Kal Ho Naa Ho (Heartbeat Lead)</option>
+          <option value="kesariya">Kesariya (Brahmastra Lead)</option>
+          <option value="gulabi_aankhen">Gulabi Aankhen (Acoustic Solo)</option>
+          <option value="channa_mereya">Channa Mereya (Acoustic Lead)</option>
+          <option value="raabta">Raabta (Agent Vinod Lead)</option>
+          <option value="zara_zara">Zara Zara (RHTDM Lead)</option>
+          <option value="lag_ja_gale">Lag Ja Gale (Acoustic Classic)</option>
+          <option value="tujhe_dekha_to">Tujhe Dekha To (DDLJ Mandolin/Guitar)</option>
+          <option value="ek_pyar_ka_nagma">Ek Pyar Ka Nagma Hai (Violin/Lead)</option>
+          <option value="papa_kehte_hain">Papa Kehte Hain (Guitar Solo)</option>
+          <option value="hum_honge_kaamyaab">We Shall Overcome / Hum Honge Kaamyaab</option>
+        </optgroup>
+      `;
+
+      try {
+        const saved = localStorage.getItem('guitar_custom_songs');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const customGroup = document.createElement('optgroup');
+            customGroup.label = '⭐ My Custom Songs';
+            parsed.forEach(cs => {
+              const opt = document.createElement('option');
+              opt.value = cs.id;
+              opt.textContent = cs.title + ' (Custom)';
+              customGroup.appendChild(opt);
+            });
+            dropdown.appendChild(customGroup);
+          }
+        }
+      } catch (e) {}
+
+      dropdown.value = activeSongId;
+    }
+
     /* ==========================================================================
        SONGS STUDIO: 3D GUITAR FRETBOARD & NOTES VS CHORDS MODE ENGINE
        ========================================================================== */
@@ -8640,9 +7389,13 @@ Was [G] blind but [D] now I [G] see"></textarea>
       const song = SONG_CATALOG[activeSongId];
       if (!song) return;
 
-      // Clear all cells
+      // Clear all cells and reset string indicators
       for (let s = 0; s < 6; s++) {
         const statusEl = document.getElementById('song-str-status-' + s);
+        if (statusEl) {
+          statusEl.textContent = '-';
+          statusEl.style.color = 'var(--text-muted)';
+        }
         for (let f = 0; f <= 12; f++) {
           const cell = document.getElementById('song-fret-cell-' + s + '-' + f);
           if (cell) cell.innerHTML = '';
@@ -8892,7 +7645,7 @@ Was [G] blind but [D] now I [G] see"></textarea>
       const song = SONG_CATALOG[activeSongId];
       if (song && song.lines[lineIdx] && song.lines[lineIdx].chords.length > 0) {
         const targetCh = song.lines[lineIdx].chords[0].chord;
-        const hudCh = document.getElementById('hud-chord-name'); if (hudCh) hudCh.textContent = currentCh;
+        const hudCh = document.getElementById('hud-chord-name'); if (hudCh) hudCh.textContent = targetCh;
       }
     }
 
@@ -9020,6 +7773,38 @@ Was [G] blind but [D] now I [G] see"></textarea>
       document.getElementById('song-note-counter').textContent = `${noteIdx + 1} / ${line.notes.length}`;
     }
 
+    function checkPlayAlongLiveSingleNote(detectedNoteName) {
+      if (!isSongPracticeMicActive || songPlayMode !== 'notes') return;
+      const song = SONG_CATALOG[activeSongId];
+      if (!song) return;
+
+      const curLine = song.lines[activeSongLineIdx];
+      if (!curLine || !curLine.notes) return;
+      const curNote = curLine.notes[activeSongNoteIdx];
+      if (!curNote) return;
+
+      const targetRoot = curNote.note.replace(/[0-9]/g, '');
+      const detRoot = detectedNoteName.replace(/[0-9]/g, '');
+
+      if (targetRoot === detRoot || detectedNoteName.startsWith(targetRoot)) {
+        songPracticeScore += 10;
+        const scoreEl = document.getElementById('song-practice-score');
+        if (scoreEl) scoreEl.textContent = songPracticeScore;
+        const badge = document.getElementById('eval-feedback-badge');
+        if (badge) {
+          badge.className = 'eval-match-indicator match-success';
+          badge.textContent = `🎯 Plucked Note ${detectedNoteName}! (+10 pts)`;
+          clearTimeout(window.songEvalBadgeTimeout);
+          window.songEvalBadgeTimeout = setTimeout(() => {
+            if (badge) {
+              badge.className = 'eval-match-indicator';
+              badge.textContent = 'Keep playing along!';
+            }
+          }, 1200);
+        }
+      }
+    }
+
     function checkPlayAlongLiveMatch(detectedChord) {
       if (!isSongPracticeMicActive) return;
       const song = SONG_CATALOG[activeSongId];
@@ -9041,7 +7826,8 @@ Was [G] blind but [D] now I [G] see"></textarea>
           if (badge) {
             badge.className = 'eval-match-indicator match-success';
             badge.textContent = `✓ Matched Note ${curNote.note}! (+10 pts)`;
-            setTimeout(() => {
+            clearTimeout(window.songEvalBadgeTimeout);
+            window.songEvalBadgeTimeout = setTimeout(() => {
               if (badge) {
                 badge.className = 'eval-match-indicator';
                 badge.textContent = 'Keep playing along!';
@@ -9051,13 +7837,16 @@ Was [G] blind but [D] now I [G] see"></textarea>
         }
       } else {
         const targetChord = (curLine.chords && curLine.chords.length > 0) ? curLine.chords[0].chord : song.chordsUsed[0];
-        if (detectedChord === targetChord) {
+        const isMatch = (detectedChord === targetChord) ||
+                        (detectedChord && detectedChord.startsWith(targetChord));
+        if (isMatch) {
           songPracticeScore += 10;
           if (scoreEl) scoreEl.textContent = songPracticeScore;
           if (badge) {
             badge.className = 'eval-match-indicator match-success';
             badge.textContent = `✓ Strummed ${detectedChord}! (+10 pts)`;
-            setTimeout(() => {
+            clearTimeout(window.songEvalBadgeTimeout);
+            window.songEvalBadgeTimeout = setTimeout(() => {
               if (badge) {
                 badge.className = 'eval-match-indicator';
                 badge.textContent = 'Keep strumming along!';
@@ -9531,6 +8320,24 @@ Was [G] blind but [D] now I [G] see"></textarea>
 
     function initSongSearch() {
       loadCustomSongsFromStorage();
+      if (window.SONG_CATALOG) {
+        Object.values(window.SONG_CATALOG).forEach(s => {
+          if (!SEARCH_SONG_DATABASE.some(ex => ex.id === s.id)) {
+            SEARCH_SONG_DATABASE.push({
+              id: s.id,
+              title: s.title,
+              movie: s.album || s.movie || s.category || '',
+              singer: s.artist || s.singer || '',
+              originalKey: s.key,
+              chords: s.chordsUsed || [],
+              difficulty: 'Beginner / Intermediate',
+              strumPattern: s.strum,
+              bpm: s.bpm,
+              lines: s.lines || []
+            });
+          }
+        });
+      }
       if (!currentSearchedSong) {
         displaySearchedSong(SEARCH_SONG_DATABASE[0]);
       }

@@ -1,8 +1,10 @@
 // Service Worker for Guitar Chord & Note Detector Studio
-const CACHE_NAME = 'guitar-studio-v1';
+const CACHE_NAME = 'guitar-studio-v2';
 const ASSETS = [
   './',
   './index.html',
+  './all_chord_shapes.js',
+  './song_catalog_data.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
