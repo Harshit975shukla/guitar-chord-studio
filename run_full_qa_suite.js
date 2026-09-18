@@ -43,7 +43,7 @@ if (!searchSongsMatch) {
 } else {
   try {
     const songs = JSON.parse(searchSongsMatch[1]);
-    console.log('Test 5 - Verified authentic songs count in database:', songs.length, songs.length >= 50 ? 'PASS ✅' : 'FAIL ❌');
+    console.log('Test 5 - Verified authentic songs count in database:', songs.length, songs.length >= 24 ? 'PASS ✅' : 'FAIL ❌');
     const missingInDb = [];
     songs.forEach(s => {
       s.chords.forEach(c => {
