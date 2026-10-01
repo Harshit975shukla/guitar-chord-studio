@@ -1,0 +1,8 @@
+Guitar Studio trained chord layer, 2026-10-01-r1. Experimental raw suggestions, not validated practice grades.
+Training data: GuitarSet 1.1.0, CC BY 4.0, https://zenodo.org/records/3371780
+Qingyang Xi, Rachel M. Bittner, Johan Pauwels, Xuzhou Ye, Juan P. Bello.
+Citation: GuitarSet: A Dataset for Guitar Transcription, ISMIR 2018. https://creativecommons.org/licenses/by/4.0/
+This new chord-classification layer was trained on transformed features from 46 recordings (664 windows), with separate player validation/test data.
+Basic Pitch note weights are unchanged. The pretrained note model has used GuitarSet, so held-out players are only guaranteed held out from this new layer.
+Supports major, minor, 7, maj7 and m7. Other current-decoder chord families and single notes keep their original path.
+External recorded-window results improved overall but 13 previously correct windows regressed. No external Am7 examples. Real-device/room reliability is not established.

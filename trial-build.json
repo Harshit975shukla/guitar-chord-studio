@@ -1,0 +1,10 @@
+{
+  "version": "2026-10-01-r1",
+  "builtAt": "2026-10-01T04:29:13.241Z",
+  "sourceBase": "25dc62772f67cd9f57a9aa7dc7aa1446be95db90",
+  "entry": "index-DPcbnI7G.js",
+  "cache": "guitar-trained-trial-DPcbnI7G",
+  "headSha256": "576f9339ea202e352d2e70071f60f2fd02fcb54e3e66d1dd04dfeca1a0cbcb63",
+  "destination": "https://harshit975shukla.github.io/guitar-chord-studio/",
+  "scope": "Standalone live detector trial. No automatic audio recording, uploads, analytics or localStorage/IndexedDB. Main v2 website unchanged."
+}

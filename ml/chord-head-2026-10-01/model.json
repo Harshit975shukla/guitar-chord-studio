@@ -1,0 +1,340 @@
+{
+  "format": "layers-model",
+  "generatedBy": "TensorFlow.js tfjs-layers v3.21.0",
+  "convertedBy": null,
+  "modelTopology": {
+    "class_name": "Sequential",
+    "config": {
+      "name": "sequential_2",
+      "layers": [
+        {
+          "class_name": "Dense",
+          "config": {
+            "units": 32,
+            "activation": "relu",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "uniform",
+                "seed": 20261001
+              }
+            },
+            "bias_initializer": {
+              "class_name": "Zeros",
+              "config": {}
+            },
+            "kernel_regularizer": {
+              "class_name": "L1L2",
+              "config": {
+                "l1": 0,
+                "l2": 0.0005
+              }
+            },
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "dense_Dense2",
+            "trainable": true,
+            "batch_input_shape": [
+              null,
+              72
+            ],
+            "dtype": "float32"
+          }
+        },
+        {
+          "class_name": "Dense",
+          "config": {
+            "units": 61,
+            "activation": "softmax",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "uniform",
+                "seed": 20261002
+              }
+            },
+            "bias_initializer": {
+              "class_name": "Zeros",
+              "config": {}
+            },
+            "kernel_regularizer": {
+              "class_name": "L1L2",
+              "config": {
+                "l1": 0,
+                "l2": 0.0005
+              }
+            },
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "dense_Dense3",
+            "trainable": true
+          }
+        }
+      ]
+    },
+    "keras_version": "tfjs-layers 3.21.0",
+    "backend": "tensor_flow.js"
+  },
+  "weightsManifest": [
+    {
+      "paths": [
+        "weights.bin"
+      ],
+      "weights": [
+        {
+          "name": "dense_Dense2/kernel",
+          "shape": [
+            72,
+            32
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense_Dense2/bias",
+          "shape": [
+            32
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense_Dense3/kernel",
+          "shape": [
+            32,
+            61
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "dense_Dense3/bias",
+          "shape": [
+            61
+          ],
+          "dtype": "float32"
+        }
+      ]
+    }
+  ],
+  "userDefinedMetadata": {
+    "featureVersion": "basic-pitch-chroma-72-v1",
+    "labels": [
+      "C",
+      "Cm",
+      "C7",
+      "Cmaj7",
+      "Cm7",
+      "C#",
+      "C#m",
+      "C#7",
+      "C#maj7",
+      "C#m7",
+      "D",
+      "Dm",
+      "D7",
+      "Dmaj7",
+      "Dm7",
+      "D#",
+      "D#m",
+      "D#7",
+      "D#maj7",
+      "D#m7",
+      "E",
+      "Em",
+      "E7",
+      "Emaj7",
+      "Em7",
+      "F",
+      "Fm",
+      "F7",
+      "Fmaj7",
+      "Fm7",
+      "F#",
+      "F#m",
+      "F#7",
+      "F#maj7",
+      "F#m7",
+      "G",
+      "Gm",
+      "G7",
+      "Gmaj7",
+      "Gm7",
+      "G#",
+      "G#m",
+      "G#7",
+      "G#maj7",
+      "G#m7",
+      "A",
+      "Am",
+      "A7",
+      "Amaj7",
+      "Am7",
+      "A#",
+      "A#m",
+      "A#7",
+      "A#maj7",
+      "A#m7",
+      "B",
+      "Bm",
+      "B7",
+      "Bmaj7",
+      "Bm7",
+      null
+    ],
+    "createdAt": "2026-09-30T19:53:42.265Z",
+    "datasetSha256": "adad18f51780de1960897bf7b77eca11ab7bfa71265217585df3bbcd0a449292",
+    "manifestSha256": "86a1eb639d8d969bbdcb98b16cd7cd3a213ec02bf134c828771d0a541556365f",
+    "extractorSha256": "5b7ae46f9e2570289fa755c67ca7e5c12e8f37a400b9af36c7b0cf00f36618ff",
+    "sourceSha256": {
+      "train.mjs": "4ea6204c08e1b066bbf085e53042a342ffbd8bf0f8341afc124c8736858979ec",
+      "head.mjs": "cd6ac3cfa3b865b184e2cba5e8cbc557d90e89de015b63e0724710228d7839e6",
+      "features.mjs": "1c0f4039eb77d77fe2e3dc6f5e93638fd9f4b719c3b078628ee0a68841fa92fe",
+      "data.mjs": "e8b75c01470da13f473aa67bfb7b5f18fd35908911d826057b075398d0154dfd"
+    },
+    "frozenNoteModel": {
+      "version": "basic-pitch-1.0.1-tfjs-3.21.0",
+      "model": "@spotify/basic-pitch@1.0.1",
+      "runtime": "@tensorflow/tfjs@3.21.0",
+      "licence": "Apache-2.0",
+      "source": "https://github.com/spotify/basic-pitch-ts",
+      "assets": [
+        {
+          "file": "model.json",
+          "bytes": 174537,
+          "sha256": "1ed1aaee3409ec1dc098c8b01f430c0911f6fe9412e7af8086750f9e8f302f68"
+        },
+        {
+          "file": "group1-shard1of1.bin",
+          "bytes": 742392,
+          "sha256": "b142a95737a52e1e412d5f92e73d8bb80dfe8d04941acc0702f11f4524fb377c"
+        },
+        {
+          "file": "LICENSE-basic-pitch.txt",
+          "bytes": 11357,
+          "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+        },
+        {
+          "file": "tfjs-backend-wasm.wasm",
+          "bytes": 275675,
+          "sha256": "3fdde0b7f76782146ed7a5212bca394d1e59e1bfb8768531c72480d6f10aee1f"
+        },
+        {
+          "file": "tfjs-backend-wasm-simd.wasm",
+          "bytes": 377757,
+          "sha256": "918e97b89039305394e9987088249bacee5ef09111ae9f9384c06bec564e2d7b"
+        },
+        {
+          "file": "tfjs-backend-wasm-threaded-simd.wasm",
+          "bytes": 386833,
+          "sha256": "7ca7dc269cc43b600cc231c252d16383aae22c4383f4363ce30c413673d8a911"
+        }
+      ],
+      "note": "On-device optional inference. Model/runtime files are served from this site, not fetched from an external inference API."
+    },
+    "trainingData": {
+      "name": "GuitarSet 1.1.0",
+      "url": "https://zenodo.org/records/3371780",
+      "doi": "10.5281/zenodo.3371780",
+      "licence": "CC-BY-4.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "creators": [
+        "Qingyang Xi",
+        "Rachel M. Bittner",
+        "Johan Pauwels",
+        "Xuzhou Ye",
+        "Juan P. Bello"
+      ],
+      "citation": "Xi et al. GuitarSet: A Dataset for Guitar Transcription, ISMIR 2018.",
+      "audioArchive": "https://zenodo.org/api/records/3371780/files/audio_mono-mic.zip/content",
+      "annotationArchive": "https://zenodo.org/api/records/3371780/files/annotation.zip/content",
+      "labelSource": "Semi-automatic performed-chord transcription with manual verification, cross-checked against simultaneous per-string note annotations; never detector guesses or the requested chart.",
+      "knownErrors": [
+        "https://github.com/marl/GuitarSet/issues/4",
+        "https://github.com/marl/GuitarSet/issues/5"
+      ],
+      "pretrainingCaveat": "Basic Pitch has used GuitarSet. These are held-out players for the new chord head, not proven unseen data for the pretrained note model."
+    },
+    "splits": {
+      "train": [
+        "00",
+        "01",
+        "02",
+        "03"
+      ],
+      "validation": [
+        "04"
+      ],
+      "test": [
+        "05"
+      ]
+    },
+    "counts": {
+      "train": {
+        "recordings": 46,
+        "windows": 664,
+        "qualities": {
+          "7": 38,
+          "Major": 217,
+          "Minor": 74,
+          "maj7": 24,
+          "m7": 30,
+          "no-chord": 281
+        }
+      },
+      "validation": {
+        "recordings": 11,
+        "windows": 146,
+        "qualities": {
+          "7": 15,
+          "Major": 24,
+          "Minor": 17,
+          "maj7": 18,
+          "m7": 10,
+          "no-chord": 62
+        }
+      },
+      "test": {
+        "recordings": 11,
+        "windows": 155,
+        "qualities": {
+          "7": 0,
+          "Major": 40,
+          "Minor": 14,
+          "maj7": 6,
+          "m7": 6,
+          "no-chord": 89
+        }
+      }
+    },
+    "augmentation": "12 cyclic rotations of pitch-class features/labels in TRAIN ONLY; these are not extra real recordings.",
+    "trainingExamples": 664,
+    "augmentedExamples": 7968,
+    "seed": 20261001,
+    "deployment": "LOCAL RESEARCH ONLY. Never copied to public/ml or enabled in the live application.",
+    "limits": [
+      "Five chord families only: major, minor, dominant 7, major 7, minor 7; other families are not supported by this head.",
+      "The test player is held out from the new head, not guaranteed held out from Basic Pitch pretraining.",
+      "Clean selected windows are not live first-strum, noisy-room or device accuracy.",
+      "No dominant-7 examples qualified in this pilot test-player split.",
+      "Scores are uncalibrated model probabilities, not certainty."
+    ],
+    "config": {
+      "name": "small-dense",
+      "hidden": 32
+    },
+    "policy": {
+      "probability": 0.9,
+      "margin": 0
+    },
+    "bestEpoch": 48,
+    "selection": "Validation only; test data has not been evaluated."
+  }
+}
