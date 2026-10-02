@@ -1,38 +1,105 @@
-const PREFIX = 'guitar-trained-trial-';
-const CACHE = PREFIX + 'DPcbnI7G';
-const BASE = new URL('./', self.location.href);
-const START = new URL('index.html', BASE).href;
-function cacheWarning(error) {
-  console.warn('Trial offline cache unavailable; online listening remains available:', error);
-}
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll([BASE.href, START, new URL('manifest.json', BASE).href])).catch(cacheWarning));
+// Service Worker for Guitar Chord Studio v2
+// Provides offline support, subpath compatibility, and instant updates
+
+const getBasePath = () => {
+  const path = self.location.pathname;
+  return path.substring(0, path.lastIndexOf('/') + 1);
+};
+
+const BASE = getBasePath();
+// Pages apps share an origin, not a cache namespace. Never evict another app's data.
+const CACHE_PREFIX = `guitar-studio:${BASE}:`;
+// Cr3j7aK_ is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
+const CACHE_NAME = `${CACHE_PREFIX}Cr3j7aK_`;
+const STATIC_ASSETS = [
+  BASE,
+  BASE + 'index.html',
+  BASE + 'manifest.json',
+  BASE + 'icon-192.png',
+  BASE + 'icon-512.png',
+  BASE + 'all_chord_shapes.js',
+  BASE + 'song_catalog_data.js'
+];
+
+// Install - cache static assets
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_ASSETS).catch((err) => {
+        console.warn('Pre-caching warning:', err);
+      });
+    })
+  );
   self.skipWaiting();
 });
-self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(PREFIX) && key !== CACHE)
-    .map(key => caches.delete(key)))).catch(cacheWarning).then(() => self.clients.claim()));
+
+// Activate - clean old caches and take control immediately
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME)
+          .map((name) => {
+            console.log('Clearing old cache:', name);
+            return caches.delete(name);
+          })
+      );
+    }).then(() => self.clients.claim())
+  );
 });
-self.addEventListener('fetch', event => {
+
+// Fetch handler
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
-  if (event.request.method !== 'GET' || url.origin !== BASE.origin || !url.pathname.startsWith(BASE.pathname)) return;
-  event.respondWith((async () => {
-    try {
-      const response = await fetch(event.request);
-      if (response.ok) {
-        const copy = response.clone();
-        event.waitUntil(caches.open(CACHE).then(cache => cache.put(event.request, copy)).catch(cacheWarning));
-      }
-      return response;
-    } catch (error) {
-      let saved;
-      try {
-        const cache = await caches.open(CACHE);
-        saved = await cache.match(event.request) || (event.request.mode === 'navigate' ? await cache.match(START) : undefined);
-      } catch (cacheError) { cacheWarning(cacheError); }
-      if (saved) return saved;
-      console.warn('Trial resource unavailable offline:', url.pathname, error);
-      return new Response('This trial resource is unavailable offline. Reconnect and retry.', { status: 503, headers: { 'Content-Type': 'text/plain' } });
-    }
-  })());
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(BASE)) return;
+
+  // For HTML navigation requests: Network First, falling back to cache
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse.ok) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.open(CACHE_NAME).then(async (cache) =>
+            (await cache.match(event.request)) || (await cache.match(BASE + 'index.html')) || Response.error());
+        })
+    );
+    return;
+  }
+
+  // For JS, CSS, media: Cache First, update in background (Stale-While-Revalidate)
+  event.respondWith(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const cachedResponse = await cache.match(event.request);
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
+        if (networkResponse.ok) {
+          const clone = networkResponse.clone();
+          cache.put(event.request, clone);
+        }
+        return networkResponse;
+      }).catch(() => Response.error());
+
+      return cachedResponse || fetchPromise;
+    })
+  );
 });
+
+// Background sync for practice sessions (when online)
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-practice-sessions') {
+    event.waitUntil(syncPracticeSessions());
+  }
+});
+
+async function syncPracticeSessions() {
+  // Implementation would sync localStorage data to server
+  // For now, just log
+  console.log('Background sync triggered for practice sessions');
+}

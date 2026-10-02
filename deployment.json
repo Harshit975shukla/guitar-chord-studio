@@ -1,0 +1,31 @@
+{
+  "repository": "Harshit975shukla/guitar-chord-studio",
+  "sourceRepository": "Harshit975shukla/guitar-chord-studio-v2",
+  "sourceRevision": "8258c65756b63517cb8117fde5555de3aaa83fa6",
+  "previousDeploymentRevision": "0df9c9098242b81d3026b2daba9a8672b8b4b8ee",
+  "builtAt": "2026-10-02T17:31:59.807Z",
+  "basePath": "/guitar-chord-studio/",
+  "entry": "assets/main-Cr3j7aK_.js",
+  "entrySha256": "4968b59d84a76caaf16b94d82523783aab55a19df539957b6d13a98be83a1eec",
+  "features": {
+    "rhythms": 18,
+    "namedProgressions": 21,
+    "scales": [
+      "major",
+      "natural_minor",
+      "harmonic_minor",
+      "dorian",
+      "mixolydian"
+    ]
+  },
+  "validation": {
+    "chordPlayer": 23,
+    "hands": 12,
+    "strumming": 8,
+    "chordGame": 10,
+    "manifest": 5,
+    "serviceWorkerIsolation": 4,
+    "desktopMobileBrowser": 25,
+    "build": "passed"
+  }
+}
