@@ -1,0 +1,39 @@
+Owner-supplied original acoustic guitar and hand animations
+
+Source: apk_extracted-20261002T162048Z-1-001.zip, supplied by the project
+owner as their Android application. Converted locally for review at the
+owner's request. No redistribution licence is inferred from the archive.
+Publishing these assets remains subject to the owner's deployment approval.
+
+Content: Acoustic_Mesh, AcousticTexture, AcousticRozet, CharNewMesh,
+SolKolHighDiffuseMap, SolKolHighBumpMap_NRM1, and the 118 original playing
+AnimationClips. App code, native binaries, UI, audio, and other guitars
+are not included.
+
+Conversion preserves the original geometry, UVs, skin bindings and cubic
+animation tangents. Unity coordinates are reflected for glTF; the scene
+is uniformly scaled and reoriented to the player. Arms are cropped to
+32 mm behind each wrist and faded; their remaining influences attach to
+the wrist. The original pick and six string meshes remain separate.
+
+The 96 chord poses and 22 strumming/picking clips retain their source names.
+Chord shapes were checked against the supplied ChordDB and posed geometry;
+the simple open Em7 pose was also identified from that geometry. Measured
+string crossings retime the two played strokes to the existing audio clock.
+No source audio or Android application code is executed by the web app.
+
+hand-poses.json is a locally generated adaptation, not an extracted source
+animation. It covers the web app's offered shapes on the original skeleton
+without replacing or rescaling the mesh. The GLB SHA-256 binds it to this rig.
+Revision 2 checks designated fingertips, approach direction and every
+sounding string's vibrating span against the skinned triangles. It uses
+an authored wrist basis and avoids palm, thumb and unused-finger intrusions.
+Native knuckle roll and thumb opposition are included rather than reduced
+to spread and flexion alone. Each pose stores a wrist transform followed
+by five values per digit: spread, two flexions, distal flexion and roll.
+Run npm run prepare:apk-hands to regenerate it; the full geometric coverage
+checks must pass before the catalogue is written. Source clip previews
+remain unmodified.
+
+The existing WebXR reference hands and their separate MIT licence are
+unchanged. This asset does not inherit that licence.
