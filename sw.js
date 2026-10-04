@@ -9,8 +9,8 @@ const getBasePath = () => {
 const BASE = getBasePath();
 // Pages apps share an origin, not a cache namespace. Never evict another app's data.
 const CACHE_PREFIX = `guitar-studio:${BASE}:`;
-// D3pHlJod is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
-const CACHE_NAME = `${CACHE_PREFIX}D3pHlJod`;
+// BItGgaPL is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
+const CACHE_NAME = `${CACHE_PREFIX}BItGgaPL`;
 const STATIC_ASSETS = [
   BASE,
   BASE + 'index.html',
@@ -57,6 +57,7 @@ self.addEventListener('fetch', (event) => {
 
   // For HTML navigation requests: Network First, falling back to cache
   if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    const fallback = BASE + (url.pathname === BASE + 'electric-lab.html' ? 'electric-lab.html' : 'index.html');
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
@@ -68,7 +69,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           return caches.open(CACHE_NAME).then(async (cache) =>
-            (await cache.match(event.request)) || (await cache.match(BASE + 'index.html')) || Response.error());
+            (await cache.match(event.request)) || (await cache.match(fallback)) || Response.error());
         })
     );
     return;
