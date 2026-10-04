@@ -2,8 +2,10 @@ Experimental Electric Lab — owner-authorized model preview
 ========================================================
 
 Scope
-  This separate electric-lab.html page uses the supplied recovered APK model.
-  It does not replace the Chord Player, native acoustic guitar, or main Lab.
+  The integrated Guitar Lab and separate electric-lab.html sandbox use the
+  supplied recovered APK model. Neither replaces the Chord Player or native
+  acoustic guitar. Only the integrated Lab's electric choice is replaced.
+  Its original steel-string acoustic and classical models remain unchanged.
   Geometry is verified; the original runtime finish is NOT yet verified.
   The owner supplied this APK as their own app and authorized converted models.
   No broader redistribution licence is inferred. The owner approved this
@@ -70,7 +72,42 @@ Presentation and demonstration
   through the application's shared recording engine. It is not APK audio
   or a prediction of the recovered model's tone. The existing audio
   provenance remains under public/audio/musicca-guitar/.
-  No microphone, app settings, main-player state, or service worker is used.
+  The sandbox does not request microphone access or change app settings or
+  main-player state. The integrated Lab retains its existing optional private
+  recorded-guitar preview; that audio is not recovered APK audio.
+
+Integrated assembly view
+  The electric choice uses one fixed cherry finish inside the original Lab.
+  Instrument selection, the disassembly slider and Assemble / Disassemble,
+  component isolation/hover, cameras, turntable, 2D and audio preview remain.
+  The acoustic and classical model/renderer paths are not replaced.
+  The separate sandbox retains its existing material/audio tools.
+  The main primitive has 94 positional connected components. Analysis welds
+  duplicated seam positions only to identify connectivity; it never changes
+  vertex attributes. Eight groups contain every source triangle exactly once:
+    Body/neck/headstock and strap hardware: 2,085, plus 6 original logo faces
+    Fretboard, 24 fret wires and inlays: 293
+    Nut, three clamps and screws: 762
+    Six tuning machines: 744
+    Two pickup housings: 20
+    Bridge, saddles, screws and vibrato: 2,010
+    Control knobs: 388
+    Six original strings: 144
+  The body, neck and headstock are one connected surface and stay together.
+  Only whole connected components are grouped. In-memory subset index buffers
+  retain original winding and relative face order, share unchanged position /
+  normal / UV attributes, and preserve the original logo and finish roles.
+  Reassembly restores zero offsets; the source GLB is not edited.
+  Assembly-only custom materials display both sides of the recovered surfaces
+  so the open neck shell stays visible when uncovered. This adds no faces and
+  does not turn the source surface into a closed solid or change the sandbox.
+  Grouping, staggered movement and separation paths are authored educational
+  illustrations, not recovered APK animation or a verified repair sequence.
+  Physical joints, wiring and exact control assignments remain unverified.
+  assembly-diagram.svg is a generated flat front projection of all 6,452 source
+  triangles, using the same groups and custom colours. It is not an exact
+  textured/logo rendering. It supports 2D assembly when WebGL is unavailable.
+  Regenerate with node --import tsx scripts/prepare-electric-assembly.mjs.
 
 Evidence
   provenance/recovery-manifest.json and material-assessment.json are exact
@@ -82,6 +119,7 @@ Evidence
   The separate original recovery directory is kept intact.
 
 Validation
+  npm run test:lab
   node --import tsx scripts/electric-lab-smoke.mjs
   node scripts/electric-lab-browser.mjs <electric-lab-url> <private-cdp-port>
   The browser runner uses an already-running isolated Chromium and local
