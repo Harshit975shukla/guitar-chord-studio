@@ -9,8 +9,8 @@ const getBasePath = () => {
 const BASE = getBasePath();
 // Pages apps share an origin, not a cache namespace. Never evict another app's data.
 const CACHE_PREFIX = `guitar-studio:${BASE}:`;
-// DrjO_FGS is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
-const CACHE_NAME = `${CACHE_PREFIX}DrjO_FGS`;
+// DuycEFFf is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
+const CACHE_NAME = `${CACHE_PREFIX}DuycEFFf`;
 const STATIC_ASSETS = [
   BASE,
   BASE + 'index.html',
