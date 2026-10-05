@@ -2,8 +2,9 @@ Experimental Electric Lab — owner-authorized model preview
 ========================================================
 
 Scope
-  The integrated Guitar Lab and separate electric-lab.html sandbox use the
-  supplied recovered APK model. Neither replaces the Chord Player or native
+  The integrated Guitar Lab's electric choice uses the supplied recovered APK
+  model. The separate electric-lab.html sandbox page was removed on
+  5 October 2026. The model does not replace the Chord Player or native
   acoustic guitar. Only the integrated Lab's electric choice is replaced.
   Its original steel-string acoustic and classical models remain unchanged.
   Geometry is verified; the original runtime finish is NOT yet verified.
@@ -52,6 +53,9 @@ Material confidence boundary
   substituted. No missing asset name is claimed.
 
 Presentation and demonstration
+  (The finish choice, wireframe, inspection areas, teaching strings and
+  playback below belonged to the removed sandbox page; the Lab uses only the
+  fixed cherry finish and the shared renderer.)
   Runtime grouping rotates/recenters the model; source buffers stay intact.
   Cherry red, Midnight blue and Vintage cream are custom Lab finishes.
   Runtime material groups separate paint, maple-coloured neck/headstock,
@@ -72,8 +76,8 @@ Presentation and demonstration
   through the application's shared recording engine. It is not APK audio
   or a prediction of the recovered model's tone. The existing audio
   provenance remains under public/audio/musicca-guitar/.
-  The sandbox does not request microphone access or change app settings or
-  main-player state. The integrated Lab retains its existing optional private
+  The Lab does not request microphone access or change app settings or
+  main-player state. It retains its existing optional private
   recorded-guitar preview; that audio is not recovered APK audio.
 
 Integrated assembly view
@@ -81,7 +85,6 @@ Integrated assembly view
   Instrument selection, the disassembly slider and Assemble / Disassemble,
   component isolation/hover, cameras, turntable, 2D and audio preview remain.
   The acoustic and classical model/renderer paths are not replaced.
-  The separate sandbox retains its existing material/audio tools.
   The main primitive has 94 positional connected components. Analysis welds
   duplicated seam positions only to identify connectivity; it never changes
   vertex attributes. Eight groups contain every source triangle exactly once:
@@ -100,7 +103,7 @@ Integrated assembly view
   Reassembly restores zero offsets; the source GLB is not edited.
   Assembly-only custom materials display both sides of the recovered surfaces
   so the open neck shell stays visible when uncovered. This adds no faces and
-  does not turn the source surface into a closed solid or change the sandbox.
+  does not turn the source surface into a closed solid.
   Grouping, staggered movement and separation paths are authored educational
   illustrations, not recovered APK animation or a verified repair sequence.
   Physical joints, wiring and exact control assignments remain unverified.
