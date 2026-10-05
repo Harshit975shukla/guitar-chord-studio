@@ -9,8 +9,12 @@ const getBasePath = () => {
 const BASE = getBasePath();
 // Pages apps share an origin, not a cache namespace. Never evict another app's data.
 const CACHE_PREFIX = `guitar-studio:${BASE}:`;
-// DuycEFFf is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
-const CACHE_NAME = `${CACHE_PREFIX}DuycEFFf`;
+// zolgLjKR is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
+const CACHE_NAME = `${CACHE_PREFIX}zolgLjKR`;
+// Recordings keep their file names between releases, so they live in a cache that releases do not clear.
+// Changed recordings still update: every use re-checks the file in the background.
+const SOUND_CACHE = `${CACHE_PREFIX}saved-sounds`;
+const isSound = (url) => url.pathname.startsWith(BASE + 'audio/');
 const STATIC_ASSETS = [
   BASE,
   BASE + 'index.html',
@@ -33,18 +37,26 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate - clean old caches and take control immediately
+// Activate - move saved recordings out of older releases' caches, clear those caches, take control immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME)
-          .map((name) => {
-            console.log('Clearing old cache:', name);
-            return caches.delete(name);
-          })
-      );
+    caches.keys().then(async (cacheNames) => {
+      const old = cacheNames.filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME && name !== SOUND_CACHE);
+      const sounds = await caches.open(SOUND_CACHE);
+      for (const name of old) {
+        try {
+          const cache = await caches.open(name);
+          for (const request of await cache.keys()) {
+            if (!isSound(new URL(request.url)) || await sounds.match(request)) continue;
+            const response = await cache.match(request);
+            if (response) await sounds.put(request, response);
+          }
+        } catch (err) {
+          console.warn('Could not keep saved sounds from', name, err);
+        }
+        console.log('Clearing old cache:', name);
+        await caches.delete(name);
+      }
     }).then(() => self.clients.claim())
   );
 });
@@ -77,7 +89,7 @@ self.addEventListener('fetch', (event) => {
 
   // For JS, CSS, media: Cache First, update in background (Stale-While-Revalidate)
   event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    caches.open(isSound(url) ? SOUND_CACHE : CACHE_NAME).then(async (cache) => {
       const cachedResponse = await cache.match(event.request);
       const fetchPromise = fetch(event.request).then((networkResponse) => {
         if (networkResponse.ok) {
