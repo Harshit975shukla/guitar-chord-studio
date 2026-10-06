@@ -9,12 +9,17 @@ const getBasePath = () => {
 const BASE = getBasePath();
 // Pages apps share an origin, not a cache namespace. Never evict another app's data.
 const CACHE_PREFIX = `guitar-studio:${BASE}:`;
-// tTnnZFur is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
-const CACHE_NAME = `${CACHE_PREFIX}tTnnZFur`;
+// B14hSsve is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
+const CACHE_NAME = `${CACHE_PREFIX}B14hSsve`;
 // Recordings keep their file names between releases, so they live in a cache that releases do not clear.
 // Changed recordings still update: every use re-checks the file in the background.
 const SOUND_CACHE = `${CACHE_PREFIX}saved-sounds`;
 const isSound = (url) => url.pathname.startsWith(BASE + 'audio/');
+// Accounts build (server/): login pages and the account API always go to the network, never to a cache.
+const SERVER_ONLY = /^(?:api|auth)(?:\/|$)|^(?:login|signup|verify|forgot|reset|account|admin|privacy)(?:\/|$)/;
+const isServerOnly = (url) => SERVER_ONLY.test(url.pathname.slice(BASE.length));
+// A redirect (for example to the login page) or an error is never saved as an app file.
+const cacheable = (response) => response.ok && !response.redirected;
 const STATIC_ASSETS = [
   BASE,
   BASE + 'index.html',
@@ -66,6 +71,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith(BASE)) return;
+  if (isServerOnly(url)) return;
 
   // For HTML navigation requests: Network First, falling back to cache
   if (event.request.mode === 'navigate' || event.request.destination === 'document') {
@@ -73,7 +79,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
-          if (networkResponse.ok) {
+          if (cacheable(networkResponse)) {
             const clone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
@@ -92,7 +98,7 @@ self.addEventListener('fetch', (event) => {
     caches.open(isSound(url) ? SOUND_CACHE : CACHE_NAME).then(async (cache) => {
       const cachedResponse = await cache.match(event.request);
       const fetchPromise = fetch(event.request).then((networkResponse) => {
-        if (networkResponse.ok) {
+        if (cacheable(networkResponse)) {
           const clone = networkResponse.clone();
           cache.put(event.request, clone);
         }
