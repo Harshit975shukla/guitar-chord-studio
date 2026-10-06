@@ -9,8 +9,8 @@ const getBasePath = () => {
 const BASE = getBasePath();
 // Pages apps share an origin, not a cache namespace. Never evict another app's data.
 const CACHE_PREFIX = `guitar-studio:${BASE}:`;
-// zolgLjKR is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
-const CACHE_NAME = `${CACHE_PREFIX}zolgLjKR`;
+// tTnnZFur is replaced at build time with the bundle hash (scripts/stamp-sw.mjs)
+const CACHE_NAME = `${CACHE_PREFIX}tTnnZFur`;
 // Recordings keep their file names between releases, so they live in a cache that releases do not clear.
 // Changed recordings still update: every use re-checks the file in the background.
 const SOUND_CACHE = `${CACHE_PREFIX}saved-sounds`;
